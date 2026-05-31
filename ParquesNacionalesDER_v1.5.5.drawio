@@ -1,0 +1,257 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Página-1" id="6WiT-UJOR7t5wvkbXQH8">
+    <mxGraphModel dx="3002" dy="2367" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="Btmo_7pfYJY9AmjP7Elt-1" parent="1" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" value="Parque" vertex="1">
+          <mxGeometry height="130" width="160" x="50" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="Btmo_7pfYJY9AmjP7Elt-2" parent="Btmo_7pfYJY9AmjP7Elt-1" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;whiteSpace=wrap;" value="ID&lt;div&gt;&lt;div&gt;TipoParque&lt;div&gt;Nombre&lt;/div&gt;&lt;div&gt;SuperficieKm2&lt;br&gt;Dirección&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="80" width="160" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="Btmo_7pfYJY9AmjP7Elt-3" parent="1" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" value="Provincia" vertex="1">
+          <mxGeometry height="120" width="160" x="-180" y="-110" as="geometry" />
+        </mxCell>
+        <mxCell id="Btmo_7pfYJY9AmjP7Elt-4" parent="Btmo_7pfYJY9AmjP7Elt-3" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;whiteSpace=wrap;" value="ID&lt;div&gt;Nombre&lt;/div&gt;" vertex="1">
+          <mxGeometry height="70" width="160" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="Btmo_7pfYJY9AmjP7Elt-7" parent="1" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" value="Tipo Visitante" vertex="1">
+          <mxGeometry height="120" width="160" x="670" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="Btmo_7pfYJY9AmjP7Elt-8" parent="Btmo_7pfYJY9AmjP7Elt-7" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;whiteSpace=wrap;" value="ID&lt;div&gt;Descripcion&lt;/div&gt;" vertex="1">
+          <mxGeometry height="70" width="160" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="Btmo_7pfYJY9AmjP7Elt-9" parent="1" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" value="Tarifa Parque" vertex="1">
+          <mxGeometry height="170" width="160" x="460" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Btmo_7pfYJY9AmjP7Elt-10" parent="Btmo_7pfYJY9AmjP7Elt-9" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;whiteSpace=wrap;" value="&lt;div&gt;ID&lt;/div&gt;&lt;div&gt;IdParque FK&lt;/div&gt;&lt;div&gt;IdTipoVisitante FK&lt;/div&gt;&lt;div&gt;Precio&lt;/div&gt;&lt;div&gt;Activo&lt;/div&gt;VigenciaDesde&lt;div&gt;VigenciaHasta&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="120" width="160" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="Btmo_7pfYJY9AmjP7Elt-12" parent="1" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" value="Venta" vertex="1">
+          <mxGeometry height="140" width="160" x="480" y="-240" as="geometry" />
+        </mxCell>
+        <mxCell id="Btmo_7pfYJY9AmjP7Elt-13" parent="Btmo_7pfYJY9AmjP7Elt-12" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;whiteSpace=wrap;" value="ID&lt;div&gt;IdFormaPago FK&lt;/div&gt;&lt;div&gt;Fecha&lt;/div&gt;&lt;div&gt;MontoTotal&lt;/div&gt;" vertex="1">
+          <mxGeometry height="90" width="160" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="Btmo_7pfYJY9AmjP7Elt-14" parent="1" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" value="Forma de Pago" vertex="1">
+          <mxGeometry height="120" width="160" x="480" y="-470" as="geometry" />
+        </mxCell>
+        <mxCell id="Btmo_7pfYJY9AmjP7Elt-15" parent="Btmo_7pfYJY9AmjP7Elt-14" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;whiteSpace=wrap;" value="ID&lt;div&gt;Descripcion&lt;/div&gt;" vertex="1">
+          <mxGeometry height="70" width="160" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="Btmo_7pfYJY9AmjP7Elt-16" parent="1" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" value="Detalle Venta" vertex="1">
+          <mxGeometry height="140" width="160" x="827" y="-160" as="geometry" />
+        </mxCell>
+        <mxCell id="Btmo_7pfYJY9AmjP7Elt-17" parent="Btmo_7pfYJY9AmjP7Elt-16" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;whiteSpace=wrap;" value="&lt;div&gt;IdVenta PK-FK&lt;br&gt;LineaVenta PK&lt;/div&gt;&lt;div&gt;IdTarifaParque FK&lt;/div&gt;&lt;div&gt;IdTarifaActividad FK&lt;/div&gt;&lt;div&gt;Cantidad&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="90" width="160" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="Btmo_7pfYJY9AmjP7Elt-18" parent="1" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" value="Actividad" vertex="1">
+          <mxGeometry height="160" width="160" x="200" y="260" as="geometry" />
+        </mxCell>
+        <mxCell id="Btmo_7pfYJY9AmjP7Elt-19" parent="Btmo_7pfYJY9AmjP7Elt-18" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;whiteSpace=wrap;" value="ID&lt;div&gt;IdParque PK-FK&lt;/div&gt;&lt;div&gt;IdTipoActividad&lt;/div&gt;&lt;div&gt;Nombre&lt;/div&gt;&lt;div&gt;Descripcion&lt;/div&gt;&lt;div&gt;Precio&lt;/div&gt;&lt;div&gt;Cupo&lt;/div&gt;" vertex="1">
+          <mxGeometry height="110" width="160" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="Btmo_7pfYJY9AmjP7Elt-20" parent="1" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" value="Tipo Actividad" vertex="1">
+          <mxGeometry height="120" width="160" x="414" y="380" as="geometry" />
+        </mxCell>
+        <mxCell id="Btmo_7pfYJY9AmjP7Elt-21" parent="Btmo_7pfYJY9AmjP7Elt-20" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;whiteSpace=wrap;" value="ID&lt;div&gt;Descripcion&lt;/div&gt;&lt;div&gt;Nombre&lt;/div&gt;" vertex="1">
+          <mxGeometry height="70" width="160" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="Btmo_7pfYJY9AmjP7Elt-22" parent="1" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" value="Guia" vertex="1">
+          <mxGeometry height="120" width="160" x="200" y="660" as="geometry" />
+        </mxCell>
+        <mxCell id="Btmo_7pfYJY9AmjP7Elt-23" parent="Btmo_7pfYJY9AmjP7Elt-22" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;whiteSpace=wrap;" value="Legajo&lt;div&gt;DNI&lt;/div&gt;&lt;div&gt;CUIL&lt;/div&gt;&lt;div&gt;Nombre&lt;/div&gt;" vertex="1">
+          <mxGeometry height="70" width="160" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="Btmo_7pfYJY9AmjP7Elt-24" parent="1" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" value="GuiaActividad" vertex="1">
+          <mxGeometry height="120" width="160" x="200" y="470" as="geometry" />
+        </mxCell>
+        <mxCell id="Btmo_7pfYJY9AmjP7Elt-25" parent="Btmo_7pfYJY9AmjP7Elt-24" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;whiteSpace=wrap;" value="&lt;div&gt;IdActividad PK-FK&lt;/div&gt;&lt;div&gt;IdGuia PK-FK&lt;/div&gt;&lt;div&gt;FechaInicio PK&lt;/div&gt;&lt;div&gt;FechaFin&lt;/div&gt;" vertex="1">
+          <mxGeometry height="70" width="160" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="Btmo_7pfYJY9AmjP7Elt-26" parent="1" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" value="Guardaparque" vertex="1">
+          <mxGeometry height="120" width="160" y="520" as="geometry" />
+        </mxCell>
+        <mxCell id="Btmo_7pfYJY9AmjP7Elt-27" parent="Btmo_7pfYJY9AmjP7Elt-26" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;whiteSpace=wrap;" value="Legajo&lt;div&gt;Nombre&lt;/div&gt;&lt;div&gt;DNI&lt;/div&gt;" vertex="1">
+          <mxGeometry height="70" width="160" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="Btmo_7pfYJY9AmjP7Elt-28" parent="1" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" value="Empresa" vertex="1">
+          <mxGeometry height="110" width="160" x="-460" y="260" as="geometry" />
+        </mxCell>
+        <mxCell id="Btmo_7pfYJY9AmjP7Elt-29" parent="Btmo_7pfYJY9AmjP7Elt-28" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;whiteSpace=wrap;" value="ID&lt;div&gt;CUIT&lt;/div&gt;&lt;div&gt;Nombre&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="60" width="160" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="Btmo_7pfYJY9AmjP7Elt-30" parent="1" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" value="Concesion" vertex="1">
+          <mxGeometry height="160" width="160" x="-200" y="260" as="geometry" />
+        </mxCell>
+        <mxCell id="Btmo_7pfYJY9AmjP7Elt-31" parent="Btmo_7pfYJY9AmjP7Elt-30" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;whiteSpace=wrap;" value="ID&amp;nbsp;&lt;div&gt;IdEmpresa FK&lt;/div&gt;&lt;div&gt;IdParque FK&lt;/div&gt;&lt;div&gt;TipoActividad&lt;/div&gt;&lt;div&gt;&lt;div&gt;&lt;/div&gt;&lt;div&gt;MontoMensual&lt;/div&gt;&lt;/div&gt;&lt;div&gt;FechaInicioContrato&lt;/div&gt;&lt;div&gt;FechaFinContrato&lt;/div&gt;" vertex="1">
+          <mxGeometry height="110" width="160" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="Btmo_7pfYJY9AmjP7Elt-32" parent="1" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" value="PagoConcesión" vertex="1">
+          <mxGeometry height="110" width="160" x="-200" y="740" as="geometry" />
+        </mxCell>
+        <mxCell id="Btmo_7pfYJY9AmjP7Elt-33" parent="Btmo_7pfYJY9AmjP7Elt-32" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;whiteSpace=wrap;" value="&lt;div&gt;IdFacturaConcesion PK-FK&lt;/div&gt;&lt;div&gt;IdConcesion PK-FK&lt;/div&gt;&lt;div&gt;FechaPago&lt;/div&gt;" vertex="1">
+          <mxGeometry height="60" width="160" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="Btmo_7pfYJY9AmjP7Elt-34" parent="1" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" value="AsignacionesGuarparque" vertex="1">
+          <mxGeometry height="120" width="160" y="260" as="geometry" />
+        </mxCell>
+        <mxCell id="Btmo_7pfYJY9AmjP7Elt-35" parent="Btmo_7pfYJY9AmjP7Elt-34" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;whiteSpace=wrap;" value="&lt;div&gt;IdParque PK-FK&lt;/div&gt;&lt;div&gt;IdGuardaParque PK-FK&lt;/div&gt;&lt;div&gt;FechaInicio PK&lt;/div&gt;&lt;div&gt;FechaFin&lt;/div&gt;" vertex="1">
+          <mxGeometry height="70" width="160" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="Btmo_7pfYJY9AmjP7Elt-36" edge="1" parent="1" source="Btmo_7pfYJY9AmjP7Elt-2" style="edgeStyle=orthogonalEdgeStyle;fontSize=12;html=1;endArrow=ERoneToMany;rounded=1;exitX=1;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="Btmo_7pfYJY9AmjP7Elt-18" value="">
+          <mxGeometry height="100" relative="1" width="100" as="geometry">
+            <mxPoint x="230" y="120" as="sourcePoint" />
+            <mxPoint x="350" y="270" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Btmo_7pfYJY9AmjP7Elt-39" edge="1" parent="1" source="Btmo_7pfYJY9AmjP7Elt-2" style="edgeStyle=orthogonalEdgeStyle;fontSize=12;html=1;endArrow=ERoneToMany;rounded=1;exitX=0.018;exitY=0.963;exitDx=0;exitDy=0;entryX=0.905;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;exitPerimeter=0;" target="Btmo_7pfYJY9AmjP7Elt-30" value="">
+          <mxGeometry height="100" relative="1" width="100" as="geometry">
+            <mxPoint x="-160" y="220" as="sourcePoint" />
+            <mxPoint x="-60" y="370" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Btmo_7pfYJY9AmjP7Elt-45" edge="1" parent="1" source="Btmo_7pfYJY9AmjP7Elt-29" style="fontSize=12;html=1;endArrow=ERoneToMany;rounded=0;exitX=1;exitY=0;exitDx=0;exitDy=0;entryX=0;entryY=0;entryDx=0;entryDy=0;" target="Btmo_7pfYJY9AmjP7Elt-31" value="">
+          <mxGeometry height="100" relative="1" width="100" as="geometry">
+            <mxPoint x="-290" y="250" as="sourcePoint" />
+            <mxPoint x="-340" y="340" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Btmo_7pfYJY9AmjP7Elt-49" edge="1" parent="1" source="Btmo_7pfYJY9AmjP7Elt-22" style="fontSize=12;html=1;endArrow=ERmany;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" target="Btmo_7pfYJY9AmjP7Elt-25" value="">
+          <mxGeometry height="100" relative="1" width="100" as="geometry">
+            <mxPoint x="280" y="770" as="sourcePoint" />
+            <mxPoint x="170" y="700" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Btmo_7pfYJY9AmjP7Elt-50" edge="1" parent="1" source="Btmo_7pfYJY9AmjP7Elt-19" style="fontSize=12;html=1;endArrow=ERmany;rounded=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" target="Btmo_7pfYJY9AmjP7Elt-24" value="">
+          <mxGeometry height="100" relative="1" width="100" as="geometry">
+            <mxPoint x="280" y="420" as="sourcePoint" />
+            <mxPoint x="290" y="440" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Btmo_7pfYJY9AmjP7Elt-51" edge="1" parent="1" source="Btmo_7pfYJY9AmjP7Elt-2" style="edgeStyle=orthogonalEdgeStyle;fontSize=12;html=1;endArrow=ERoneToMany;rounded=1;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0.684;entryY=0.002;entryDx=0;entryDy=0;entryPerimeter=0;" target="Btmo_7pfYJY9AmjP7Elt-34" value="">
+          <mxGeometry height="100" relative="1" width="100" as="geometry">
+            <mxPoint x="260" y="280" as="sourcePoint" />
+            <mxPoint x="360" y="430" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Btmo_7pfYJY9AmjP7Elt-54" edge="1" parent="1" source="Btmo_7pfYJY9AmjP7Elt-26" style="fontSize=12;html=1;endArrow=ERmany;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" target="Btmo_7pfYJY9AmjP7Elt-35" value="">
+          <mxGeometry height="100" relative="1" width="100" as="geometry">
+            <mxPoint x="230" y="710" as="sourcePoint" />
+            <mxPoint x="230" y="590" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Btmo_7pfYJY9AmjP7Elt-55" edge="1" parent="1" source="Btmo_7pfYJY9AmjP7Elt-20" style="fontSize=12;html=1;endArrow=ERoneToMany;rounded=0;exitX=0.024;exitY=0.002;exitDx=0;exitDy=0;entryX=0.996;entryY=0.712;entryDx=0;entryDy=0;entryPerimeter=0;exitPerimeter=0;" target="Btmo_7pfYJY9AmjP7Elt-19" value="">
+          <mxGeometry height="100" relative="1" width="100" as="geometry">
+            <mxPoint x="518.25" y="409.09000000000003" as="sourcePoint" />
+            <mxPoint x="470.00999999999976" y="230.91999999999993" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Btmo_7pfYJY9AmjP7Elt-57" edge="1" parent="1" source="Btmo_7pfYJY9AmjP7Elt-13" style="fontSize=12;html=1;endArrow=ERoneToMany;rounded=0;exitX=1;exitY=0;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="Btmo_7pfYJY9AmjP7Elt-16" value="">
+          <mxGeometry height="100" relative="1" width="100" as="geometry">
+            <mxPoint x="550" y="10" as="sourcePoint" />
+            <mxPoint x="390" y="10" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Btmo_7pfYJY9AmjP7Elt-60" edge="1" parent="1" source="Btmo_7pfYJY9AmjP7Elt-15" style="fontSize=12;html=1;endArrow=ERmany;rounded=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" target="Btmo_7pfYJY9AmjP7Elt-12" value="">
+          <mxGeometry height="100" relative="1" width="100" as="geometry">
+            <mxPoint x="310" y="50" as="sourcePoint" />
+            <mxPoint x="410" y="-50" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Btmo_7pfYJY9AmjP7Elt-62" edge="1" parent="1" source="Btmo_7pfYJY9AmjP7Elt-2" style="fontSize=12;html=1;endArrow=ERoneToMany;rounded=0;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=0;entryY=0.354;entryDx=0;entryDy=0;entryPerimeter=0;" target="Btmo_7pfYJY9AmjP7Elt-10" value="">
+          <mxGeometry height="100" relative="1" width="100" as="geometry">
+            <Array as="points" />
+            <mxPoint x="160" y="50" as="sourcePoint" />
+            <mxPoint x="260" y="-50" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Btmo_7pfYJY9AmjP7Elt-63" edge="1" parent="1" source="Btmo_7pfYJY9AmjP7Elt-9" style="fontSize=12;html=1;endArrow=ERoneToMany;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;edgeStyle=orthogonalEdgeStyle;" target="Btmo_7pfYJY9AmjP7Elt-17" value="">
+          <mxGeometry height="100" relative="1" width="100" as="geometry">
+            <mxPoint x="160" y="50" as="sourcePoint" />
+            <mxPoint x="260" y="-50" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Btmo_7pfYJY9AmjP7Elt-64" edge="1" parent="1" source="Btmo_7pfYJY9AmjP7Elt-8" style="fontSize=12;html=1;endArrow=ERoneToMany;rounded=0;exitX=0;exitY=0;exitDx=0;exitDy=0;entryX=1;entryY=0;entryDx=0;entryDy=0;" target="Btmo_7pfYJY9AmjP7Elt-10" value="">
+          <mxGeometry height="100" relative="1" width="100" as="geometry">
+            <mxPoint x="667" y="-120" as="sourcePoint" />
+            <mxPoint x="460" y="90" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Btmo_7pfYJY9AmjP7Elt-66" parent="1" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" value="TarifaActividad" vertex="1">
+          <mxGeometry height="150" width="160" x="920" y="260" as="geometry" />
+        </mxCell>
+        <mxCell id="Btmo_7pfYJY9AmjP7Elt-67" parent="Btmo_7pfYJY9AmjP7Elt-66" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;whiteSpace=wrap;" value="&lt;div&gt;ID&lt;/div&gt;&lt;div&gt;IdActividad FK&lt;/div&gt;&lt;div&gt;Precio&lt;/div&gt;&lt;div&gt;Activo&lt;/div&gt;VigenciaDesde&lt;div&gt;VigenciaHasta&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="100" width="160" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="Btmo_7pfYJY9AmjP7Elt-69" edge="1" parent="1" source="Btmo_7pfYJY9AmjP7Elt-19" style="fontSize=12;html=1;endArrow=ERmany;rounded=0;exitX=1;exitY=0;exitDx=0;exitDy=0;entryX=0;entryY=0;entryDx=0;entryDy=0;" target="Btmo_7pfYJY9AmjP7Elt-67" value="">
+          <mxGeometry height="100" relative="1" width="100" as="geometry">
+            <mxPoint x="380" y="410" as="sourcePoint" />
+            <mxPoint x="470" y="310" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Btmo_7pfYJY9AmjP7Elt-70" edge="1" parent="1" source="Btmo_7pfYJY9AmjP7Elt-66" style="fontSize=12;html=1;endArrow=ERoneToMany;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.75;entryY=1;entryDx=0;entryDy=0;" target="Btmo_7pfYJY9AmjP7Elt-17" value="">
+          <mxGeometry height="100" relative="1" width="100" as="geometry">
+            <mxPoint x="470" y="-20" as="sourcePoint" />
+            <mxPoint x="584" y="-20" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="u2EF-b6-IpmhNpSmdlbL-4" parent="1" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" value="Ubicación" vertex="1">
+          <mxGeometry height="97.5" width="150" x="-170" y="61.25" as="geometry" />
+        </mxCell>
+        <mxCell id="u2EF-b6-IpmhNpSmdlbL-5" parent="u2EF-b6-IpmhNpSmdlbL-4" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;whiteSpace=wrap;" value="&lt;div&gt;idProvincia PK-FK&lt;/div&gt;&lt;div&gt;idParque PK-FK&lt;/div&gt;" vertex="1">
+          <mxGeometry height="47.5" width="150" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="u2EF-b6-IpmhNpSmdlbL-11" edge="1" parent="1" style="fontSize=12;html=1;endArrow=ERmany;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" target="u2EF-b6-IpmhNpSmdlbL-4" value="">
+          <mxGeometry height="100" relative="1" width="100" as="geometry">
+            <mxPoint x="-95.25999999999999" y="10" as="sourcePoint" />
+            <mxPoint x="-95" y="60" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="u2EF-b6-IpmhNpSmdlbL-12" edge="1" parent="1" style="fontSize=12;html=1;endArrow=ERoneToMany;rounded=0;exitX=0.024;exitY=0.002;exitDx=0;exitDy=0;entryX=1.008;entryY=0.48;entryDx=0;entryDy=0;entryPerimeter=0;exitPerimeter=0;" target="u2EF-b6-IpmhNpSmdlbL-4" value="">
+          <mxGeometry height="100" relative="1" width="100" as="geometry">
+            <mxPoint x="50" y="109.5" as="sourcePoint" />
+            <mxPoint x="-9" y="110.5" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="MRGt671bf-BciwsWnZh3-5" parent="1" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" value="FacturaConcesión" vertex="1">
+          <mxGeometry height="130" width="160" x="-200" y="500" as="geometry" />
+        </mxCell>
+        <mxCell id="MRGt671bf-BciwsWnZh3-6" parent="MRGt671bf-BciwsWnZh3-5" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;whiteSpace=wrap;" value="&lt;div&gt;IdConcesion PK-FK&lt;/div&gt;&lt;div&gt;ID PK&lt;/div&gt;&lt;div&gt;FechaVencimiento&lt;/div&gt;&lt;div&gt;MontoAAbonar&lt;/div&gt;&lt;div&gt;EstaPagada&amp;nbsp;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="80" width="160" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="MRGt671bf-BciwsWnZh3-9" edge="1" parent="1" source="Btmo_7pfYJY9AmjP7Elt-31" style="fontSize=12;html=1;endArrow=ERmany;rounded=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" target="MRGt671bf-BciwsWnZh3-5" value="">
+          <mxGeometry height="100" relative="1" width="100" as="geometry">
+            <mxPoint x="-120" y="450" as="sourcePoint" />
+            <mxPoint x="-120.36000000000001" y="431" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="MRGt671bf-BciwsWnZh3-10" edge="1" parent="1" style="fontSize=12;html=1;endArrow=ERmany;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" target="MRGt671bf-BciwsWnZh3-6" value="">
+          <mxGeometry height="100" relative="1" width="100" as="geometry">
+            <mxPoint x="-120" y="740" as="sourcePoint" />
+            <mxPoint x="-120" y="640" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="z0wzbYEecBz6HvpjXnTF-4" parent="1" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" value="ActividadVendida" vertex="1">
+          <mxGeometry height="120" width="160" x="170" y="-230" as="geometry" />
+        </mxCell>
+        <mxCell id="z0wzbYEecBz6HvpjXnTF-5" parent="z0wzbYEecBz6HvpjXnTF-4" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;whiteSpace=wrap;" value="&lt;div&gt;idVenta PK-FK&lt;/div&gt;&lt;div&gt;idActividad PK-FK&lt;/div&gt;&lt;div&gt;idParque PK-FK&lt;/div&gt;" vertex="1">
+          <mxGeometry height="70" width="160" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="z0wzbYEecBz6HvpjXnTF-6" edge="1" parent="1" source="Btmo_7pfYJY9AmjP7Elt-18" style="fontSize=12;html=1;endArrow=ERmany;rounded=0;entryX=0.741;entryY=1.01;entryDx=0;entryDy=0;exitX=0.688;exitY=0;exitDx=0;exitDy=0;exitPerimeter=0;entryPerimeter=0;" target="z0wzbYEecBz6HvpjXnTF-5" value="">
+          <mxGeometry height="100" relative="1" width="100" as="geometry">
+            <mxPoint x="310" y="150" as="sourcePoint" />
+            <mxPoint x="310" y="10" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="z0wzbYEecBz6HvpjXnTF-7" edge="1" parent="1" source="z0wzbYEecBz6HvpjXnTF-5" style="fontSize=12;html=1;endArrow=ERoneToMany;rounded=0;exitX=1.005;exitY=0.47;exitDx=0;exitDy=0;entryX=0.004;entryY=0.408;entryDx=0;entryDy=0;exitPerimeter=0;entryPerimeter=0;" target="Btmo_7pfYJY9AmjP7Elt-13" value="">
+          <mxGeometry height="100" relative="1" width="100" as="geometry">
+            <mxPoint x="350" y="-130" as="sourcePoint" />
+            <mxPoint x="537" y="-30" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

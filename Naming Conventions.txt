@@ -1,0 +1,12 @@
+NAMING CONVENTIONS
+==================
+INSTRUCCIONES = MACRO_CASE
+FUNCIONES_ESCALARES = UDF_MACRO_CASE | prefijo = 'UDF'
+FUNCIONES_VECTORIALES = TVF_MACRO_CASE | prefijo = 'TVF'
+Tablas = PascalCase | prefijo = ninguno
+campos = snake_case | prefijo = ninguno
+pk_primary_key = snake_case | prefijo = 'pk_'
+fk_foreign_key = snake_case | prefijo = 'fk_'
+ck_check = snake_case | prefijo = 'ck_'
+ixc_indice_cluster = PascalCase | prefijo = 'ixc_'
+ix_indice_no_cluster = PascalCase | prefijo = 'ix'
