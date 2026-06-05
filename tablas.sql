@@ -1,18 +1,18 @@
 /*
 
 DATOS DEL GRUPO
-===============
-Comisión: 01-2900|Martes Noche
+
+Comision: 01-2900|Martes Noche
 Integrantes:
 
 Joaquin Olarte|39.789.077
-Adrián Martínez Robledo|94.849.986
+Adrian Martinez Robledo|94.849.986
 Yerimen Lombardo|42.115.925
-Joaquín Chinchurreta|45.683.986
+Joaquin Chinchurreta|45.683.986
 
 DATOS DEL SCRIPT
-================
-Creación de las tablas y constraints
+
+Creacion de las tablas y constraints
 
 */
 
@@ -47,13 +47,14 @@ CREATE TABLE concesiones.Empresa
 END
 GO
 
-IF OBJECT_ID('rrhh.Guia') IS NULL
+
+IF OBJECT_ID('personal.Guia') IS NULL
 BEGIN
-CREATE TABLE rrhh.Guia
+CREATE TABLE personal.Guia
 (
 	legajo INT,
-	dni DECIMAL(8,0),
-	cuil DECIMAL(11,0) NOT NULL UNIQUE,
+	dni INT,
+	cuil INT NOT NULL UNIQUE,
 	nombre VARCHAR(100) NOT NULL,
 	apellido VARCHAR(100) NOT NULL,
 	CONSTRAINT PK_guia PRIMARY KEY(legajo,dni)
@@ -61,7 +62,7 @@ CREATE TABLE rrhh.Guia
 END
 GO
 
--->>>>> Yo eliminaría TipoActividad 
+-->>>>> Yo eliminaria TipoActividad 
 
 --IF OBJECT_ID('desarrollo.TipoActividad') IS NULL
 --BEGIN
@@ -74,6 +75,17 @@ GO
 --END
 --GO
 
+IF OBJECT_ID('actividades.TipoActividad') IS NULL
+BEGIN
+CREATE TABLE actividades.TipoActividad	
+(
+	id INT PRIMARY KEY,
+	descripcion VARCHAR(50) NOT NULL,
+	nombre VARCHAR(50) NOT NULL
+)
+END
+GO
+
 IF OBJECT_ID('ventas.TipoVisitante') IS NULL
 BEGIN
 CREATE TABLE ventas.TipoVisitante	
@@ -84,9 +96,9 @@ CREATE TABLE ventas.TipoVisitante
 END
 GO
 
-IF OBJECT_ID('rrhh.Guardaparque') IS NULL
+IF OBJECT_ID('personal.Guardaparque') IS NULL
 BEGIN
-CREATE TABLE rrhh.Guardaparque
+CREATE TABLE personal.Guardaparque
 (
 	legajo INT,
 	dni INT,
@@ -97,9 +109,9 @@ CREATE TABLE rrhh.Guardaparque
 END
 GO
 
-IF OBJECT_ID('gestion.Parque') IS NULL
+IF OBJECT_ID('parques.Parque') IS NULL
 BEGIN
-CREATE TABLE gestion.Parque
+CREATE TABLE parques.Parque
 (
 	id INT PRIMARY KEY,
 	tipo_parque VARCHAR(100) NOT NULL,
@@ -123,8 +135,8 @@ IF OBJECT_ID('ventas.Venta') IS NULL
 BEGIN
 CREATE TABLE ventas.Venta	
 (
-	nro_venta INT IDENTITY(1,1) PRIMARY KEY,
-	id_parque INT NOT NULL REFERENCES gestion.Parque(id),
+	id INT IDENTITY(1,1) PRIMARY KEY,
+	id_parque INT NOT NULL REFERENCES parques.Parque(id),
 	id_forma_de_pago INT NOT NULL REFERENCES ventas.FormaDePago(id),
 	fecha DATE NOT NULL,
 	importe DECIMAL(10,2) NOT NULL,
@@ -133,12 +145,13 @@ CREATE TABLE ventas.Venta
 END
 GO
 
-IF OBJECT_ID('gestion.TarifaParque') IS NULL
+
+IF OBJECT_ID('ventas.TarifaParque') IS NULL
 BEGIN
-CREATE TABLE gestion.TarifaParque
+CREATE TABLE ventas.TarifaParque
 (
 	id INT IDENTITY(1,1) PRIMARY KEY,
-	id_parque INT NOT NULL REFERENCES gestion.Parque(id),
+	id_parque INT NOT NULL REFERENCES parques.Parque(id),
 	id_tipo_visitante INT NOT NULL REFERENCES ventas.TipoVisitante(id),
 	precio DECIMAL(10,2) NOT NULL,
 	activo BIT DEFAULT 1 NOT NULL,
@@ -148,12 +161,12 @@ CREATE TABLE gestion.TarifaParque
 END
 GO
 
-IF OBJECT_ID('tours.Actividad') IS NULL
+IF OBJECT_ID('actividades.Actividad') IS NULL
 BEGIN
-CREATE TABLE tours.Actividad
+CREATE TABLE actividades.Actividad
 (
 	id INT IDENTITY(1,1) PRIMARY KEY,
-	id_parque INT NOT NULL REFERENCES gestion.Parque(id),
+	id_parque INT NOT NULL REFERENCES parques.Parque(id),
 	--id_tipo_actividad INT REFERENCES TipoActividad(id) NOT NULL,
 	tipo_actividad VARCHAR(50) NOT NULL,
 	nombre VARCHAR(50) NOT NULL,
@@ -164,12 +177,12 @@ CREATE TABLE tours.Actividad
 END
 GO
 
-IF OBJECT_ID('tours.TarifaActividad') IS NULL
+IF OBJECT_ID('actividades.TarifaActividad') IS NULL
 BEGIN
-CREATE TABLE tours.TarifaActividad
+CREATE TABLE actividades.TarifaActividad
 (
 	id INT PRIMARY KEY,
-	id_actividad INT REFERENCES tours.Actividad(id) NOT NULL,
+	id_actividad INT REFERENCES actividades.Actividad(id) NOT NULL,
 	precio DECIMAL(10,2) NOT NULL,
 	activo BIT DEFAULT 1 NOT NULL,
 	vigencia_desde DATETIME NOT NULL,
@@ -182,23 +195,23 @@ IF OBJECT_ID('ventas.DetalleVenta') IS NULL
 BEGIN
 CREATE TABLE ventas.DetalleVenta
 (
-	id_venta INT REFERENCES ventas.Venta(nro_venta),
+	id_venta INT REFERENCES ventas.Venta(id),
 	linea_venta INT,
 	id_tarifa_parque INT NOT NULL 
-	REFERENCES gestion.TarifaParque(id),
+	REFERENCES ventas.TarifaParque(id),
 	id_tarifa_actividad INT NOT NULL 
-	REFERENCES tours.TarifaActividad(id),
+	REFERENCES actividades.TarifaActividad(id),
 	importe DECIMAL (10,2) NOT NULL,
 	CONSTRAINT PK_detalle_venta PRIMARY KEY(id_venta,linea_venta)
 )
 END
 GO
 
-IF OBJECT_ID('rrhh.GuiaActividad') IS NULL
+IF OBJECT_ID('actividades.GuiaActividad') IS NULL
 BEGIN
-CREATE TABLE rrhh.GuiaActividad
+CREATE TABLE actividades.GuiaActividad
 (
-	id_actividad INT REFERENCES tours.Actividad(id),
+	id_actividad INT REFERENCES actividades.Actividad(id),
 	legajo_guia INT,
 	dni_guia INT,
 	fecha_inicio DATETIME,
@@ -206,7 +219,7 @@ CREATE TABLE rrhh.GuiaActividad
 	CONSTRAINT PK_guia_actividad 
 	PRIMARY KEY(id_actividad, legajo_guia, dni_guia, fecha_inicio),
 	CONSTRAINT FK_guia_actividad FOREIGN KEY(legajo_guia, dni_guia)
-	REFERENCES rrhh.Guia(legajo, dni)
+	REFERENCES personal.Guia(legajo, dni)
 )
 END
 GO
@@ -218,7 +231,7 @@ CREATE TABLE concesiones.Concesion
 	id INT PRIMARY KEY,
 	id_empresa INT NOT NULL,
 	cuit_empresa INT NOT NULL,
-	id_parque INT NOT NULL REFERENCES gestion.Parque(id),
+	id_parque INT NOT NULL REFERENCES parques.Parque(id),
 	tipo_actividad VARCHAR(30) NOT NULL,
 	monto_mensual DECIMAL(10,2) NOT NULL,
 	fecha_inicio_contrato DATE NOT NULL,
@@ -259,18 +272,18 @@ CREATE TABLE concesiones.PagoConcesion
 END
 GO
 
-IF OBJECT_ID('rrhh.AsignacionesGuardaParque') IS NULL
+IF OBJECT_ID('personal.AsignacionesGuardaParque') IS NULL
 BEGIN
-CREATE TABLE rrhh.AsignacionesGuardaParque
+CREATE TABLE personal.AsignacionesGuardaParque
 (
-	id_parque INT REFERENCES gestion.Parque(id),
+	id_parque INT REFERENCES parques.Parque(id),
 	legajo_guardaparque INT,
 	dni_guardaparque INT,
 	fecha_inicio DATE,
 	fecha_fin DATE NOT NULL,
 	CONSTRAINT FK_guardaparque_guia 
 	FOREIGN KEY(legajo_guardaparque,dni_guardaparque)
-	REFERENCES rrhh.Guardaparque(legajo,dni),
+	REFERENCES personal.Guardaparque(legajo,dni),
 	CONSTRAINT PK_guardaparque 
 	PRIMARY KEY
 	(
