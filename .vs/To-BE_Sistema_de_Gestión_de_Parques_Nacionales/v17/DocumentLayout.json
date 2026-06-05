@@ -23,24 +23,24 @@
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "bd_esquemas.sql - JOAQUIN\\SQLEXPRESS.master (JOAQUIN\\joaqu (69))",
+              "Title": "bd_esquemas.sql - JOAQUIN\\SQLEXPRESS.ToBE (JOAQUIN\\joaqu (76))",
               "DocumentMoniker": "D:\\Documentos\\UNLaM\\2_Base de Datos Aplicada\\Trabajo Pr\u00E1ctico\\To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales\\bd_esquemas.sql",
               "RelativeDocumentMoniker": "bd_esquemas.sql",
-              "ToolTip": "bd_esquemas.sql - JOAQUIN\\SQLEXPRESS.master (JOAQUIN\\joaqu (69))",
+              "ToolTip": "bd_esquemas.sql - JOAQUIN\\SQLEXPRESS.ToBE (JOAQUIN\\joaqu (76))",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
               "WhenOpened": "2026-05-31T17:29:25.098Z",
-              "EditorCaption": " - JOAQUIN\\SQLEXPRESS.master (JOAQUIN\\joaqu (69))"
+              "EditorCaption": " - JOAQUIN\\SQLEXPRESS.ToBE (JOAQUIN\\joaqu (76))"
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "tablas.sql - JOAQUIN\\SQLEXPRESS.ToBE (JOAQUIN\\joaqu (84))",
+              "Title": "tablas.sql - JOAQUIN\\SQLEXPRESS.ToBE (JOAQUIN\\joaqu (67))",
               "DocumentMoniker": "D:\\Documentos\\UNLaM\\2_Base de Datos Aplicada\\Trabajo Pr\u00E1ctico\\To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales\\tablas.sql",
               "RelativeDocumentMoniker": "tablas.sql",
-              "ToolTip": "tablas.sql - JOAQUIN\\SQLEXPRESS.ToBE (JOAQUIN\\joaqu (84))",
+              "ToolTip": "tablas.sql - JOAQUIN\\SQLEXPRESS.ToBE (JOAQUIN\\joaqu (67))",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
               "WhenOpened": "2026-05-31T17:29:30.51Z",
-              "EditorCaption": " - JOAQUIN\\SQLEXPRESS.ToBE (JOAQUIN\\joaqu (84))"
+              "EditorCaption": " - JOAQUIN\\SQLEXPRESS.ToBE (JOAQUIN\\joaqu (67))"
             }
           ]
         }

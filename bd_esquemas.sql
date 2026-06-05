@@ -26,11 +26,50 @@ BEGIN
 END
 GO
 
+ALTER DATABASE ToBE
+SET RECOVERY FULL
+
 USE ToBE
 GO
 
+-- Creacion esquema desarrollo
 IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = 'desarrollo')
 BEGIN
 	EXECUTE('CREATE SCHEMA desarrollo')
+END
+GO
+
+-- Creacion esquema gestion
+IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = 'gestion')
+BEGIN
+	EXECUTE('CREATE SCHEMA gestion')
+END
+GO
+
+-- Creacion esquema ventas
+IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = 'ventas')
+BEGIN
+	EXECUTE('CREATE SCHEMA ventas')
+END
+GO
+
+-- Creacion esquema rrhh
+IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = 'rrhh')
+BEGIN
+	EXECUTE('CREATE SCHEMA rrhh')
+END
+GO
+
+-- Creacion esquema tours
+IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = 'tours')
+BEGIN
+	EXECUTE('CREATE SCHEMA tours')
+END
+GO
+
+-- Creacion esquema concesiones
+IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = 'concesiones')
+BEGIN
+	EXECUTE('CREATE SCHEMA concesiones')
 END
 GO
