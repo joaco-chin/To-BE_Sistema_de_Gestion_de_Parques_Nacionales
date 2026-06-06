@@ -28,15 +28,6 @@ CREATE TABLE ventas.FormaDePago
 END
 GO
 
-IF OBJECT_ID('parques.Provincia') IS NULL
-BEGIN
-CREATE TABLE parques.Provincia	
-(
-	nro_provincia INT PRIMARY KEY,
-	nombre VARCHAR(52) NOT NULL
-)
-END
-GO
 
 IF OBJECT_ID('concesiones.Empresa') IS NULL
 BEGIN
@@ -60,6 +51,10 @@ CREATE TABLE personal.Guia
 	cuil INT NOT NULL UNIQUE, -- Chequeamos que el cuil contenga al dni
 	nombre VARCHAR(100) NOT NULL,
 	apellido VARCHAR(100) NOT NULL,
+	titulo VARCHAR(100) NULL,
+	habilitaciones VARCHAR(200) NULL,
+	especialidad VARCHAR(100) NULL,
+	vigencia_autorizacion DATE NULL,
 	CONSTRAINT PK_guia PRIMARY KEY(legajo,dni)
 )
 END
@@ -96,6 +91,7 @@ CREATE TABLE personal.Guardaparque
 	dni INT,
 	nombre VARCHAR(100) NOT NULL,
 	apellido VARCHAR(100) NOT NULL,
+	motivo_egreso VARCHAR(200) NULL,
 	CONSTRAINT PK_guarda_parque PRIMARY KEY(legajo,dni)
 )
 END
@@ -108,23 +104,22 @@ CREATE TABLE parques.Parque
 	id INT PRIMARY KEY,
 	tipo_parque VARCHAR(100) NOT NULL,
 	nombre VARCHAR(100) NOT NULL,
-	superficie_km2 DECIMAL(5,5) NOT NULL
+	superficie_km2 DECIMAL(12,2) NOT NULL
 	CHECK (superficie_km2 > 0), -- La superficie no puede ser 0 o negativa
-	direccion VARCHAR(150) NOT NULL
+	direccion VARCHAR(150) NOT NULL,
+	-- A=Salta, B=Buenos Aires, C=CABA, D=San Luis, E=Entre Rios, F=La Rioja
+	-- G=Santiago del Estero, H=Chaco, J=San Juan, K=Catamarca, L=La Pampa
+	-- M=Mendoza, N=Misiones, P=Formosa, Q=Neuquen, R=Rio Negro, S=Santa Fe
+	-- T=Tucuman, U=Chubut, V=Tierra del Fuego, W=Corrientes, X=Cordoba
+	-- Y=Jujuy, Z=Santa Cruz
+	provincia CHAR(1) NOT NULL
+	CHECK (provincia IN ('A','B','C','D','E','F','G','H','J','K','L','M','N','P','Q','R','S','T','U','V','W','X','Y','Z')),
+	latitud DECIMAL(9,6) NULL,
+	longitud DECIMAL(9,6) NULL
 )
 END
 GO
 
-IF OBJECT_ID('parques.Ubicacion') IS NULL
-BEGIN
-CREATE TABLE parques.Ubicacion
-(
-	id_parque INT,
-	id_provincia INT,
-	CONSTRAINT PK_ubicacion PRIMARY KEY(id_parque, id_provincia)
-)
-END
-GO
 
 IF OBJECT_ID('ventas.Venta') IS NULL
 BEGIN
@@ -133,6 +128,8 @@ CREATE TABLE ventas.Venta
 	id INT IDENTITY(1,1) PRIMARY KEY,
 	id_parque INT NOT NULL REFERENCES parques.Parque(id),
 	id_forma_de_pago INT NOT NULL REFERENCES ventas.FormaDePago(id),
+	nro_punto_venta INT NOT NULL,
+	nro_comprobante INT NOT NULL,
 	fecha DATE NOT NULL,
 	importe DECIMAL(10,2) NOT NULL
 )
@@ -164,7 +161,7 @@ CREATE TABLE actividades.Actividad
 	tipo_actividad VARCHAR(50) NOT NULL,
 	nombre VARCHAR(50) NOT NULL,
 	descripcion VARCHAR(100) NOT NULL,
-	precio DECIMAL(10,2) NOT NULL,
+	duracion_minutos INT NOT NULL CHECK (duracion_minutos > 0),
 	cupo INT NOT NULL CHECK (cupo > 0)
 )
 END
@@ -190,11 +187,12 @@ CREATE TABLE ventas.DetalleVenta
 (
 	id_venta INT REFERENCES ventas.Venta(id),
 	linea_venta INT,
-	id_tarifa_parque INT NOT NULL 
+	-- Al menos uno de los dos debe estar presente
+	id_tarifa_parque INT NULL
 	REFERENCES ventas.TarifaParque(id),
-	id_tarifa_actividad INT NOT NULL 
+	id_tarifa_actividad INT NULL
 	REFERENCES actividades.TarifaActividad(id),
-	importe DECIMAL (10,2) NOT NULL,
+	int cantidad INT NOT NULL CHECK (cantidad > 0),
 	CONSTRAINT PK_detalle_venta PRIMARY KEY(id_venta,linea_venta)
 )
 END
@@ -256,7 +254,6 @@ BEGIN
 CREATE TABLE concesiones.PagoConcesion
 (
 	id_factura_concesion INT,
-	id_concesion INT,
 	CONSTRAINT FK_pago_concesion 
 	FOREIGN KEY(id_factura_concesion,id_concesion)
 	REFERENCES concesiones.FacturaConcesion(id, id_concesion),
