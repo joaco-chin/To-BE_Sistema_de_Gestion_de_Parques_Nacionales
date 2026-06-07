@@ -156,7 +156,7 @@ CREATE TABLE ventas.TarifaParque
 	precio DECIMAL(10,2) NOT NULL,
 	activo BIT DEFAULT 1 NOT NULL,
 	vigencia_desde DATE NOT NULL,
-	vigencia_hasta DATE NOT NULL
+	vigencia_hasta DATE
 )
 END
 GO

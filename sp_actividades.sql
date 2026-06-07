@@ -48,6 +48,16 @@ BEGIN
 			THROW 50003, 'La fecha de fin no puede ser menor a la fecha de inicio',1
 		END
 
+		IF EXISTS(
+			SELECT id
+			FROM actividades.TarifaActividad
+			WHERE id_actividad = @id_actividad AND
+			(vigencia_hasta IS NULL OR @vigencia_desde <= vigencia_hasta)
+		)
+		BEGIN
+			THROW 50004, 'Hay otra tarifa activa en este momento. Debe darse de baja para ingresar otra',1
+		END
+
 		INSERT INTO actividades.TarifaActividad
 		(id,id_actividad,precio,vigencia_desde,vigencia_hasta)
 		VALUES
