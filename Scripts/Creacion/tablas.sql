@@ -54,26 +54,17 @@ CREATE TABLE personal.Guia
 (
 	legajo INT,
 	dni INT,
-	cuil INT NOT NULL UNIQUE,
+	cuil INT NOT NULL UNIQUE, -- Chequeamos que el cuil contenga al dni
 	nombre VARCHAR(100) NOT NULL,
 	apellido VARCHAR(100) NOT NULL,
+	titulo VARCHAR(100) NULL,
+	habilitaciones VARCHAR(200) NULL,
+	especialidad VARCHAR(100) NULL,
+	vigencia_autorizacion DATE NULL,
 	CONSTRAINT PK_guia PRIMARY KEY(legajo,dni)
 )
 END
 GO
-
--->>>>> Yo eliminaria TipoActividad 
-
---IF OBJECT_ID('desarrollo.TipoActividad') IS NULL
---BEGIN
---CREATE TABLE desarrollo.TipoActividad	
---(
---	id INT PRIMARY KEY,
---	descripcion VARCHAR(50) NOT NULL,
---	nombre VARCHAR(50) NOT NULL
---)
---END
---GO
 
 IF OBJECT_ID('actividades.TipoActividad') IS NULL
 BEGIN
@@ -104,6 +95,7 @@ CREATE TABLE personal.Guardaparque
 	dni INT,
 	nombre VARCHAR(100) NOT NULL,
 	apellido VARCHAR(100) NOT NULL,
+	motivo_egreso VARCHAR(200) NULL,
 	CONSTRAINT PK_guarda_parque PRIMARY KEY(legajo,dni)
 )
 END
@@ -126,7 +118,9 @@ CREATE TABLE parques.Parque
 		'Mendoza', 'San Luis', 'San Juan', 'Santiago del Estero',
 		'Catamarca', 'Salta', 'Jujuy', 'Tucuman', 'La Rioja',
 		'Formosa', 'Chaco', 'CABA')
-	)
+	),
+	latitud DECIMAL(9,6) NULL,
+	longitud DECIMAL(9,6) NULL
 )
 END
 GO
@@ -138,9 +132,10 @@ CREATE TABLE ventas.Venta
 	id INT IDENTITY(1,1) PRIMARY KEY,
 	id_parque INT NOT NULL REFERENCES parques.Parque(id),
 	id_forma_de_pago INT NOT NULL REFERENCES ventas.FormaDePago(id),
+	nro_punto_venta INT NOT NULL,
+	nro_comprobante INT NOT NULL,
 	fecha DATE NOT NULL,
-	importe DECIMAL(10,2) NOT NULL,
-	punto_de_venta INT NOT NULL
+	importe DECIMAL(10,2) NOT NULL
 )
 END
 GO
@@ -171,8 +166,9 @@ CREATE TABLE actividades.Actividad
 	tipo_actividad VARCHAR(50) NOT NULL,
 	nombre VARCHAR(50) NOT NULL,
 	descripcion VARCHAR(100) NOT NULL,
-	precio DECIMAL(10,2) NOT NULL,
+	duracion_minutos INT NOT NULL CHECK (duracion_minutos > 0),
 	cupo INT NOT NULL CHECK (cupo > 0)
+
 )
 END
 GO
@@ -201,7 +197,7 @@ CREATE TABLE ventas.DetalleVenta
 	REFERENCES ventas.TarifaParque(id),
 	id_tarifa_actividad INT NOT NULL 
 	REFERENCES actividades.TarifaActividad(id),
-	importe DECIMAL (10,2) NOT NULL,
+	int cantidad INT NOT NULL CHECK (cantidad > 0),
 	CONSTRAINT PK_detalle_venta PRIMARY KEY(id_venta,linea_venta)
 )
 END
