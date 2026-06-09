@@ -110,8 +110,9 @@ CREATE TABLE parques.Parque
 	id INT PRIMARY KEY,
 	tipo_parque VARCHAR(100) NOT NULL,
 	nombre VARCHAR(100) NOT NULL,
-	superficie_km2 DECIMAL(5,5) NOT NULL,
+	superficie_km2 DECIMAL(12,5) NOT NULL,
 	direccion VARCHAR(150) NOT NULL,
+	activo BIT NOT NULL DEFAULT 1,
 	provincia CHAR(19) NOT NULL 
 	CHECK (provincia IN
 		('Buenos Aires', 'La Pampa', 'Cordoba', 'Entre Rios',
@@ -199,7 +200,7 @@ CREATE TABLE ventas.DetalleVenta
 	REFERENCES ventas.TarifaParque(id),
 	id_tarifa_actividad INT NOT NULL 
 	REFERENCES actividades.TarifaActividad(id),
-	int cantidad INT NOT NULL CHECK (cantidad > 0),
+	cantidad INT NOT NULL CHECK (cantidad > 0),
 	CONSTRAINT PK_detalle_venta PRIMARY KEY(id_venta,linea_venta)
 )
 END
