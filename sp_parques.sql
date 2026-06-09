@@ -1,53 +1,278 @@
 /*
 
 DATOS DEL GRUPO
-
+===============
 Comision: 01-2900|Martes Noche
 Integrantes:
 
-Joaquin Olarte|39.789.077
-Adrian Martinez Robledo|94.849.986
 Yerimen Lombardo|42.115.925
 Joaquin Chinchurreta|45.683.986
 
 DATOS DEL SCRIPT
-
-Creacion de Store Procedures para el esquema "parques"
+================
+Stored Procedures ABM - Parques
+Operaciones de alta, modificacion, baja logica y consulta sobre parques.Parque.
 
 */
 
 USE ToBE
 GO
 
-CREATE OR ALTER PROCEDURE parques.SP_IngresarParque
-	@id INT,
-	@nombre VARCHAR(100),
-	@tipo_parque VARCHAR(100),
-	@superficie_km2 DECIMAL(5,5),
-	@direccion VARCHAR(150),
-	@provincia CHAR(19)
+-- ============================================================
+-- SP_AltaParque
+-- Registra un nuevo parque nacional en el sistema.
+-- ============================================================
+CREATE OR ALTER PROCEDURE parques.SP_AltaParque
+	@id            INT,
+	@nombre        VARCHAR(100),
+	@tipo_parque   VARCHAR(100),
+	@superficie_km2 DECIMAL(12,2),
+	@direccion     VARCHAR(150),
+	@provincia     CHAR(19),
+	@latitud       DECIMAL(9,6) = NULL,
+	@longitud      DECIMAL(9,6) = NULL
 AS
 BEGIN
-	BEGIN TRY
-		IF @nombre LIKE '' 
-		OR @tipo_parque LIKE '' 
-		OR @direccion LIKE ''
-		BEGIN
-			THROW 50001, 'El tipo, el nombre o la direccion del parque no pueden estar vacios', 1
-		END
+	SET NOCOUNT ON
 
-		INSERT INTO parques.Parque(id, nombre, tipo_parque,
-		superficie_km2, direccion, provincia)
-		VALUES (@id, @nombre, @tipo_parque, @superficie_km2,
-		@direccion, @provincia)
-	END TRY
+	DECLARE @errores VARCHAR(MAX) = ''
 
-	BEGIN CATCH
-		SELECT 
-			ERROR_NUMBER() AS codigo_error,
-			ERROR_MESSAGE() AS mensaje_error
-	END CATCH
+	--  campos obligatorios no vacios
+	IF LTRIM(RTRIM(ISNULL(@nombre, ''))) = ''
+		SET @errores += '- El nombre del parque no puede estar vacio.' + CHAR(13)
+
+	IF LTRIM(RTRIM(ISNULL(@tipo_parque, ''))) = ''
+		SET @errores += '- El tipo de parque no puede estar vacio.' + CHAR(13)
+
+	IF LTRIM(RTRIM(ISNULL(@direccion, ''))) = ''
+		SET @errores += '- La direccion no puede estar vacia.' + CHAR(13)
+
+	--  tipo_parque en valores controlados
+	IF @tipo_parque NOT IN (
+		'Parque Nacional', 'Reserva Natural', 'Monumento Natural',
+		'Reserva de Biosfera', 'Parque Interjurisdiccional'
+	)
+		SET @errores += '- El tipo de parque debe ser: Parque Nacional, Reserva Natural, Monumento Natural, Reserva de Biosfera o Parque Interjurisdiccional.' + CHAR(13)
+
+	--  superficie positiva
+	IF @superficie_km2 <= 0
+		SET @errores += '- La superficie debe ser mayor a 0 km2.' + CHAR(13)
+
+	--  nombre unico
+	IF EXISTS (
+		SELECT 1 FROM parques.Parque
+		WHERE nombre = @nombre AND activo = 1
+	)
+		SET @errores += '- Ya existe un parque activo con ese nombre.' + CHAR(13)
+
+	-- : id no duplicado
+	IF EXISTS (
+		SELECT 1 FROM parques.Parque WHERE id = @id
+	)
+		SET @errores += '- Ya existe un parque con el ID indicado.' + CHAR(13)
+
+	-- : coordenadas dentro de rango
+	IF @latitud IS NOT NULL AND (@latitud < -90 OR @latitud > 90)
+		SET @errores += '- La latitud debe estar entre -90 y 90.' + CHAR(13)
+
+	IF @longitud IS NOT NULL AND (@longitud < -180 OR @longitud > 180)
+		SET @errores += '- La longitud debe estar entre -180 y 180.' + CHAR(13)
+
+	IF LEN(@errores) > 0
+	BEGIN
+		RAISERROR(@errores, 16, 1)
+		RETURN
+	END
+
+	INSERT INTO parques.Parque (id, nombre, tipo_parque, superficie_km2, direccion, provincia, latitud, longitud, activo)
+	VALUES (@id, @nombre, @tipo_parque, @superficie_km2, @direccion, @provincia, @latitud, @longitud, 1)
+
+	PRINT 'Parque registrado correctamente.'
 END
+GO
+
+-- ============================================================
+-- SP_ModificarParque
+-- Modifica los datos de un parque existente y activo.
+-- ============================================================
+CREATE OR ALTER PROCEDURE parques.SP_ModificarParque
+	@id            INT,
+	@nombre        VARCHAR(100),
+	@tipo_parque   VARCHAR(100),
+	@superficie_km2 DECIMAL(12,2),
+	@direccion     VARCHAR(150),
+	@provincia     CHAR(19),
+	@latitud       DECIMAL(9,6) = NULL,
+	@longitud      DECIMAL(9,6) = NULL
+AS
+BEGIN
+	SET NOCOUNT ON
+
+	DECLARE @errores VARCHAR(MAX) = ''
+
+	-- parque existe y esta activo
+	IF NOT EXISTS (
+		SELECT 1 FROM parques.Parque WHERE id = @id AND activo = 1
+	)
+	BEGIN
+		RAISERROR('No se encontro un parque activo con el ID indicado.', 16, 1)
+		RETURN
+	END
+
+	-- campos obligatorios no vacios
+	IF LTRIM(RTRIM(ISNULL(@nombre, ''))) = ''
+		SET @errores += '- El nombre del parque no puede estar vacio.' + CHAR(13)
+
+	IF LTRIM(RTRIM(ISNULL(@tipo_parque, ''))) = ''
+		SET @errores += '- El tipo de parque no puede estar vacio.' + CHAR(13)
+
+	IF LTRIM(RTRIM(ISNULL(@direccion, ''))) = ''
+		SET @errores += '- La direccion no puede estar vacia.' + CHAR(13)
+
+	-- tipo_parque en valores controlados
+	IF @tipo_parque NOT IN (
+		'Parque Nacional', 'Reserva Natural', 'Monumento Natural',
+		'Reserva de Biosfera', 'Parque Interjurisdiccional'
+	)
+		SET @errores += '- El tipo de parque debe ser: Parque Nacional, Reserva Natural, Monumento Natural, Reserva de Biosfera o Parque Interjurisdiccional.' + CHAR(13)
+
+	-- superficie positiva
+	IF @superficie_km2 <= 0
+		SET @errores += '- La superficie debe ser mayor a 0 km2.' + CHAR(13)
+
+	-- nombre unico (excluye el propio parque)
+	IF EXISTS (
+		SELECT 1 FROM parques.Parque
+		WHERE nombre = @nombre AND activo = 1 AND id <> @id
+	)
+		SET @errores += '- Ya existe otro parque activo con ese nombre.' + CHAR(13)
+
+	-- coordenadas dentro de rango
+	IF @latitud IS NOT NULL AND (@latitud < -90 OR @latitud > 90)
+		SET @errores += '- La latitud debe estar entre -90 y 90.' + CHAR(13)
+
+	IF @longitud IS NOT NULL AND (@longitud < -180 OR @longitud > 180)
+		SET @errores += '- La longitud debe estar entre -180 y 180.' + CHAR(13)
+
+	IF LEN(@errores) > 0
+	BEGIN
+		RAISERROR(@errores, 16, 1)
+		RETURN
+	END
+
+	UPDATE parques.Parque
+	SET
+		nombre         = @nombre,
+		tipo_parque    = @tipo_parque,
+		superficie_km2 = @superficie_km2,
+		direccion      = @direccion,
+		provincia      = @provincia,
+		latitud        = @latitud,
+		longitud       = @longitud
+	WHERE id = @id
+
+	PRINT 'Parque modificado correctamente.'
+END
+GO
+
+-- ============================================================
+-- SP_BajaParque
+-- Realiza la baja logica de un parque (activo = 0).
+-- No se puede dar de baja si tiene dependencias activas.
+-- ============================================================
+CREATE OR ALTER PROCEDURE parques.SP_BajaParque
+	@id INT
+AS
+BEGIN
+	SET NOCOUNT ON
+
+	DECLARE @errores VARCHAR(MAX) = ''
+
+	-- parque existe y esta activo
+	IF NOT EXISTS (
+		SELECT 1 FROM parques.Parque WHERE id = @id AND activo = 1
+	)
+	BEGIN
+		RAISERROR('No se encontro un parque activo con el ID indicado.', 16, 1)
+		RETURN
+	END
+
+	-- sin concesiones vigentes
+	IF EXISTS (
+		SELECT 1 FROM concesiones.Concesion
+		WHERE id_parque = @id
+		  AND fecha_fin_contrato >= CAST(GETDATE() AS DATE)
+	)
+		SET @errores += '- El parque tiene concesiones vigentes. Debe cerrarlas antes de darlo de baja.' + CHAR(13)
+
+	-- sin guardaparques asignados actualmente
+	IF EXISTS (
+		SELECT 1 FROM personal.AsignacionesGuardaParque
+		WHERE id_parque = @id
+		  AND (fecha_fin IS NULL OR fecha_fin >= CAST(GETDATE() AS DATE))
+	)
+		SET @errores += '- El parque tiene guardaparques con asignacion activa. Debe reasignarlos antes de darlo de baja.' + CHAR(13)
+
+	-- sin tours activos en curso
+	IF EXISTS (
+		SELECT 1
+		FROM actividades.GuiaActividad ga
+		INNER JOIN actividades.Actividad a ON a.id = ga.id_actividad
+		WHERE a.id_parque = @id
+		  AND ga.fecha_fin >= GETDATE()
+	)
+		SET @errores += '- El parque tiene tours o actividades con guia en curso. Espere a que finalicen.' + CHAR(13)
+
+	IF LEN(@errores) > 0
+	BEGIN
+		RAISERROR(@errores, 16, 1)
+		RETURN
+	END
+
+	UPDATE parques.Parque
+	SET activo = 0
+	WHERE id = @id
+
+	PRINT 'Parque dado de baja correctamente.'
+END
+GO
+
+-- ============================================================
+-- SP_ConsultarParque
+-- Consulta parques con filtros opcionales.
+-- Todos los parametros son opcionales (NULL = sin filtro).
+-- ============================================================
+CREATE OR ALTER PROCEDURE parques.SP_ConsultarParque
+	@id          INT           = NULL,
+	@nombre      VARCHAR(100)  = NULL,
+	@provincia   CHAR(19)      = NULL,
+	@tipo_parque VARCHAR(100)  = NULL,
+	@solo_activos BIT          = 1
+AS
+BEGIN
+	SET NOCOUNT ON
+
+	SELECT
+		p.id,
+		p.nombre,
+		p.tipo_parque,
+		p.superficie_km2,
+		p.direccion,
+		p.provincia,
+		p.latitud,
+		p.longitud,
+		p.activo
+	FROM parques.Parque p
+	WHERE
+		(@id          IS NULL OR p.id          = @id)
+		AND (@nombre      IS NULL OR p.nombre      LIKE '%' + @nombre + '%')
+		AND (@provincia   IS NULL OR p.provincia   = @provincia)
+		AND (@tipo_parque IS NULL OR p.tipo_parque  = @tipo_parque)
+		AND (@solo_activos = 0    OR p.activo       = 1)
+	ORDER BY p.nombre
+END
+GO
+
 GO
 
 CREATE OR ALTER PROCEDURE ventas.SP_IngresarTarifaParque
@@ -55,23 +280,13 @@ CREATE OR ALTER PROCEDURE ventas.SP_IngresarTarifaParque
 	@id_tipo_visitante INT,
 	@precio DECIMAL(10,2),
 	@vigencia_desde DATE,
-	@vigencia_hasta DATE = NULL
+	@vigencia_hasta DATE
 AS
 BEGIN
 	BEGIN TRY
 		IF @vigencia_desde > @vigencia_hasta
 		BEGIN
 			THROW 50003, 'La fecha de fin no puede ser menor a la fecha de inicio',1
-		END
-
-		IF EXISTS (
-			SELECT id
-			FROM ventas.TarifaParque
-			WHERE id_parque = @id_parque AND
-			(vigencia_hasta IS NULL OR @vigencia_desde <= vigencia_hasta)
-		)
-		BEGIN
-			THROW 50004, 'Hay otra tarifa activa en este momento. Debe darse de baja para ingresar otra',1
 		END
 
 		INSERT INTO ventas.TarifaParque(id_parque, id_tipo_visitante,
@@ -87,4 +302,3 @@ BEGIN
 			ERROR_MESSAGE() AS mensaje_error
 	END CATCH
 END
-
