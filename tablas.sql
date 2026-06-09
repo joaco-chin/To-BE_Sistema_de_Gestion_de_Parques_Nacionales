@@ -151,7 +151,7 @@ CREATE TABLE ventas.TarifaParque
 	precio DECIMAL(10,2) NOT NULL,
 	activo BIT DEFAULT 1 NOT NULL,
 	vigencia_desde DATE NOT NULL,
-	vigencia_hasta DATE NOT NULL
+	vigencia_hasta DATE
 )
 END
 GO
@@ -276,7 +276,7 @@ CREATE TABLE personal.AsignacionesGuardaParque
 	legajo_guardaparque INT,
 	dni_guardaparque INT,
 	fecha_inicio DATE,
-	fecha_fin DATE NOT NULL,
+	fecha_fin DATE,
 	CONSTRAINT FK_guardaparque_guia 
 	FOREIGN KEY(legajo_guardaparque,dni_guardaparque)
 	REFERENCES personal.Guardaparque(legajo,dni),
