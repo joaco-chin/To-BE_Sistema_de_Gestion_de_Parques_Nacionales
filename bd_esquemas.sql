@@ -12,7 +12,7 @@ Joaquin Chinchurreta|45.683.986
 
 DATOS DEL SCRIPT
 
-Creacion de las tablas y constraints
+Creacion de la base de datos y esquemas
 
 */
 

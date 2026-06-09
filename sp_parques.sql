@@ -1,3 +1,21 @@
+/*
+
+DATOS DEL GRUPO
+
+Comision: 01-2900|Martes Noche
+Integrantes:
+
+Joaquin Olarte|39.789.077
+Adrian Martinez Robledo|94.849.986
+Yerimen Lombardo|42.115.925
+Joaquin Chinchurreta|45.683.986
+
+DATOS DEL SCRIPT
+
+Creacion de Store Procedures para el esquema "parques"
+
+*/
+
 USE ToBE
 GO
 
@@ -37,7 +55,7 @@ CREATE OR ALTER PROCEDURE ventas.SP_IngresarTarifaParque
 	@id_tipo_visitante INT,
 	@precio DECIMAL(10,2),
 	@vigencia_desde DATE,
-	@vigencia_hasta DATE
+	@vigencia_hasta DATE = NULL
 AS
 BEGIN
 	BEGIN TRY
