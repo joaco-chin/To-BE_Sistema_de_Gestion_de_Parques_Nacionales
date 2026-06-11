@@ -34,7 +34,7 @@ IF OBJECT_ID('concesiones.Empresa') IS NULL
 BEGIN
 CREATE TABLE concesiones.Empresa
 (
-	id INT,
+	id INT IDENTITY(1,1),
 	cuit CHAR(11),
 	nombre VARCHAR(100) NOT NULL,
 	razon_social VARCHAR(150) NOT NULL,
@@ -92,6 +92,7 @@ CREATE TABLE personal.Guardaparque
 (
 	legajo INT,
 	dni INT,
+	cuil CHAR(11),
 	nombre VARCHAR(100) NOT NULL,
 	apellido VARCHAR(100) NOT NULL,
 	motivo_egreso VARCHAR(200) NULL,

@@ -1,7 +1,7 @@
 /*
 
 DATOS DEL GRUPO
-
+===============
 Comision: 01-2900|Martes Noche
 Integrantes:
 
@@ -9,10 +9,9 @@ Yerimen Lombardo|42.115.925
 Joaquin Chinchurreta|45.683.986
 
 DATOS DEL SCRIPT
-
-Creacion de Store Procedures para ingresar staff del personal y
-manejar el alta y baja de los mismos, trabajando con el esquema
-"personal"
+================
+Stored Procedures ABM - Personal (Guardaparques y Guias)
+Operaciones de alta, modificacion, baja logica y consulta.
 
 */
 
@@ -21,7 +20,6 @@ GO
 
 -- ============================================================
 -- GuardaparqueAlta
--- Registra un nuevo guardaparque.
 -- ============================================================
 CREATE OR ALTER PROCEDURE personal.GuardaparqueAlta
 	@legajo INT,
@@ -32,27 +30,74 @@ CREATE OR ALTER PROCEDURE personal.GuardaparqueAlta
 AS 
 BEGIN
 	SET NOCOUNT ON
-	BEGIN TRY
-		IF EXISTS (SELECT 1 FROM personal.Guardaparque WHERE legajo = @legajo OR dni = @dni)
-		BEGIN
-			THROW 50001, 'El legajo o DNI ya se encuentra registrado.', 1
-		END
+	DECLARE @errores VARCHAR(MAX) = ''
 
-		INSERT INTO personal.Guardaparque (legajo, dni, cuil, nombre, apellido, borrado)
-		VALUES (@legajo, @dni, @cuil, @nombre, @apellido, 0)
+	IF @legajo <= 0 SET @errores += '- El legajo debe ser positivo.' + CHAR(13)
+	IF @dni <= 0 SET @errores += '- El DNI debe ser positivo.' + CHAR(13)
+	IF LEN(ISNULL(@cuil, '')) <> 11 SET @errores += '- El CUIL debe tener 11 caracteres.' + CHAR(13)
+	IF LTRIM(RTRIM(ISNULL(@nombre, ''))) = '' SET @errores += '- El nombre no puede estar vacio.' + CHAR(13)
+	IF LTRIM(RTRIM(ISNULL(@apellido, ''))) = '' SET @errores += '- El apellido no puede estar vacio.' + CHAR(13)
 
-		PRINT 'Guardaparque registrado correctamente.'
-	END TRY
-	BEGIN CATCH
-		DECLARE @ErrorMessage NVARCHAR(4000) = ERROR_MESSAGE()
-		RAISERROR(@ErrorMessage, 16, 1)
-	END CATCH
+	IF EXISTS (SELECT 1 FROM personal.Guardaparque WHERE legajo = @legajo)
+		SET @errores += '- El legajo ya se encuentra registrado.' + CHAR(13)
+	
+	IF EXISTS (SELECT 1 FROM personal.Guardaparque WHERE dni = @dni)
+		SET @errores += '- El DNI ya se encuentra registrado.' + CHAR(13)
+
+	IF LEN(@errores) > 0
+	BEGIN
+		RAISERROR(@errores, 16, 1)
+		RETURN
+	END
+
+	INSERT INTO personal.Guardaparque (legajo, dni, cuil, nombre, apellido, borrado)
+	VALUES (@legajo, @dni, @cuil, @nombre, @apellido, 0)
+
+	PRINT 'Guardaparque registrado correctamente.'
+END
+GO
+
+-- ============================================================
+-- GuardaparqueModificar
+-- ============================================================
+CREATE OR ALTER PROCEDURE personal.GuardaparqueModificar
+	@legajo INT,
+	@dni INT,
+	@cuil CHAR(11),
+	@nombre VARCHAR(100),
+	@apellido VARCHAR(100),
+	@motivo_egreso VARCHAR(200) = NULL
+AS 
+BEGIN
+	SET NOCOUNT ON
+	DECLARE @errores VARCHAR(MAX) = ''
+
+	IF NOT EXISTS (SELECT 1 FROM personal.Guardaparque WHERE legajo = @legajo AND dni = @dni AND borrado = 0)
+		SET @errores += '- No se encontro un guardaparque activo con ese legajo y DNI.' + CHAR(13)
+
+	IF LEN(ISNULL(@cuil, '')) <> 11 SET @errores += '- El CUIL debe tener 11 caracteres.' + CHAR(13)
+	IF LTRIM(RTRIM(ISNULL(@nombre, ''))) = '' SET @errores += '- El nombre no puede estar vacio.' + CHAR(13)
+	IF LTRIM(RTRIM(ISNULL(@apellido, ''))) = '' SET @errores += '- El apellido no puede estar vacio.' + CHAR(13)
+
+	IF LEN(@errores) > 0
+	BEGIN
+		RAISERROR(@errores, 16, 1)
+		RETURN
+	END
+
+	UPDATE personal.Guardaparque
+	SET cuil = @cuil,
+		nombre = @nombre,
+		apellido = @apellido,
+		motivo_egreso = @motivo_egreso
+	WHERE legajo = @legajo AND dni = @dni
+
+	PRINT 'Guardaparque modificado correctamente.'
 END
 GO
 
 -- ============================================================
 -- GuardaparqueBaja
--- Realiza la baja logica de un guardaparque.
 -- ============================================================
 CREATE OR ALTER PROCEDURE personal.GuardaparqueBaja
 	@legajo INT,
@@ -60,34 +105,47 @@ CREATE OR ALTER PROCEDURE personal.GuardaparqueBaja
 AS 
 BEGIN
 	SET NOCOUNT ON
-	BEGIN TRY
-		IF NOT EXISTS (SELECT 1 FROM personal.Guardaparque WHERE legajo = @legajo AND dni = @dni AND borrado = 0)
-		BEGIN
-			THROW 50002, 'No se encontro un guardaparque activo con ese legajo y DNI.', 1
-		END
+	IF NOT EXISTS (SELECT 1 FROM personal.Guardaparque WHERE legajo = @legajo AND dni = @dni AND borrado = 0)
+	BEGIN
+		RAISERROR('No se encontro un guardaparque activo con ese legajo y DNI.', 16, 1)
+		RETURN
+	END
 
-		-- Finalizar asignaciones activas
+	-- Finalizar asignaciones activas (si existe la tabla)
+	IF OBJECT_ID('personal.AsignacionesGuardaParque') IS NOT NULL
+	BEGIN
 		UPDATE personal.AsignacionesGuardaParque
 		SET fecha_fin = CAST(GETDATE() AS DATE)
 		WHERE legajo_guardaparque = @legajo AND dni_guardaparque = @dni AND (fecha_fin IS NULL OR fecha_fin > GETDATE())
+	END
 
-		-- Baja logica
-		UPDATE personal.Guardaparque
-		SET borrado = 1
-		WHERE legajo = @legajo AND dni = @dni
+	UPDATE personal.Guardaparque
+	SET borrado = 1
+	WHERE legajo = @legajo AND dni = @dni
 
-		PRINT 'Guardaparque dado de baja correctamente.'
-	END TRY
-	BEGIN CATCH
-		DECLARE @ErrorMessage NVARCHAR(4000) = ERROR_MESSAGE()
-		RAISERROR(@ErrorMessage, 16, 1)
-	END CATCH
+	PRINT 'Guardaparque dado de baja correctamente.'
+END
+GO
+
+-- ============================================================
+-- GuardaparqueConsultar
+-- ============================================================
+CREATE OR ALTER PROCEDURE personal.GuardaparqueConsultar
+	@legajo INT = NULL,
+	@dni INT = NULL
+AS
+BEGIN
+	SET NOCOUNT ON
+	SELECT legajo, dni, cuil, nombre, apellido, motivo_egreso
+	FROM personal.Guardaparque
+	WHERE (@legajo IS NULL OR legajo = @legajo)
+	  AND (@dni IS NULL OR dni = @dni)
+	  AND borrado = 0
 END
 GO
 
 -- ============================================================
 -- GuardaparqueAsignarParque
--- Asigna un guardaparque a un parque.
 -- ============================================================
 CREATE OR ALTER PROCEDURE personal.GuardaparqueAsignarParque
 	@legajo INT,
@@ -96,33 +154,32 @@ CREATE OR ALTER PROCEDURE personal.GuardaparqueAsignarParque
 AS
 BEGIN
 	SET NOCOUNT ON
-	BEGIN TRY
-		-- Validar existencia y no borrado
-		IF NOT EXISTS (SELECT 1 FROM personal.Guardaparque WHERE legajo = @legajo AND dni = @dni AND borrado = 0)
-			THROW 50003, 'El guardaparque no existe o esta dado de baja.', 1
-		
-		IF NOT EXISTS (SELECT 1 FROM parques.Parque WHERE id = @id_parque AND borrado = 0)
-			THROW 50004, 'El parque no existe o esta dado de baja.', 1
+	DECLARE @errores VARCHAR(MAX) = ''
 
-		-- Validar que no tenga una asignacion activa
-		IF EXISTS (SELECT 1 FROM personal.AsignacionesGuardaParque WHERE legajo_guardaparque = @legajo AND dni_guardaparque = @dni AND (fecha_fin IS NULL OR fecha_fin > GETDATE()))
-			THROW 50005, 'El guardaparque ya tiene una asignacion activa.', 1
+	IF NOT EXISTS (SELECT 1 FROM personal.Guardaparque WHERE legajo = @legajo AND dni = @dni AND borrado = 0)
+		SET @errores += '- El guardaparque no existe o esta dado de baja.' + CHAR(13)
+	
+	IF NOT EXISTS (SELECT 1 FROM parques.Parque WHERE id = @id_parque AND borrado = 0)
+		SET @errores += '- El parque no existe o esta dado de baja.' + CHAR(13)
 
-		INSERT INTO personal.AsignacionesGuardaParque (id_parque, legajo_guardaparque, dni_guardaparque, fecha_inicio)
-		VALUES (@id_parque, @legajo, @dni, CAST(GETDATE() AS DATE))
+	IF EXISTS (SELECT 1 FROM personal.AsignacionesGuardaParque WHERE legajo_guardaparque = @legajo AND dni_guardaparque = @dni AND (fecha_fin IS NULL OR fecha_fin > GETDATE()))
+		SET @errores += '- El guardaparque ya tiene una asignacion activa.' + CHAR(13)
 
-		PRINT 'Guardaparque asignado al parque correctamente.'
-	END TRY
-	BEGIN CATCH
-		DECLARE @ErrorMessage NVARCHAR(4000) = ERROR_MESSAGE()
-		RAISERROR(@ErrorMessage, 16, 1)
-	END CATCH
+	IF LEN(@errores) > 0
+	BEGIN
+		RAISERROR(@errores, 16, 1)
+		RETURN
+	END
+
+	INSERT INTO personal.AsignacionesGuardaParque (id_parque, legajo_guardaparque, dni_guardaparque, fecha_inicio)
+	VALUES (@id_parque, @legajo, @dni, CAST(GETDATE() AS DATE))
+
+	PRINT 'Guardaparque asignado al parque correctamente.'
 END
 GO
 
 -- ============================================================
 -- GuiaAlta
--- Registra un nuevo guia.
 -- ============================================================
 CREATE OR ALTER PROCEDURE personal.GuiaAlta
 	@legajo INT,
@@ -130,30 +187,82 @@ CREATE OR ALTER PROCEDURE personal.GuiaAlta
 	@cuil CHAR(11),
 	@nombre VARCHAR(100),
 	@apellido VARCHAR(100),
+	@titulo VARCHAR(100) = NULL,
 	@especialidad VARCHAR(100) = NULL,
 	@vigencia_autorizacion DATE = NULL
 AS
 BEGIN
 	SET NOCOUNT ON
-	BEGIN TRY
-		IF EXISTS (SELECT 1 FROM personal.Guia WHERE legajo = @legajo OR dni = @dni)
-			THROW 50006, 'El legajo o DNI del guia ya esta registrado.', 1
+	DECLARE @errores VARCHAR(MAX) = ''
 
-		INSERT INTO personal.Guia (legajo, dni, cuil, nombre, apellido, especialidad, vigencia_autorizacion, borrado)
-		VALUES (@legajo, @dni, @cuil, @nombre, @apellido, @especialidad, @vigencia_autorizacion, 0)
+	IF @legajo <= 0 SET @errores += '- El legajo debe ser positivo.' + CHAR(13)
+	IF @dni <= 0 SET @errores += '- El DNI debe ser positivo.' + CHAR(13)
+	IF LEN(ISNULL(@cuil, '')) <> 11 SET @errores += '- El CUIL debe tener 11 caracteres.' + CHAR(13)
+	IF LTRIM(RTRIM(ISNULL(@nombre, ''))) = '' SET @errores += '- El nombre no puede estar vacio.' + CHAR(13)
+	IF LTRIM(RTRIM(ISNULL(@apellido, ''))) = '' SET @errores += '- El apellido no puede estar vacio.' + CHAR(13)
 
-		PRINT 'Guia registrado correctamente.'
-	END TRY
-	BEGIN CATCH
-		DECLARE @ErrorMessage NVARCHAR(4000) = ERROR_MESSAGE()
-		RAISERROR(@ErrorMessage, 16, 1)
-	END CATCH
+	IF EXISTS (SELECT 1 FROM personal.Guia WHERE legajo = @legajo)
+		SET @errores += '- El legajo ya se encuentra registrado.' + CHAR(13)
+	
+	IF EXISTS (SELECT 1 FROM personal.Guia WHERE dni = @dni)
+		SET @errores += '- El DNI ya se encuentra registrado.' + CHAR(13)
+
+	IF LEN(@errores) > 0
+	BEGIN
+		RAISERROR(@errores, 16, 1)
+		RETURN
+	END
+
+	INSERT INTO personal.Guia (legajo, dni, cuil, nombre, apellido, titulo, especialidad, vigencia_autorizacion, borrado)
+	VALUES (@legajo, @dni, @cuil, @nombre, @apellido, @titulo, @especialidad, @vigencia_autorizacion, 0)
+
+	PRINT 'Guia registrado correctamente.'
+END
+GO
+
+-- ============================================================
+-- GuiaModificar
+-- ============================================================
+CREATE OR ALTER PROCEDURE personal.GuiaModificar
+	@legajo INT,
+	@dni INT,
+	@cuil CHAR(11),
+	@nombre VARCHAR(100),
+	@apellido VARCHAR(100),
+	@titulo VARCHAR(100) = NULL,
+	@especialidad VARCHAR(100) = NULL,
+	@vigencia_autorizacion DATE = NULL
+AS
+BEGIN
+	SET NOCOUNT ON
+	DECLARE @errores VARCHAR(MAX) = ''
+
+	IF NOT EXISTS (SELECT 1 FROM personal.Guia WHERE legajo = @legajo AND dni = @dni AND borrado = 0)
+		SET @errores += '- No se encontro un guia activo con ese legajo y DNI.' + CHAR(13)
+
+	IF LEN(ISNULL(@cuil, '')) <> 11 SET @errores += '- El CUIL debe tener 11 caracteres.' + CHAR(13)
+
+	IF LEN(@errores) > 0
+	BEGIN
+		RAISERROR(@errores, 16, 1)
+		RETURN
+	END
+
+	UPDATE personal.Guia
+	SET cuil = @cuil,
+		nombre = @nombre,
+		apellido = @apellido,
+		titulo = @titulo,
+		especialidad = @especialidad,
+		vigencia_autorizacion = @vigencia_autorizacion
+	WHERE legajo = @legajo AND dni = @dni
+
+	PRINT 'Guia modificado correctamente.'
 END
 GO
 
 -- ============================================================
 -- GuiaBaja
--- Realiza la baja logica de un guia.
 -- ============================================================
 CREATE OR ALTER PROCEDURE personal.GuiaBaja
 	@legajo INT,
@@ -161,20 +270,33 @@ CREATE OR ALTER PROCEDURE personal.GuiaBaja
 AS
 BEGIN
 	SET NOCOUNT ON
-	BEGIN TRY
-		IF NOT EXISTS (SELECT 1 FROM personal.Guia WHERE legajo = @legajo AND dni = @dni AND borrado = 0)
-			THROW 50007, 'No se encontro un guia activo con ese legajo y DNI.', 1
+	IF NOT EXISTS (SELECT 1 FROM personal.Guia WHERE legajo = @legajo AND dni = @dni AND borrado = 0)
+	BEGIN
+		RAISERROR('No se encontro un guia activo con ese legajo y DNI.', 16, 1)
+		RETURN
+	END
 
-		-- Baja logica
-		UPDATE personal.Guia
-		SET borrado = 1
-		WHERE legajo = @legajo AND dni = @dni
+	UPDATE personal.Guia
+	SET borrado = 1
+	WHERE legajo = @legajo AND dni = @dni
 
-		PRINT 'Guia dado de baja correctamente.'
-	END TRY
-	BEGIN CATCH
-		DECLARE @ErrorMessage NVARCHAR(4000) = ERROR_MESSAGE()
-		RAISERROR(@ErrorMessage, 16, 1)
-	END CATCH
+	PRINT 'Guia dado de baja correctamente.'
+END
+GO
+
+-- ============================================================
+-- GuiaConsultar
+-- ============================================================
+CREATE OR ALTER PROCEDURE personal.GuiaConsultar
+	@legajo INT = NULL,
+	@dni INT = NULL
+AS
+BEGIN
+	SET NOCOUNT ON
+	SELECT legajo, dni, cuil, nombre, apellido, titulo, especialidad, vigencia_autorizacion
+	FROM personal.Guia
+	WHERE (@legajo IS NULL OR legajo = @legajo)
+	  AND (@dni IS NULL OR dni = @dni)
+	  AND borrado = 0
 END
 GO
