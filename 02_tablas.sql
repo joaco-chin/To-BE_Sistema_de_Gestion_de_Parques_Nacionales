@@ -2,15 +2,11 @@
 
 DATOS DEL GRUPO
 
-Universidad: Universidad Nacional de La Matanza
-Materia: Bases de Datos Aplicadas
 Comision: 01-2900|Martes Noche
 Integrantes:
 
-Joaquin Olarte
-Adrian Martinez Robledo
-Yerimen Lombardo
-Joaquin Chinchurreta
+Yerimen Lombardo|42.115.925
+Joaquin Chinchurreta|45.683.986
 
 DATOS DEL SCRIPT
 
@@ -26,11 +22,10 @@ CREATE TABLE ventas.FormaDePago
 (
 	id INT IDENTITY(1,1) PRIMARY KEY,
 	descripcion VARCHAR(40) NOT NULL,
-	nro_tarjeta DECIMAL(4,0)
-	CHECK (nro_tarjeta > 0),
-	cvu INT,
-	cbu INT,
-	alias VARCHAR(50)
+	nro_tarjeta CHAR(4) NULL,
+	cvu CHAR(22) NULL,
+	cbu CHAR(22) NULL,
+	alias VARCHAR(50) NULL
 )
 END
 GO
@@ -40,10 +35,11 @@ BEGIN
 CREATE TABLE concesiones.Empresa
 (
 	id INT,
-	cuit INT,
+	cuit CHAR(11),
 	nombre VARCHAR(100) NOT NULL,
 	razon_social VARCHAR(150) NOT NULL,
 	actividad VARCHAR(50) NOT NULL,
+	borrado BIT NOT NULL DEFAULT 0,
 	CONSTRAINT PK_empresa PRIMARY KEY(id,cuit)
 )
 END
@@ -56,13 +52,14 @@ CREATE TABLE personal.Guia
 (
 	legajo INT,
 	dni INT,
-	cuil INT NOT NULL UNIQUE, -- Chequeamos que el cuil contenga al dni
+	cuil CHAR(11) NOT NULL UNIQUE, -- Chequeamos que el cuil contenga al dni
 	nombre VARCHAR(100) NOT NULL,
 	apellido VARCHAR(100) NOT NULL,
 	titulo VARCHAR(100) NULL,
 	habilitaciones VARCHAR(200) NULL,
 	especialidad VARCHAR(100) NULL,
 	vigencia_autorizacion DATE NULL,
+	borrado BIT NOT NULL DEFAULT 0,
 	CONSTRAINT PK_guia PRIMARY KEY(legajo,dni)
 )
 END
@@ -98,6 +95,7 @@ CREATE TABLE personal.Guardaparque
 	nombre VARCHAR(100) NOT NULL,
 	apellido VARCHAR(100) NOT NULL,
 	motivo_egreso VARCHAR(200) NULL,
+	borrado BIT NOT NULL DEFAULT 0,
 	CONSTRAINT PK_guarda_parque PRIMARY KEY(legajo,dni)
 )
 END
@@ -113,6 +111,7 @@ CREATE TABLE parques.Parque
 	superficie_km2 DECIMAL(12,5) NOT NULL,
 	direccion VARCHAR(150) NOT NULL,
 	activo BIT NOT NULL DEFAULT 1,
+	borrado BIT NOT NULL DEFAULT 0,
 	provincia CHAR(19) NOT NULL 
 	CHECK (provincia IN
 		('Buenos Aires', 'La Pampa', 'Cordoba', 'Entre Rios',
@@ -170,8 +169,8 @@ CREATE TABLE actividades.Actividad
 	nombre VARCHAR(50) NOT NULL,
 	descripcion VARCHAR(100) NOT NULL,
 	duracion_minutos INT NOT NULL CHECK (duracion_minutos > 0),
-	cupo INT NOT NULL CHECK (cupo > 0)
-
+	cupo INT NOT NULL CHECK (cupo > 0),
+	borrado BIT NOT NULL DEFAULT 0
 )
 END
 GO
@@ -185,7 +184,7 @@ CREATE TABLE actividades.TarifaActividad
 	precio DECIMAL(10,2) NOT NULL,
 	activo BIT DEFAULT 1 NOT NULL,
 	vigencia_desde DATETIME NOT NULL,
-	vigencia_hasta DATETIME NOT NULL 
+	vigencia_hasta DATETIME NULL 
 )
 END
 GO
@@ -196,11 +195,13 @@ CREATE TABLE ventas.DetalleVenta
 (
 	id_venta INT REFERENCES ventas.Venta(id),
 	linea_venta INT,
-	id_tarifa_parque INT NOT NULL 
+	-- Al menos uno de los dos debe estar presente (validar en SP)
+	id_tarifa_parque INT NULL
 	REFERENCES ventas.TarifaParque(id),
-	id_tarifa_actividad INT NOT NULL 
+	id_tarifa_actividad INT NULL
 	REFERENCES actividades.TarifaActividad(id),
 	cantidad INT NOT NULL CHECK (cantidad > 0),
+	importe DECIMAL(10,2) NOT NULL,
 	CONSTRAINT PK_detalle_venta PRIMARY KEY(id_venta,linea_venta)
 )
 END
@@ -229,7 +230,7 @@ CREATE TABLE concesiones.Concesion
 (
 	id INT PRIMARY KEY,
 	id_empresa INT NOT NULL,
-	cuit_empresa INT NOT NULL,
+	cuit_empresa CHAR(11) NOT NULL,
 	id_parque INT NOT NULL REFERENCES parques.Parque(id),
 	tipo_actividad VARCHAR(30) NOT NULL,
 	monto_mensual DECIMAL(10,2) NOT NULL,

@@ -10,3 +10,5 @@ fk_foreign_key = snake_case | prefijo = 'fk_'
 ck_check = snake_case | prefijo = 'ck_'
 ixc_indice_cluster = PascalCase | prefijo = 'ixc_'
 ix_indice_no_cluster = PascalCase | prefijo = 'ix'
+stored_procedures = PascalCase | formato = EntidadAccion | sin prefijo | ejemplo = ParqueAlta, GuiaModificar
+scripts = snake_case | prefijo numerico de orden de ejecucion | ejemplo = 01_bd_esquemas.sql, 02_tablas.sql

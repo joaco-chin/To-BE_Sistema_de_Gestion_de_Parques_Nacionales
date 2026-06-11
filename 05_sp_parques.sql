@@ -1,16 +1,12 @@
 /*
 
 DATOS DEL GRUPO
-
-Universidad: Universidad Nacional de La Matanza
-Materia: Bases de Datos Aplicadas
+===============
 Comision: 01-2900|Martes Noche
 Integrantes:
 
-Joaquin Olarte
-Adrian Martinez Robledo
-Yerimen Lombardo
-Joaquin Chinchurreta
+Yerimen Lombardo|42.115.925
+Joaquin Chinchurreta|45.683.986
 
 DATOS DEL SCRIPT
 ================
@@ -26,7 +22,7 @@ GO
 -- SP_AltaParque
 -- Registra un nuevo parque nacional en el sistema.
 -- ============================================================
-CREATE OR ALTER PROCEDURE parques.SP_AltaParque
+CREATE OR ALTER PROCEDURE parques.ParqueAlta
 	@id            INT,
 	@nombre        VARCHAR(100),
 	@tipo_parque   VARCHAR(100),
@@ -65,9 +61,9 @@ BEGIN
 	--  nombre unico
 	IF EXISTS (
 		SELECT 1 FROM parques.Parque
-		WHERE nombre = @nombre AND activo = 1
+		WHERE nombre = @nombre AND borrado = 0
 	)
-		SET @errores += '- Ya existe un parque activo con ese nombre.' + CHAR(13)
+		SET @errores += '- Ya existe un parque con ese nombre.' + CHAR(13)
 
 	-- : id no duplicado
 	IF EXISTS (
@@ -88,8 +84,8 @@ BEGIN
 		RETURN
 	END
 
-	INSERT INTO parques.Parque (id, nombre, tipo_parque, superficie_km2, direccion, provincia, latitud, longitud, activo)
-	VALUES (@id, @nombre, @tipo_parque, @superficie_km2, @direccion, @provincia, @latitud, @longitud, 1)
+	INSERT INTO parques.Parque (id, nombre, tipo_parque, superficie_km2, direccion, provincia, latitud, longitud, activo, borrado)
+	VALUES (@id, @nombre, @tipo_parque, @superficie_km2, @direccion, @provincia, @latitud, @longitud, 1, 0)
 
 	PRINT 'Parque registrado correctamente.'
 END
@@ -97,9 +93,9 @@ GO
 
 -- ============================================================
 -- SP_ModificarParque
--- Modifica los datos de un parque existente y activo.
+-- Modifica los datos de un parque existente y no borrado.
 -- ============================================================
-CREATE OR ALTER PROCEDURE parques.SP_ModificarParque
+CREATE OR ALTER PROCEDURE parques.ParqueModificar
 	@id            INT,
 	@nombre        VARCHAR(100),
 	@tipo_parque   VARCHAR(100),
@@ -114,12 +110,12 @@ BEGIN
 
 	DECLARE @errores VARCHAR(MAX) = ''
 
-	-- parque existe y esta activo
+	-- parque existe y no esta borrado
 	IF NOT EXISTS (
-		SELECT 1 FROM parques.Parque WHERE id = @id AND activo = 1
+		SELECT 1 FROM parques.Parque WHERE id = @id AND borrado = 0
 	)
 	BEGIN
-		RAISERROR('No se encontro un parque activo con el ID indicado.', 16, 1)
+		RAISERROR('No se encontro un parque con el ID indicado.', 16, 1)
 		RETURN
 	END
 
@@ -147,9 +143,9 @@ BEGIN
 	-- nombre unico (excluye el propio parque)
 	IF EXISTS (
 		SELECT 1 FROM parques.Parque
-		WHERE nombre = @nombre AND activo = 1 AND id <> @id
+		WHERE nombre = @nombre AND borrado = 0 AND id <> @id
 	)
-		SET @errores += '- Ya existe otro parque activo con ese nombre.' + CHAR(13)
+		SET @errores += '- Ya existe otro parque con ese nombre.' + CHAR(13)
 
 	-- coordenadas dentro de rango
 	IF @latitud IS NOT NULL AND (@latitud < -90 OR @latitud > 90)
@@ -181,10 +177,10 @@ GO
 
 -- ============================================================
 -- SP_BajaParque
--- Realiza la baja logica de un parque (activo = 0).
+-- Realiza la baja logica de un parque (borrado = 1).
 -- No se puede dar de baja si tiene dependencias activas.
 -- ============================================================
-CREATE OR ALTER PROCEDURE parques.SP_BajaParque
+CREATE OR ALTER PROCEDURE parques.ParqueBaja
 	@id INT
 AS
 BEGIN
@@ -192,12 +188,12 @@ BEGIN
 
 	DECLARE @errores VARCHAR(MAX) = ''
 
-	-- parque existe y esta activo
+	-- parque existe y no esta borrado
 	IF NOT EXISTS (
-		SELECT 1 FROM parques.Parque WHERE id = @id AND activo = 1
+		SELECT 1 FROM parques.Parque WHERE id = @id AND borrado = 0
 	)
 	BEGIN
-		RAISERROR('No se encontro un parque activo con el ID indicado.', 16, 1)
+		RAISERROR('No se encontro un parque con el ID indicado.', 16, 1)
 		RETURN
 	END
 
@@ -234,7 +230,7 @@ BEGIN
 	END
 
 	UPDATE parques.Parque
-	SET activo = 0
+	SET borrado = 1, activo = 0
 	WHERE id = @id
 
 	PRINT 'Parque dado de baja correctamente.'
@@ -246,7 +242,7 @@ GO
 -- Consulta parques con filtros opcionales.
 -- Todos los parametros son opcionales (NULL = sin filtro).
 -- ============================================================
-CREATE OR ALTER PROCEDURE parques.SP_ConsultarParque
+CREATE OR ALTER PROCEDURE parques.ParqueConsultar
 	@id          INT           = NULL,
 	@nombre      VARCHAR(100)  = NULL,
 	@provincia   CHAR(19)      = NULL,
@@ -265,10 +261,12 @@ BEGIN
 		p.provincia,
 		p.latitud,
 		p.longitud,
-		p.activo
+		p.activo,
+		p.borrado
 	FROM parques.Parque p
 	WHERE
-		(@id          IS NULL OR p.id          = @id)
+		p.borrado = 0
+		AND (@id          IS NULL OR p.id          = @id)
 		AND (@nombre      IS NULL OR p.nombre      LIKE '%' + @nombre + '%')
 		AND (@provincia   IS NULL OR p.provincia   = @provincia)
 		AND (@tipo_parque IS NULL OR p.tipo_parque  = @tipo_parque)
@@ -279,7 +277,7 @@ GO
 
 GO
 
-CREATE OR ALTER PROCEDURE ventas.SP_IngresarTarifaParque
+CREATE OR ALTER PROCEDURE ventas.TarifaParqueAlta
 	@id_parque INT,
 	@id_tipo_visitante INT,
 	@precio DECIMAL(10,2),

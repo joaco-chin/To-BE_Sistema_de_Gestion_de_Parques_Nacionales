@@ -2,15 +2,11 @@
 
 DATOS DEL GRUPO
 
-Universidad: Universidad Nacional de La Matanza
-Materia: Bases de Datos Aplicadas
 Comision: 01-2900|Martes Noche
 Integrantes:
 
-Joaquin Olarte
-Adrian Martinez Robledo
-Yerimen Lombardo
-Joaquin Chinchurreta
+Yerimen Lombardo|42.115.925
+Joaquin Chinchurreta|45.683.986
 
 DATOS DEL SCRIPT
 
