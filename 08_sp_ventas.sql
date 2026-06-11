@@ -81,17 +81,15 @@ GO
 CREATE OR ALTER PROCEDURE ventas.DetalleVentaAgregar
 	@id_venta INT,
 	@id_tarifa_parque INT = NULL,
-	@id_actividad INT = NULL,
+	@id_tarifa_actividad INT = NULL,
 	@cantidad INT,
-	--@importe DECIMAL(10,2)
+	@importe DECIMAL(10,2)
 AS
 BEGIN
 	SET NOCOUNT ON
 	BEGIN TRY
 		DECLARE @linea INT
 		SELECT @linea = ISNULL(MAX(linea_venta), 0) + 1 FROM ventas.DetalleVenta WHERE id_venta = @id_venta
-		DECLARE @importe DECIMAL(10,2)
-		SET @importe = 0
 
 		-- Validar cupo si es actividad
 		IF @id_tarifa_actividad IS NOT NULL
@@ -109,17 +107,7 @@ BEGIN
 
 			IF (@vendidos + @cantidad) > @cupo
 				THROW 50003, 'No hay cupo suficiente para la actividad.', 1
-			
-			SELECT @importe = SUM(precio) * @cantidad
-			FROM actividades.TarifaActividad AS ta
-			WHERE id_actividad = @id_actividad 
-			AND id_tarifa_actividad = @id_tarifa_actividad 
 		END
-
-		SET @importe = 
-		(SELECT precio * @cantidad 
-		FROM ventas.TarifaParque 
-		WHERE activo = 1 OR id = @id_tarifa_parque) 
 
 		INSERT INTO ventas.DetalleVenta (id_venta, linea_venta, id_tarifa_parque, id_tarifa_actividad, cantidad, importe)
 		VALUES (@id_venta, @linea, @id_tarifa_parque, @id_tarifa_actividad, @cantidad, @importe)
@@ -131,8 +119,6 @@ BEGIN
 	END CATCH
 END
 GO
-
-
 
 
 

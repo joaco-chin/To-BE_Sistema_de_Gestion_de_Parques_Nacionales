@@ -28,8 +28,8 @@
           <FullPath>01_bd_esquemas.sql</FullPath>
         </FileNode>
         <FileNode Name="02_tablas.sql">
-          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:JOAQUIN\SQLEXPRESS:True</AssociatedConnectionMoniker>
-          <AssociatedConnSrvName>JOAQUIN\SQLEXPRESS</AssociatedConnSrvName>
+          <AssociatedConnectionMoniker />
+          <AssociatedConnSrvName />
           <AssociatedConnUserName />
           <FullPath>02_tablas.sql</FullPath>
         </FileNode>
@@ -64,14 +64,14 @@
           <FullPath>07_sp_actividades.sql</FullPath>
         </FileNode>
         <FileNode Name="08_sp_ventas.sql">
-          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:JOAQUIN\SQLEXPRESS:True</AssociatedConnectionMoniker>
-          <AssociatedConnSrvName>JOAQUIN\SQLEXPRESS</AssociatedConnSrvName>
+          <AssociatedConnectionMoniker />
+          <AssociatedConnSrvName />
           <AssociatedConnUserName />
           <FullPath>08_sp_ventas.sql</FullPath>
         </FileNode>
         <FileNode Name="09_sp_concesiones.sql">
-          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:JOAQUIN\SQLEXPRESS:True</AssociatedConnectionMoniker>
-          <AssociatedConnSrvName>JOAQUIN\SQLEXPRESS</AssociatedConnSrvName>
+          <AssociatedConnectionMoniker />
+          <AssociatedConnSrvName />
           <AssociatedConnUserName />
           <FullPath>09_sp_concesiones.sql</FullPath>
         </FileNode>

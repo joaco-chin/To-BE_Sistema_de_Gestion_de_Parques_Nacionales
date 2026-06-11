@@ -51,7 +51,7 @@ BEGIN
 CREATE TABLE personal.Guia
 (
 	legajo INT,
-	dni INT,
+	dni CHAR(9),
 	cuil CHAR(11) NOT NULL UNIQUE, -- Chequeamos que el cuil contenga al dni
 	nombre VARCHAR(100) NOT NULL,
 	apellido VARCHAR(100) NOT NULL,
@@ -81,7 +81,8 @@ BEGIN
 CREATE TABLE ventas.TipoVisitante	
 (
 	id INT PRIMARY KEY,
-	descripcion VARCHAR(30) NOT NULL
+	descripcion VARCHAR(30) NOT NULL,
+	descuento DECIMAL(2,2)
 )
 END
 GO
@@ -91,7 +92,7 @@ BEGIN
 CREATE TABLE personal.Guardaparque
 (
 	legajo INT,
-	dni INT,
+	dni CHAR(8),
 	cuil CHAR(11),
 	nombre VARCHAR(100) NOT NULL,
 	apellido VARCHAR(100) NOT NULL,
@@ -213,8 +214,8 @@ BEGIN
 CREATE TABLE actividades.GuiaActividad
 (
 	id_actividad INT REFERENCES actividades.Actividad(id),
-	legajo_guia INT,
-	dni_guia INT,
+	legajo_guia CHAR(8),
+	dni_guia CHAR(8),
 	fecha_inicio DATETIME,
 	fecha_fin DATETIME NOT NULL,
 	CONSTRAINT PK_guia_actividad 
@@ -278,8 +279,8 @@ BEGIN
 CREATE TABLE personal.AsignacionesGuardaParque
 (
 	id_parque INT REFERENCES parques.Parque(id),
-	legajo_guardaparque INT,
-	dni_guardaparque INT,
+	legajo_guardaparque CHAR(8),
+	dni_guardaparque CHAR(8),
 	fecha_inicio DATE,
 	fecha_fin DATE,
 	CONSTRAINT FK_guardaparque_guia 
