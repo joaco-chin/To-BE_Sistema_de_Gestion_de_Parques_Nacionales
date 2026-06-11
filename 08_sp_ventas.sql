@@ -46,8 +46,7 @@ CREATE OR ALTER PROCEDURE ventas.VentaRegistrar
 	@id_forma_de_pago INT,
 	@nro_punto_venta INT,
 	@nro_comprobante INT,
-	@fecha DATE,
-	@importe_total DECIMAL(10,2)
+	@fecha DATE = NULL
 AS
 BEGIN
 	SET NOCOUNT ON
@@ -59,6 +58,9 @@ BEGIN
 			
 			IF NOT EXISTS (SELECT 1 FROM ventas.FormaDePago WHERE id = @id_forma_de_pago)
 				THROW 50002, 'La forma de pago no existe.', 1
+
+			IF @fecha = NULL
+				SET @fecha = GETDATE()
 
 			INSERT INTO ventas.Venta (id_parque, id_forma_de_pago, nro_punto_venta, nro_comprobante, fecha, importe)
 			VALUES (@id_parque, @id_forma_de_pago, @nro_punto_venta, @nro_comprobante, @fecha, @importe_total)
@@ -80,16 +82,20 @@ GO
 -- ============================================================
 CREATE OR ALTER PROCEDURE ventas.DetalleVentaAgregar
 	@id_venta INT,
+	@id_parque INT,
+	@id_tipo_visitante INT,
 	@id_tarifa_parque INT = NULL,
 	@id_tarifa_actividad INT = NULL,
-	@cantidad INT,
-	@importe DECIMAL(10,2)
+	@cantidad_actividades INT
 AS
 BEGIN
 	SET NOCOUNT ON
 	BEGIN TRY
 		DECLARE @linea INT
 		SELECT @linea = ISNULL(MAX(linea_venta), 0) + 1 FROM ventas.DetalleVenta WHERE id_venta = @id_venta
+
+		DECLARE @importe DECIMAL(10,2)
+		SET @importe = 0
 
 		-- Validar cupo si es actividad
 		IF @id_tarifa_actividad IS NOT NULL
@@ -105,12 +111,29 @@ BEGIN
 			FROM ventas.DetalleVenta dv
 			WHERE dv.id_tarifa_actividad = @id_tarifa_actividad
 
-			IF (@vendidos + @cantidad) > @cupo
+			IF (@vendidos + @cantidad_actividades) > @cupo
 				THROW 50003, 'No hay cupo suficiente para la actividad.', 1
+			
+			SET @importe = @importe + 
+			(SELECT precio * @cantidad_actividades
+			FROM actividades.TarifaActividad
+			WHERE id = @id_tarifa_actividad 
+			OR activo = 1)
 		END
 
+		SET @importe = @importe +
+		(
+			SELECT (tp.precio - tp.precio * tv.descuento)
+			FROM ventas.TarifaParque tp
+			INNER JOIN ventas.TipoVisitante tv
+			ON tp.id_tipo_visitante = tv.id
+			WHERE (tp.id = @id_tarifa_parque 
+			OR (tp.activo = 1 AND tp.id_parque = @id_parque))
+			AND tv.id = @id_tipo_visitante
+			)
+
 		INSERT INTO ventas.DetalleVenta (id_venta, linea_venta, id_tarifa_parque, id_tarifa_actividad, cantidad, importe)
-		VALUES (@id_venta, @linea, @id_tarifa_parque, @id_tarifa_actividad, @cantidad, @importe)
+		VALUES (@id_venta, @linea, @id_tarifa_parque, @id_tarifa_actividad, @cantidad_actividades, @importe)
 
 	END TRY
 	BEGIN CATCH
