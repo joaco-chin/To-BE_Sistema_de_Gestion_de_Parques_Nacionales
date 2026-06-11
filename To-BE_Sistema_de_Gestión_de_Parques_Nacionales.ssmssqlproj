@@ -21,53 +21,65 @@
     </LogicalFolder>
     <LogicalFolder Name="Consultas" Type="0" Sorted="true">
       <Items>
-        <FileNode Name="bd_esquemas.sql">
+        <FileNode Name="01_bd_esquemas.sql">
           <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:JOAQUIN\SQLEXPRESS:True</AssociatedConnectionMoniker>
           <AssociatedConnSrvName>JOAQUIN\SQLEXPRESS</AssociatedConnSrvName>
           <AssociatedConnUserName />
-          <FullPath>bd_esquemas.sql</FullPath>
+          <FullPath>01_bd_esquemas.sql</FullPath>
         </FileNode>
-        <FileNode Name="logins.sql">
-          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:JOAQUIN\SQLEXPRESS:True</AssociatedConnectionMoniker>
-          <AssociatedConnSrvName>JOAQUIN\SQLEXPRESS</AssociatedConnSrvName>
+        <FileNode Name="02_tablas.sql">
+          <AssociatedConnectionMoniker />
+          <AssociatedConnSrvName />
           <AssociatedConnUserName />
-          <FullPath>logins.sql</FullPath>
+          <FullPath>02_tablas.sql</FullPath>
         </FileNode>
-        <FileNode Name="sp_actividades.sql">
-          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:JOAQUIN\SQLEXPRESS:True</AssociatedConnectionMoniker>
-          <AssociatedConnSrvName>JOAQUIN\SQLEXPRESS</AssociatedConnSrvName>
+        <FileNode Name="03_logins.sql">
+          <AssociatedConnectionMoniker />
+          <AssociatedConnSrvName />
           <AssociatedConnUserName />
-          <FullPath>sp_actividades.sql</FullPath>
+          <FullPath>03_logins.sql</FullPath>
         </FileNode>
-        <FileNode Name="sp_parques.sql">
-          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:JOAQUIN\SQLEXPRESS:True</AssociatedConnectionMoniker>
-          <AssociatedConnSrvName>JOAQUIN\SQLEXPRESS</AssociatedConnSrvName>
+        <FileNode Name="04_usuarios.sql">
+          <AssociatedConnectionMoniker />
+          <AssociatedConnSrvName />
           <AssociatedConnUserName />
-          <FullPath>sp_parques.sql</FullPath>
+          <FullPath>04_usuarios.sql</FullPath>
         </FileNode>
-        <FileNode Name="sp_personal.sql">
+        <FileNode Name="05_sp_parques.sql">
           <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:JOAQUIN\SQLEXPRESS:True</AssociatedConnectionMoniker>
           <AssociatedConnSrvName>JOAQUIN\SQLEXPRESS</AssociatedConnSrvName>
           <AssociatedConnUserName />
-          <FullPath>sp_personal.sql</FullPath>
+          <FullPath>05_sp_parques.sql</FullPath>
         </FileNode>
-        <FileNode Name="sp_ventas.sql">
-          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:JOAQUIN\SQLEXPRESS:True</AssociatedConnectionMoniker>
-          <AssociatedConnSrvName>JOAQUIN\SQLEXPRESS</AssociatedConnSrvName>
+        <FileNode Name="06_sp_personal.sql">
+          <AssociatedConnectionMoniker />
+          <AssociatedConnSrvName />
           <AssociatedConnUserName />
-          <FullPath>sp_ventas.sql</FullPath>
+          <FullPath>06_sp_personal.sql</FullPath>
         </FileNode>
-        <FileNode Name="tablas.sql">
-          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:JOAQUIN\SQLEXPRESS:True</AssociatedConnectionMoniker>
-          <AssociatedConnSrvName>JOAQUIN\SQLEXPRESS</AssociatedConnSrvName>
+        <FileNode Name="07_sp_actividades.sql">
+          <AssociatedConnectionMoniker />
+          <AssociatedConnSrvName />
           <AssociatedConnUserName />
-          <FullPath>tablas.sql</FullPath>
+          <FullPath>07_sp_actividades.sql</FullPath>
         </FileNode>
-        <FileNode Name="usuarios.sql">
-          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:JOAQUIN\SQLEXPRESS:True</AssociatedConnectionMoniker>
-          <AssociatedConnSrvName>JOAQUIN\SQLEXPRESS</AssociatedConnSrvName>
+        <FileNode Name="08_sp_ventas.sql">
+          <AssociatedConnectionMoniker />
+          <AssociatedConnSrvName />
           <AssociatedConnUserName />
-          <FullPath>usuarios.sql</FullPath>
+          <FullPath>08_sp_ventas.sql</FullPath>
+        </FileNode>
+        <FileNode Name="09_sp_concesiones.sql">
+          <AssociatedConnectionMoniker />
+          <AssociatedConnSrvName />
+          <AssociatedConnUserName />
+          <FullPath>09_sp_concesiones.sql</FullPath>
+        </FileNode>
+        <FileNode Name="10_test_sp_abm_parques.sql">
+          <AssociatedConnectionMoniker />
+          <AssociatedConnSrvName />
+          <AssociatedConnUserName />
+          <FullPath>10_test_sp_abm_parques.sql</FullPath>
         </FileNode>
       </Items>
     </LogicalFolder>
