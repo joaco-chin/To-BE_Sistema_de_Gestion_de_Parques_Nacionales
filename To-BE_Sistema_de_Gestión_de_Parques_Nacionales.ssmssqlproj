@@ -33,17 +33,17 @@
           <AssociatedConnUserName />
           <FullPath>02_tablas.sql</FullPath>
         </FileNode>
-        <FileNode Name="03_logins.sql">
+        <FileNode Name="03_tablas_memoria.sql">
           <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:JOAQUIN\SQLEXPRESS:True</AssociatedConnectionMoniker>
           <AssociatedConnSrvName>JOAQUIN\SQLEXPRESS</AssociatedConnSrvName>
           <AssociatedConnUserName />
-          <FullPath>03_logins.sql</FullPath>
+          <FullPath>03_tablas_memoria.sql</FullPath>
         </FileNode>
-        <FileNode Name="04_usuarios.sql">
+        <FileNode Name="04_logins.sql">
           <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:JOAQUIN\SQLEXPRESS:True</AssociatedConnectionMoniker>
           <AssociatedConnSrvName>JOAQUIN\SQLEXPRESS</AssociatedConnSrvName>
           <AssociatedConnUserName />
-          <FullPath>04_usuarios.sql</FullPath>
+          <FullPath>04_logins.sql</FullPath>
         </FileNode>
         <FileNode Name="05_sp_parques.sql">
           <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:JOAQUIN\SQLEXPRESS:True</AssociatedConnectionMoniker>
@@ -80,6 +80,18 @@
           <AssociatedConnSrvName />
           <AssociatedConnUserName />
           <FullPath>10_test_sp_abm_parques.sql</FullPath>
+        </FileNode>
+        <FileNode Name="11_usuarios.sql">
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:JOAQUIN\SQLEXPRESS:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>JOAQUIN\SQLEXPRESS</AssociatedConnSrvName>
+          <AssociatedConnUserName />
+          <FullPath>11_usuarios.sql</FullPath>
+        </FileNode>
+        <FileNode Name="15_test_sp_ab_carrito.sql">
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:JOAQUIN\SQLEXPRESS:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>JOAQUIN\SQLEXPRESS</AssociatedConnSrvName>
+          <AssociatedConnUserName />
+          <FullPath>15_test_sp_ab_carrito.sql</FullPath>
         </FileNode>
       </Items>
     </LogicalFolder>

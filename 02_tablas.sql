@@ -196,7 +196,7 @@ BEGIN
 CREATE TABLE ventas.DetalleVenta
 (
 	id_venta INT REFERENCES ventas.Venta(id),
-	linea_venta INT,
+	linea_venta INT IDENTITY(1,1),
 	-- Al menos uno de los dos debe estar presente (validar en SP)
 	id_tarifa_parque INT NOT NULL
 	REFERENCES ventas.TarifaParque(id),
