@@ -23,14 +23,14 @@ GO
 -- Registra un nuevo parque nacional en el sistema.
 -- ============================================================
 CREATE OR ALTER PROCEDURE parques.ParqueAlta
-	@id            INT,
 	@nombre        VARCHAR(100),
 	@tipo_parque   VARCHAR(100),
 	@superficie_km2 DECIMAL(12,2),
 	@direccion     VARCHAR(150),
 	@provincia     CHAR(19),
 	@latitud       DECIMAL(9,6) = NULL,
-	@longitud      DECIMAL(9,6) = NULL
+	@longitud      DECIMAL(9,6) = NULL,
+	@id_nuevo      INT          = NULL OUTPUT
 AS
 BEGIN
 	SET NOCOUNT ON
@@ -65,13 +65,7 @@ BEGIN
 	)
 		SET @errores += '- Ya existe un parque con ese nombre.' + CHAR(13)
 
-	-- : id no duplicado
-	IF EXISTS (
-		SELECT 1 FROM parques.Parque WHERE id = @id
-	)
-		SET @errores += '- Ya existe un parque con el ID indicado.' + CHAR(13)
-
-	-- : coordenadas dentro de rango
+	--  coordenadas dentro de rango
 	IF @latitud IS NOT NULL AND (@latitud < -90 OR @latitud > 90)
 		SET @errores += '- La latitud debe estar entre -90 y 90.' + CHAR(13)
 
@@ -84,10 +78,12 @@ BEGIN
 		RETURN
 	END
 
-	INSERT INTO parques.Parque (id, nombre, tipo_parque, superficie_km2, direccion, provincia, latitud, longitud, activo, borrado)
-	VALUES (@id, @nombre, @tipo_parque, @superficie_km2, @direccion, @provincia, @latitud, @longitud, 1, 0)
+	INSERT INTO parques.Parque (nombre, tipo_parque, superficie_km2, direccion, provincia, latitud, longitud, activo, borrado)
+	VALUES (@nombre, @tipo_parque, @superficie_km2, @direccion, @provincia, @latitud, @longitud, 1, 0)
 
-	PRINT 'Parque registrado correctamente.'
+	SET @id_nuevo = SCOPE_IDENTITY()
+
+	PRINT 'Parque registrado correctamente. ID asignado: ' + CAST(@id_nuevo AS VARCHAR(10))
 END
 GO
 
