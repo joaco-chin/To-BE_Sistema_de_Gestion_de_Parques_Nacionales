@@ -3,18 +3,6 @@
   "WorkspaceRootPath": "D:\\Documentos\\UNLaM\\2_Base de Datos Aplicada\\Trabajo Pr\u00E1ctico\\To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{1AB1FBB9-ADC6-4A43-14C0-FA1FADD37E7E}|To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales.ssmssqlproj|D:\\Documentos\\UNLaM\\2_Base de Datos Aplicada\\Trabajo Pr\u00E1ctico\\To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales\\05_funciones_ventas.sql||{B5A506EB-11BE-4782-9A18-21265C2CA0B4}",
-      "RelativeMoniker": "D:0:0:{1AB1FBB9-ADC6-4A43-14C0-FA1FADD37E7E}|To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales.ssmssqlproj|solutionrelative:05_funciones_ventas.sql||{B5A506EB-11BE-4782-9A18-21265C2CA0B4}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{1AB1FBB9-ADC6-4A43-14C0-FA1FADD37E7E}|To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales.ssmssqlproj|D:\\Documentos\\UNLaM\\2_Base de Datos Aplicada\\Trabajo Pr\u00E1ctico\\To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales\\08_sp_ventas.sql||{B5A506EB-11BE-4782-9A18-21265C2CA0B4}",
-      "RelativeMoniker": "D:0:0:{1AB1FBB9-ADC6-4A43-14C0-FA1FADD37E7E}|To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales.ssmssqlproj|solutionrelative:08_sp_ventas.sql||{B5A506EB-11BE-4782-9A18-21265C2CA0B4}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{1AB1FBB9-ADC6-4A43-14C0-FA1FADD37E7E}|To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales.ssmssqlproj|D:\\Documentos\\UNLaM\\2_Base de Datos Aplicada\\Trabajo Pr\u00E1ctico\\To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales\\03_tablas_memoria.sql||{B5A506EB-11BE-4782-9A18-21265C2CA0B4}",
-      "RelativeMoniker": "D:0:0:{1AB1FBB9-ADC6-4A43-14C0-FA1FADD37E7E}|To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales.ssmssqlproj|solutionrelative:03_tablas_memoria.sql||{B5A506EB-11BE-4782-9A18-21265C2CA0B4}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{1AB1FBB9-ADC6-4A43-14C0-FA1FADD37E7E}|To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales.ssmssqlproj|D:\\Documentos\\UNLaM\\2_Base de Datos Aplicada\\Trabajo Pr\u00E1ctico\\To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales\\01_bd_esquemas.sql||{B5A506EB-11BE-4782-9A18-21265C2CA0B4}",
       "RelativeMoniker": "D:0:0:{1AB1FBB9-ADC6-4A43-14C0-FA1FADD37E7E}|To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales.ssmssqlproj|solutionrelative:01_bd_esquemas.sql||{B5A506EB-11BE-4782-9A18-21265C2CA0B4}"
     }
@@ -31,46 +19,13 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "05_funciones_ventas.sql - JOAQUIN\\SQLEXPRESS.ToBE (JOAQUIN\\joaqu (54))",
-              "DocumentMoniker": "D:\\Documentos\\UNLaM\\2_Base de Datos Aplicada\\Trabajo Pr\u00E1ctico\\To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales\\05_funciones_ventas.sql",
-              "RelativeDocumentMoniker": "05_funciones_ventas.sql",
-              "ToolTip": "05_funciones_ventas.sql - JOAQUIN\\SQLEXPRESS.ToBE (JOAQUIN\\joaqu (54))",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
-              "WhenOpened": "2026-06-12T04:20:42.064Z",
-              "EditorCaption": " - JOAQUIN\\SQLEXPRESS.ToBE (JOAQUIN\\joaqu (54))"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "08_sp_ventas.sql - JOAQUIN\\SQLEXPRESS.ToBE (JOAQUIN\\joaqu (67))",
-              "DocumentMoniker": "D:\\Documentos\\UNLaM\\2_Base de Datos Aplicada\\Trabajo Pr\u00E1ctico\\To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales\\08_sp_ventas.sql",
-              "RelativeDocumentMoniker": "08_sp_ventas.sql",
-              "ToolTip": "08_sp_ventas.sql - JOAQUIN\\SQLEXPRESS.ToBE (JOAQUIN\\joaqu (67))",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
-              "WhenOpened": "2026-06-12T04:17:06.178Z",
-              "EditorCaption": " - JOAQUIN\\SQLEXPRESS.ToBE (JOAQUIN\\joaqu (67))"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "01_bd_esquemas.sql - JOAQUIN\\SQLEXPRESS.ToBE (JOAQUIN\\joaqu (53))",
+              "Title": "01_bd_esquemas.sql - no conectado",
               "DocumentMoniker": "D:\\Documentos\\UNLaM\\2_Base de Datos Aplicada\\Trabajo Pr\u00E1ctico\\To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales\\01_bd_esquemas.sql",
               "RelativeDocumentMoniker": "01_bd_esquemas.sql",
-              "ToolTip": "01_bd_esquemas.sql - JOAQUIN\\SQLEXPRESS.ToBE (JOAQUIN\\joaqu (53))",
+              "ToolTip": "01_bd_esquemas.sql - no conectado",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
-              "WhenOpened": "2026-06-12T04:20:06.148Z",
-              "EditorCaption": " - JOAQUIN\\SQLEXPRESS.ToBE (JOAQUIN\\joaqu (53))"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "03_tablas_memoria.sql - JOAQUIN\\SQLEXPRESS.ToBE (JOAQUIN\\joaqu (51))",
-              "DocumentMoniker": "D:\\Documentos\\UNLaM\\2_Base de Datos Aplicada\\Trabajo Pr\u00E1ctico\\To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales\\03_tablas_memoria.sql",
-              "RelativeDocumentMoniker": "03_tablas_memoria.sql",
-              "ToolTip": "03_tablas_memoria.sql - JOAQUIN\\SQLEXPRESS.ToBE (JOAQUIN\\joaqu (51))",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
-              "WhenOpened": "2026-06-12T04:17:00.761Z",
-              "EditorCaption": " - JOAQUIN\\SQLEXPRESS.ToBE (JOAQUIN\\joaqu (51))"
+              "WhenOpened": "2026-06-12T16:07:56.772Z",
+              "EditorCaption": " - no conectado"
             }
           ]
         }

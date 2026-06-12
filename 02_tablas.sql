@@ -107,7 +107,7 @@ IF OBJECT_ID('parques.Parque') IS NULL
 BEGIN
 CREATE TABLE parques.Parque
 (
-	id INT PRIMARY KEY,
+	id INT IDENTITY(1,1) PRIMARY KEY,
 	tipo_parque VARCHAR(100) NOT NULL,
 	nombre VARCHAR(100) NOT NULL,
 	superficie_km2 DECIMAL(12,5) NOT NULL,
