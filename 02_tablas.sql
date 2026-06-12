@@ -69,9 +69,10 @@ IF OBJECT_ID('actividades.TipoActividad') IS NULL
 BEGIN
 CREATE TABLE actividades.TipoActividad	
 (
-	id INT PRIMARY KEY,
+	id INT IDENTITY(1,1) PRIMARY KEY,
 	descripcion VARCHAR(50) NOT NULL,
-	nombre VARCHAR(50) NOT NULL
+	nombre VARCHAR(50) NOT NULL,
+	borrado BIT DEFAULT 0
 )
 END
 GO
@@ -164,15 +165,15 @@ IF OBJECT_ID('actividades.Actividad') IS NULL
 BEGIN
 CREATE TABLE actividades.Actividad
 (
-	id INT IDENTITY(1,1) PRIMARY KEY,
+	id_tipo_actividad INT REFERENCES TipoActividad(id),
+	fecha_horario DATETIME,
 	id_parque INT NOT NULL REFERENCES parques.Parque(id),
-	--id_tipo_actividad INT REFERENCES TipoActividad(id) NOT NULL,
-	tipo_actividad VARCHAR(50) NOT NULL,
 	nombre VARCHAR(50) NOT NULL,
 	descripcion VARCHAR(100) NOT NULL,
 	duracion_minutos INT NOT NULL CHECK (duracion_minutos > 0),
 	cupo INT NOT NULL CHECK (cupo > 0),
-	borrado BIT NOT NULL DEFAULT 0
+	borrado BIT NOT NULL DEFAULT 0,
+	CONSTRAINT pk_actividad PRIMARY KEY(id_tipo_actividad, fecha_horario)
 )
 END
 GO
