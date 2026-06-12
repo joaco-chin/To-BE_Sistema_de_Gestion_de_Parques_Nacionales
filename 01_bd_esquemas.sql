@@ -17,8 +17,6 @@ Creacion de la base de datos y esquemas
 USE master
 GO
 
-DROP DATABASE ToBE
-
 IF NOT EXISTS (SELECT name FROM master.dbo.sysdatabases WHERE name = 'TOBE')
 BEGIN
 	CREATE DATABASE ToBE

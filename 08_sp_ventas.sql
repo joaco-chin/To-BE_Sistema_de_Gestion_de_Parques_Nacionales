@@ -95,14 +95,8 @@ BEGIN
 	SET NOCOUNT ON
 	BEGIN TRY
 
-		IF NOT EXISTS (SELECT id FROM actividades.Actividad WHERE id = @id_actividad)
-			THROW 50015, 'El id de actividad no existe', 1
-
 		IF NOT EXISTS (SELECT id FROM ventas.TipoVisitante WHERE id = @id_tipo_visitante)
 			THROW 50016, 'El tipo de visitante no existe', 1
-
-		DECLARE @linea INT
-		SELECT @linea = ISNULL(MAX(linea_venta), 0) + 1 FROM ventas.DetalleVenta WHERE id_venta = @id_venta
 		
 		DECLARE @importe DECIMAL(10,2)
 		SELECT @importe = tp.precio - tp.precio * tv.descuento
@@ -120,29 +114,30 @@ BEGIN
 		ON tp.id_parque = c.id_parque
 		WHERE c.id = @id_carrito
 		AND tp.activo = 1 
-		AND tp.id_tipo_visitante = tp.@id_tipo_visitante)
+		AND tp.id_tipo_visitante = @id_tipo_visitante)
 
 		IF @id_actividad IS NOT NULL
 		BEGIN
+			IF NOT EXISTS (SELECT id FROM actividades.Actividad WHERE id = @id_actividad)
+				THROW 50015, 'El id de actividad no existe', 1
+			
 			DECLARE @id_tarifa_actividad INT
 			SET @id_tarifa_actividad = 
 			(SELECT MAX(id)
 			FROM actividades.TarifaActividad
 			WHERE id_actividad = @id_actividad
-			AND activo = 1 
-			AND id_tipo_visitante = @id_tipo_visitante)
+			AND activo = 1)
 
 			SET @importe = @importe +
 			(SELECT precio * @cantidad
 			FROM actividades.TarifaActividad
-			WHERE id = @id_tarifa_actividad
-			AND activo = 1)
+			WHERE id = @id_tarifa_actividad)
 		END
 
 		INSERT INTO ventas.CarritoDetalleVenta 
-		(id_carrito, linea_venta, id_tarifa_parque, id_tarifa_actividad, cantidad, importe)
+		(id_carrito, id_tarifa_parque, id_tarifa_actividad, cantidad, importe)
 		VALUES 
-		(@id_carrito, @linea, @id_tarifa_parque, @id_tarifa_actividad, @cantidad, @importe)
+		(@id_carrito, @id_tarifa_parque, @id_tarifa_actividad, @cantidad, @importe)
 
 	END TRY
 	BEGIN CATCH
@@ -158,6 +153,7 @@ GO
 -- ============================================================
 CREATE OR ALTER PROCEDURE ventas.CarritoEliminar
 	@id_carrito INT,
+	@linea_venta INT
 AS
 BEGIN
 	BEGIN TRY
@@ -176,7 +172,6 @@ BEGIN
 		WHERE id_carrito = @id_carrito
 		AND linea_venta = @linea_venta
 	END TRY
-
 	BEGIN CATCH
 		DECLARE @ErrorMessage NVARCHAR(4000) = ERROR_MESSAGE()
 		RAISERROR(@ErrorMessage, 16, 1)
@@ -189,7 +184,7 @@ GO
 -- Elimina todos los detalles de ventas (items) del carrito
 -- ============================================================
 CREATE OR ALTER PROCEDURE ventas.CarritoVaciar
-	@id_carrito INT,
+	@id_carrito INT
 AS
 BEGIN
 	BEGIN TRY
@@ -218,7 +213,7 @@ CREATE OR ALTER PROCEDURE ventas.VentaConfirmar
 	@id_carrito INT,
 	@id_forma_de_pago INT,
 	@nro_punto_venta INT,
-	@nro_comprobante INT,
+	@nro_comprobante INT
 AS
 BEGIN
 	SET NOCOUNT ON
@@ -247,7 +242,7 @@ BEGIN
 			INSERT INTO ventas.Venta 
 			(id_parque, id_forma_de_pago, nro_punto_venta, nro_comprobante, fecha, importe)
 			VALUES 
-			(@id_parque, @id_forma_de_pago, @nro_punto_venta, @nro_comprobante, @fecha, @importe_total)
+			(@id_parque, @id_forma_de_pago, @nro_punto_venta, @nro_comprobante, @fecha, @importe)
 			
 			DECLARE @id_venta INT
 			SET @id_venta = (SELECT MAX(id) FROM ventas.Venta)
@@ -278,73 +273,6 @@ BEGIN
 	END TRY
 	BEGIN CATCH
 		IF @@TRANCOUNT > 0 ROLLBACK TRANSACTION
-		DECLARE @ErrorMessage NVARCHAR(4000) = ERROR_MESSAGE()
-		RAISERROR(@ErrorMessage, 16, 1)
-	END CATCH
-END
-GO
-
--- ============================================================
--- DetalleVentaAgregar
--- Agrega un item a una venta (Entrada a Parque o Actividad).
--- ============================================================
-CREATE OR ALTER PROCEDURE ventas.DetalleVentaAgregar
-	@id_venta INT,
-	@id_parque INT,
-	@id_tipo_visitante INT,
-	@id_tarifa_parque INT = NULL,
-	@id_tarifa_actividad INT = NULL,
-	@cantidad_actividades INT
-AS
-BEGIN
-	SET NOCOUNT ON
-	BEGIN TRY
-		DECLARE @linea INT
-		SELECT @linea = ISNULL(MAX(linea_venta), 0) + 1 FROM ventas.DetalleVenta WHERE id_venta = @id_venta
-
-		DECLARE @importe DECIMAL(10,2)
-		SET @importe = 0
-
-		-- Validar cupo si es actividad
-		IF @id_tarifa_actividad IS NOT NULL
-		BEGIN
-			DECLARE @id_actividad INT
-			DECLARE @cupo INT
-			DECLARE @vendidos INT
-
-			SELECT @id_actividad = id_actividad FROM actividades.TarifaActividad WHERE id = @id_tarifa_actividad
-			SELECT @cupo = cupo FROM actividades.Actividad WHERE id = @id_actividad
-
-			SELECT @vendidos = ISNULL(SUM(dv.cantidad), 0)
-			FROM ventas.DetalleVenta dv
-			WHERE dv.id_tarifa_actividad = @id_tarifa_actividad
-
-			IF (@vendidos + @cantidad_actividades) > @cupo
-				THROW 50003, 'No hay cupo suficiente para la actividad.', 1
-			
-			SET @importe = @importe + 
-			(SELECT precio * @cantidad_actividades
-			FROM actividades.TarifaActividad
-			WHERE id = @id_tarifa_actividad 
-			OR activo = 1)
-		END
-
-		SET @importe = @importe +
-		(
-			SELECT (tp.precio - tp.precio * tv.descuento)
-			FROM ventas.TarifaParque tp
-			INNER JOIN ventas.TipoVisitante tv
-			ON tp.id_tipo_visitante = tv.id
-			WHERE (tp.id = @id_tarifa_parque 
-			OR (tp.activo = 1 AND tp.id_parque = @id_parque))
-			AND tv.id = @id_tipo_visitante
-			)
-
-		INSERT INTO ventas.DetalleVenta (id_venta, linea_venta, id_tarifa_parque, id_tarifa_actividad, cantidad, importe)
-		VALUES (@id_venta, @linea, @id_tarifa_parque, @id_tarifa_actividad, @cantidad_actividades, @importe)
-
-	END TRY
-	BEGIN CATCH
 		DECLARE @ErrorMessage NVARCHAR(4000) = ERROR_MESSAGE()
 		RAISERROR(@ErrorMessage, 16, 1)
 	END CATCH
