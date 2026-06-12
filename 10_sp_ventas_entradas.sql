@@ -85,7 +85,7 @@ GO
 -- CarritoAgregar
 -- Agrega un detalle de venta (item) al carrito
 -- ============================================================
-CREATE OR ALTER PROCEDURE ventas.CarritoAgregar
+CREATE OR ALTER PROCEDURE ventas.CarritoAgregar	-- ARREGLAR
 	@id_carrito INT,
 	@id_tipo_visitante INT,
 	@id_actividad INT = NULL,
@@ -210,8 +210,11 @@ GO
 -- ============================================================
 -- VentaConfirmar
 -- Confirma una venta en un parque según un carrito dado.
+-- En caso de que no hayan errores, vacía el mismo al final
+-- y actualiza la tabla de actividades para cambiar la cantidad
+-- de cupos disponibles
 -- ============================================================
-CREATE OR ALTER PROCEDURE ventas.VentaConfirmar
+CREATE OR ALTER PROCEDURE ventas.VentaConfirmar	
 	@id_carrito INT,
 	@id_forma_de_pago INT,
 	@nro_punto_venta INT,
@@ -269,6 +272,8 @@ BEGIN
 			INNER JOIN ventas.DetalleVenta AS dv
 			ON ta.id = dv.id_tarifa_actividad
 			WHERE dv.id_venta = @id_venta 
+
+			EXECUTE ventas.CarritoVaciar @id_carrito
 
 			SELECT SCOPE_IDENTITY() AS id_venta
 		COMMIT TRANSACTION

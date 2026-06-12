@@ -1,7 +1,7 @@
 USE ToBE
 GO
 
-CREATE OR ALTER FUNCTION dev.ULTIMA_TARIFA_ACTIVIDAD(@id_actividad INT)
+CREATE OR ALTER FUNCTION dev.GetIdUltimaTarifaAct(@id_actividad INT)
 RETURNS INT
 AS
 BEGIN
@@ -16,7 +16,7 @@ BEGIN
 END
 GO
 
-CREATE OR ALTER FUNCTION dev.ULTIMA_TARIFA_PARQUE(@id_parque INT, @id_tipo_visitante INT)
+CREATE OR ALTER FUNCTION dev.GetIdUltimaTarifaParque(@id_parque INT)
 RETURNS INT
 AS
 BEGIN
@@ -27,9 +27,24 @@ BEGIN
 	FROM ventas.TarifaParque AS tp
 	INNER JOIN ventas.TipoVisitante AS tv
 	ON tp.id_tipo_visitante = tv.id
-	WHERE tp.id_parque = @id_parque
-	AND tv.id = @id_tipo_visitante)
+	WHERE tp.id_parque = @id_parque)
 
 	RETURN @id_tarifa_parque
+END
+GO
+
+CREATE OR ALTER FUNCTION dev.PrecioFinalEntradaParque(@id_tarifa_parque INT)
+RETURNS INT
+AS
+BEGIN
+	DECLARE @precio_final INT
+	SET @precio_final = 
+	(SELECT tp.precio * tp.precio * tv.descuento
+	FROM ventas.TarifaParque AS tp
+	INNER JOIN ventas.TipoVisitante AS tv
+	ON tp.id_tipo_visitante = tv.id
+	WHERE tp.id = @id_tarifa_parque)
+
+	RETURN @precio_final
 END
 GO
