@@ -52,7 +52,7 @@ CREATE TABLE personal.Guia
 (
 	legajo INT,
 	dni CHAR(8),
-	cuil CHAR(11) NOT NULL UNIQUE, -- Chequeamos que el cuil contenga al dni
+	cuil CHAR(11) NOT NULL UNIQUE, 
 	nombre VARCHAR(100) NOT NULL,
 	apellido VARCHAR(100) NOT NULL,
 	titulo VARCHAR(100) NULL,

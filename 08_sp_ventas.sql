@@ -98,23 +98,26 @@ BEGIN
 		IF NOT EXISTS (SELECT id FROM ventas.TipoVisitante WHERE id = @id_tipo_visitante)
 			THROW 50016, 'El tipo de visitante no existe', 1
 		
+		DECLARE @id_parque INT
+		SET @id_parque = (SELECT id_parque FROM ventas.Carrito WHERE id = @id_carrito)
+
+		DECLARE @id_tarifa_parque INT
+		SET @id_tarifa_parque = 
+		(
+		SELECT MAX(tp.id) 
+		FROM ventas.TarifaParque AS tp
+		INNER JOIN ventas.TipoVisitante AS tv
+		ON tp.id_tipo_visitante = tv.id
+		WHERE tp.id_parque = @id_parque
+		AND tv.id = @id_tipo_visitante)
+
 		DECLARE @importe DECIMAL(10,2)
 		SELECT @importe = tp.precio - tp.precio * tv.descuento
 		FROM ventas.TarifaParque AS tp
 		INNER JOIN ventas.TipoVisitante AS tv
 		ON tp.id_tipo_visitante = tv.id
 		WHERE tp.activo = 1
-
-		DECLARE @id_tarifa_parque INT
-		SET @id_tarifa_parque = 
-		(
-		SELECT MAX(id) 
-		FROM ventas.TarifaParque AS tp
-		INNER JOIN ventas.Carrito AS c
-		ON tp.id_parque = c.id_parque
-		WHERE c.id = @id_carrito
-		AND tp.activo = 1 
-		AND tp.id_tipo_visitante = @id_tipo_visitante)
+		AND tv.id = @id_tipo_visitante
 
 		IF @id_actividad IS NOT NULL
 		BEGIN
@@ -122,11 +125,11 @@ BEGIN
 				THROW 50015, 'El id de actividad no existe', 1
 			
 			DECLARE @id_tarifa_actividad INT
-			SET @id_tarifa_actividad = 
-			(SELECT MAX(id)
-			FROM actividades.TarifaActividad
-			WHERE id_actividad = @id_actividad
-			AND activo = 1)
+			SET @id_tarifa_actividad = dev.ULTIMA_TARIFA_ACTIVIDAD(@id_actividad)
+			--(SELECT MAX(id)
+			--FROM actividades.TarifaActividad
+			--WHERE id_actividad = @id_actividad
+			--AND activo = 1)
 
 			SET @importe = @importe +
 			(SELECT precio * @cantidad
@@ -138,7 +141,6 @@ BEGIN
 		(id_carrito, id_tarifa_parque, id_tarifa_actividad, cantidad, importe)
 		VALUES 
 		(@id_carrito, @id_tarifa_parque, @id_tarifa_actividad, @cantidad, @importe)
-
 	END TRY
 	BEGIN CATCH
 		DECLARE @ErrorMessage NVARCHAR(4000) = ERROR_MESSAGE()

@@ -77,3 +77,9 @@ BEGIN
 	EXECUTE('CREATE SCHEMA concesiones')
 END
 GO
+
+IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = 'dev')
+BEGIN
+	EXECUTE('CREATE SCHEMA dev')
+END
+GO
