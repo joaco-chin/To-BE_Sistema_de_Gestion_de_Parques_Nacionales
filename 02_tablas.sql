@@ -199,7 +199,7 @@ CREATE TABLE ventas.DetalleVenta
 	id_venta INT REFERENCES ventas.Venta(id),
 	linea_venta INT IDENTITY(1,1),
 	-- Al menos uno de los dos debe estar presente (validar en SP)
-	id_tarifa_parque INT NOT NULL
+	id_tarifa_parque INT NULL
 	REFERENCES ventas.TarifaParque(id),
 	id_tarifa_actividad INT NULL
 	REFERENCES actividades.TarifaActividad(id),
@@ -236,11 +236,12 @@ CREATE TABLE concesiones.Concesion
 	cuit_empresa CHAR(11) NOT NULL,
 	id_parque INT NOT NULL REFERENCES parques.Parque(id),
 	tipo_actividad VARCHAR(30) NOT NULL,
-	monto_mensual DECIMAL(10,2) NOT NULL,
+	monto_mensual DECIMAL(10,2) NOT NULL CHECK (monto_mensual > 0),
 	fecha_inicio_contrato DATE NOT NULL,
 	fecha_fin_contrato DATE NOT NULL,
 	CONSTRAINT FK_concesion_empresa FOREIGN KEY(id_empresa, cuit_empresa)
-	REFERENCES concesiones.Empresa(id, cuit)
+	REFERENCES concesiones.Empresa(id, cuit),
+	borrado BIT NOT NULL DEFAULT 0
 )
 END
 GO

@@ -179,6 +179,51 @@ END
 GO
 
 -- ============================================================
+-- ConcesionBaja
+-- ============================================================
+CREATE OR ALTER PROCEDURE concesiones.ConcesionBaja
+	@id_concesion INT
+AS
+BEGIN
+	BEGIN TRY
+		IF NOT EXISTS(SELECT id FROM concesiones.Concesion 
+		WHERE id = @id_concesion AND borrado = 0)
+			THROW 50050, 'La concesion no existe o ya fue dada de baja', 1
+
+		UPDATE concesiones.Concesion
+		SET borrado = 1
+		WHERE id = @id_concesion
+	END TRY
+	BEGIN CATCH
+		PRINT(CAST(ERROR_NUMBER() AS CHAR) + ' ' + ERROR_MESSAGE())
+	END CATCH
+END
+GO
+
+-- ============================================================
+-- ConcesionModificarPrecio
+-- ============================================================
+CREATE OR ALTER PROCEDURE concesiones.ConcesionModificarMonto
+	@id_concesion INT,
+	@monto_mensual DECIMAL(10,2)
+AS
+BEGIN
+	BEGIN TRY
+		IF NOT EXISTS(SELECT id FROM concesiones.Concesion 
+		WHERE id = @id_concesion AND borrado = 0)
+			THROW 50050, 'La concesion no existe o ya fue dada de baja', 1
+
+		UPDATE concesiones.Concesion
+		SET monto_mensual = @monto_mensual
+		WHERE id = @id_concesion
+	END TRY
+	BEGIN CATCH
+		PRINT(CAST(ERROR_NUMBER() AS CHAR) + ' ' + ERROR_MESSAGE())
+	END CATCH
+END
+GO
+
+-- ============================================================
 -- FacturaAlta
 -- ============================================================
 CREATE OR ALTER PROCEDURE concesiones.FacturaConcesionAlta

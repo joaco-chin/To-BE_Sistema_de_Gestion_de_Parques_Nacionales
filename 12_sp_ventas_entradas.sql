@@ -89,7 +89,7 @@ CREATE OR ALTER PROCEDURE ventas.CarritoAgregar	-- ARREGLAR
 	@id_carrito INT,
 	@id_tipo_visitante INT,
 	@id_actividad INT = NULL,
-	@cantidad INT
+	@cantidad INT = 0
 AS
 BEGIN
 	SET NOCOUNT ON
@@ -102,27 +102,13 @@ BEGIN
 		SET @id_parque = (SELECT id_parque FROM ventas.Carrito WHERE id = @id_carrito)
 
 		DECLARE @id_tarifa_parque INT
-		SET @id_tarifa_parque = 
-		(
-		SELECT MAX(tp.id) 
-		FROM ventas.TarifaParque AS tp
-		INNER JOIN ventas.TipoVisitante AS tv
-		ON tp.id_tipo_visitante = tv.id
-		WHERE tp.id_parque = @id_parque
-		AND tv.id = @id_tipo_visitante)
-
 		DECLARE @importe DECIMAL(10,2)
-		SELECT @importe = tp.precio - tp.precio * tv.descuento
-		FROM ventas.TarifaParque AS tp
-		INNER JOIN ventas.TipoVisitante AS tv
-		ON tp.id_tipo_visitante = tv.id
-		WHERE tp.activo = 1
-		AND tv.id = @id_tipo_visitante
 
 		IF @id_actividad IS NOT NULL
 		BEGIN
 			IF NOT EXISTS (SELECT id FROM actividades.Actividad WHERE id = @id_actividad)
 				THROW 50015, 'El id de actividad no existe', 1
+			SET @id_tarifa_parque = NULL
 			
 			DECLARE @id_tarifa_actividad INT
 			SET @id_tarifa_actividad = dev.ULTIMA_TARIFA_ACTIVIDAD(@id_actividad)
@@ -131,10 +117,29 @@ BEGIN
 			--WHERE id_actividad = @id_actividad
 			--AND activo = 1)
 
-			SET @importe = @importe +
+			SET @importe = 
 			(SELECT precio * @cantidad
 			FROM actividades.TarifaActividad
 			WHERE id = @id_tarifa_actividad)
+		END
+
+		ELSE
+		BEGIN
+		SET @id_tarifa_parque = 
+		(
+			SELECT MAX(tp.id) 
+			FROM ventas.TarifaParque AS tp
+			INNER JOIN ventas.TipoVisitante AS tv
+			ON tp.id_tipo_visitante = tv.id
+			WHERE tp.id_parque = @id_parque
+			AND tv.id = @id_tipo_visitante)
+
+			SELECT @importe = tp.precio - tp.precio * tv.descuento
+			FROM ventas.TarifaParque AS tp
+			INNER JOIN ventas.TipoVisitante AS tv
+			ON tp.id_tipo_visitante = tv.id
+			WHERE tp.activo = 1
+			AND tv.id = @id_tipo_visitante
 		END
 
 		INSERT INTO ventas.CarritoDetalleVenta 

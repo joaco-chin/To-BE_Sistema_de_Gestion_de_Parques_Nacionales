@@ -56,7 +56,8 @@ AS
 BEGIN
 	BEGIN TRY
 		BEGIN TRANSACTION
-			IF NOT EXISTS (SELECT id FROM actividades.TipoActividad WHERE id = @id_tipo_actividad)
+			IF NOT EXISTS (SELECT id FROM actividades.TipoActividad 
+			WHERE id = @id_tipo_actividad AND borrado = 0)
 				THROW 50032, 'El tipo de actividad seleccionado no existe', 1
 
 			SET @nombre = LTRIM(RTRIM(@nombre))
@@ -91,7 +92,8 @@ AS
 BEGIN
 	BEGIN TRY
 		BEGIN TRANSACTION
-			IF NOT EXISTS (SELECT id FROM actividades.TipoActividad WHERE id = @id_tipo_actividad)
+			IF NOT EXISTS (SELECT id FROM actividades.TipoActividad 
+			WHERE id = @id_tipo_actividad AND borrado = 0)
 				THROW 50032, 'El tipo de actividad seleccionado no existe', 1
 
 			UPDATE actividades.TipoActividad
