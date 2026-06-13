@@ -249,12 +249,12 @@ IF OBJECT_ID('concesiones.FacturaConcesion') IS NULL
 BEGIN
 CREATE TABLE concesiones.FacturaConcesion
 (
-	id INT,
+	id INT IDENTITY(1,1),
 	id_concesion INT REFERENCES concesiones.Concesion(id),
 	fecha_vencimiento DATE NOT NULL,
 	monto_a_abonar DECIMAL(10,2) NOT NULL,
 	esta_pagada BIT NOT NULL DEFAULT 0,
-	fecha_pago DATE NOT NULL,
+	fecha_pago DATE NULL,
 	CONSTRAINT PK_factura_concesion 
 	PRIMARY KEY(id, id_concesion)
 )

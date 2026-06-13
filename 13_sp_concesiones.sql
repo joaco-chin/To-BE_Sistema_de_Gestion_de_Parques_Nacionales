@@ -178,3 +178,81 @@ BEGIN
 END
 GO
 
+-- ============================================================
+-- FacturaAlta
+-- ============================================================
+CREATE OR ALTER PROCEDURE concesiones.FacturaConcesionAlta
+	@id_concesion INT
+BEGIN
+	BEGIN TRY
+		IF NOT EXISTS(SELECT 1 FROM concesiones.Concesion WHERE id = @id_concesion)
+			THROW 50040, 'El id de concesion no existe', 1
+		
+		DECLARE @monto_concesion DECIMAL(10,2) = dev.GetMontoConcesion(@id_concesion)
+
+		-- Vemos si hay o no facturas anteriores
+		IF NOT EXISTS(SELECT 1 FROM concesiones.FacturaConcesion WHERE id_concesion = @id_concesion)
+		BEGIN
+			-- Si no hay, la creamos con la fecha de inicio del contrato + 1 mes
+			INSERT INTO concesiones.FacturaConcesion(id_concesion, fecha_vencimiento, monto_a_abonar)
+			VALUES(@id_concesion, 
+			DATEADD(MONTH, 1, dev.GetFechaInicioConcesion(@id_concesion)),
+			@monto_concesion)
+		END
+
+		ELSE	-- Si no hay facturas anteriores, la creamos con la ultima fecha de vencimiento + 1 mes
+		BEGIN
+			INSERT INTO concesiones.FacturaConcesion(id_concesion, fecha_vencimiento, monto_a_abonar)
+			VALUES(@id_concesion, 
+			DATEADD(MONTH, 1, dev.GetFechaVencimientoFactConcesion(@id_concesion)),
+			@monto_concesion)
+		END
+	END TRY
+	BEGIN CATCH
+		PRINT(CAST(ERROR_NUMBER() AS CHAR) + ' ' + ERROR_MESSAGE())
+	END CATCH
+END
+GO
+
+CREATE OR ALTER PROCEDURE concesiones.PagoConcesionAlta
+	@id_factura INT,
+	@id_concesion INT,
+	@fecha_pago DATE
+BEGIN
+	INSERT INTO concesiones.PagoConcesion(id_factura_concesion, id_concesion, fecha_pago)
+	VALUES (@id_factura, @id_concesion, @fecha_pago)
+END
+GO
+
+CREATE OR ALTER PROCEDURE concesiones.FacturaConcesionPagar
+	@id_factura INT,
+	@id_concesion INT
+BEGIN
+	BEGIN TRY
+		BEGIN TRANSACTION
+			IF NOT EXISTS(SELECT 1 FROM concesiones.FacturaConcesion 
+			WHERE id_concesion = @id_concesion AND id = @id_factura)
+				THROW 50040, 'La factura de concesion no existe', 1
+			
+			DECLARE @fecha_pago DATE
+			SET @fecha_pago = GETDATE()
+
+			EXECUTE concesiones.PagoConcesionAlta @id_factura, @id_concesion, @fecha_pago
+
+			UPDATE concesiones.FacturaConcesion
+			SET 
+				esta_pagada = 1
+				fecha_pago = @fecha_pago
+			WHERE id = @id_factura
+			AND id_concesion = @id_concesion
+		COMMIT TRANSACTION
+	END TRY
+	BEGIN CATCH
+		IF @@TRANCOUNT > 0 
+			ROLLBACK TRANSACTION
+
+		DECLARE @ErrorMessage NVARCHAR(4000) = ERROR_MESSAGE()
+		RAISERROR(@ErrorMessage, 16, 1)
+	END CATCH
+END
+GO
