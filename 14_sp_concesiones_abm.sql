@@ -293,6 +293,9 @@ BEGIN
 END
 GO
 
+-- ============================================================
+-- PagoConcesionAlta
+-- ============================================================
 CREATE OR ALTER PROCEDURE concesiones.PagoConcesionAlta
 	@id_factura INT,
 	@id_concesion INT,
@@ -305,38 +308,3 @@ BEGIN
 END
 GO
 
-CREATE OR ALTER PROCEDURE concesiones.FacturaConcesionPagar
-	@id_factura INT,
-	@id_concesion INT
-BEGIN
-	SET NOCOUNT ON
-
-	BEGIN TRY
-		BEGIN TRANSACTION
-			IF NOT EXISTS(SELECT 1 FROM concesiones.FacturaConcesion 
-			WHERE id_concesion = @id_concesion AND id = @id_factura)
-				THROW 50040, 'La factura de concesion no existe', 1
-			
-			DECLARE @fecha_pago DATE
-			SET @fecha_pago = GETDATE()
-
-			EXECUTE concesiones.PagoConcesionAlta @id_factura, @id_concesion, @fecha_pago
-
-			UPDATE concesiones.FacturaConcesion
-			SET 
-				esta_pagada = 1
-				fecha_pago = @fecha_pago
-			WHERE id = @id_factura
-			AND id_concesion = @id_concesion
-		COMMIT TRANSACTION
-	END TRY
-
-	BEGIN CATCH
-		IF @@TRANCOUNT > 0 
-			ROLLBACK TRANSACTION
-
-		PRINT(CAST(ERROR_NUMBER() AS CHAR) + ' ' + ERROR_MESSAGE())
-		--THROW 
-	END CATCH
-END
-GO

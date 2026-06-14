@@ -1,35 +1,12 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "D:\\Documentos\\UNLaM\\2_Base de Datos Aplicada\\Trabajo Pr\u00E1ctico\\To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales\\",
-  "Documents": [
-    {
-      "AbsoluteMoniker": "D:0:0:{1AB1FBB9-ADC6-4A43-14C0-FA1FADD37E7E}|To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales.ssmssqlproj|D:\\Documentos\\UNLaM\\2_Base de Datos Aplicada\\Trabajo Pr\u00E1ctico\\To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales\\12_sp_ventas_entradas.sql||{B5A506EB-11BE-4782-9A18-21265C2CA0B4}",
-      "RelativeMoniker": "D:0:0:{1AB1FBB9-ADC6-4A43-14C0-FA1FADD37E7E}|To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales.ssmssqlproj|solutionrelative:12_sp_ventas_entradas.sql||{B5A506EB-11BE-4782-9A18-21265C2CA0B4}"
-    }
-  ],
+  "Documents": [],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
       "VerticalTabListWidth": 256,
-      "DocumentGroups": [
-        {
-          "DockedWidth": 200,
-          "SelectedChildIndex": 0,
-          "Children": [
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "12_sp_ventas_entradas.sql - JOAQUIN\\SQLEXPRESS.ToBE (admin_tobe (51))",
-              "DocumentMoniker": "D:\\Documentos\\UNLaM\\2_Base de Datos Aplicada\\Trabajo Pr\u00E1ctico\\To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales\\12_sp_ventas_entradas.sql",
-              "RelativeDocumentMoniker": "12_sp_ventas_entradas.sql",
-              "ToolTip": "12_sp_ventas_entradas.sql - JOAQUIN\\SQLEXPRESS.ToBE (admin_tobe (51))",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
-              "WhenOpened": "2026-06-14T19:20:39.372Z",
-              "EditorCaption": " - JOAQUIN\\SQLEXPRESS.ToBE (admin_tobe (51))"
-            }
-          ]
-        }
-      ]
+      "DocumentGroups": []
     }
   ]
 }
