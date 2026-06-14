@@ -7,10 +7,12 @@ CREATE OR ALTER PROCEDURE ventas.TipoVisitanteAlta
 	@descuento DECIMAL(2,2) = 0
 AS
 BEGIN
+	SET NOCOUNT ON
+
 	BEGIN TRY
 		SET @descripcion = LTRIM(RTRIM(@descripcion))
 		IF @descripcion = ''
-			THROW 50020, 'La descripcion no puede estar vacia', 1
+			THROW 50060, 'La descripcion no puede estar vacia', 1
 
 		INSERT INTO ventas.TipoVisitante(id, descripcion, descuento)
 		VALUES(@id_visitante, @descripcion, @descuento)
@@ -27,9 +29,12 @@ CREATE OR ALTER PROCEDURE ventas.TipoVisitanteModificar
 	@nuevo_descuento DECIMAL(2,2) 
 AS
 BEGIN
+	SET NOCOUNT ON
+
 	BEGIN TRY
 		IF NOT EXISTS (SELECT id FROM ventas.TipoVisitante WHERE id = @id_visitante)
-			THROW 50021, 'El id de visitante no existe', 1
+			THROW 50061, 'El id de visitante no existe', 1
+
 		UPDATE ventas.TipoVisitante
 		SET descuento = @nuevo_descuento
 		WHERE id = @id_visitante
@@ -37,6 +42,7 @@ BEGIN
 
 	BEGIN CATCH
 		PRINT(CAST(ERROR_NUMBER() AS CHAR) + ' ' + ERROR_MESSAGE())
+		-- THROW
 	END CATCH
 END
 GO                 

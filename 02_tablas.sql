@@ -111,7 +111,8 @@ CREATE TABLE parques.Parque
 	id INT IDENTITY(1,1) PRIMARY KEY,
 	tipo_parque VARCHAR(100) NOT NULL,
 	nombre VARCHAR(100) NOT NULL,
-	superficie_km2 DECIMAL(12,5) NOT NULL,
+	superficie_km2 DECIMAL(12,5) NOT NULL
+	CHECK (superficie_km2 > 0),
 	direccion VARCHAR(150) NOT NULL,
 	activo BIT NOT NULL DEFAULT 1,
 	borrado BIT NOT NULL DEFAULT 0,
@@ -141,6 +142,7 @@ CREATE TABLE ventas.Venta
 	nro_comprobante INT NOT NULL,
 	fecha DATE NOT NULL,
 	importe DECIMAL(10,2) NOT NULL
+	CHECK (importe > 0)
 )
 END
 GO
@@ -173,7 +175,7 @@ CREATE TABLE actividades.Actividad
 	duracion_minutos INT NOT NULL CHECK (duracion_minutos > 0),
 	cupo INT NOT NULL CHECK (cupo > 0),
 	borrado BIT NOT NULL DEFAULT 0,
-	CONSTRAINT pk_actividad PRIMARY KEY(id_tipo_actividad, fecha_horario)
+	CONSTRAINT PK_actividad PRIMARY KEY(id_tipo_actividad, fecha_horario)
 )
 END
 GO
@@ -183,11 +185,13 @@ BEGIN
 CREATE TABLE actividades.TarifaActividad
 (
 	id INT PRIMARY KEY,
-	id_actividad INT REFERENCES actividades.Actividad(id) NOT NULL,
-	precio DECIMAL(10,2) NOT NULL,
+	id_actividad INT NOT NULL,
+	fecha_horario_act DATETIME NOT NULL,
+	precio DECIMAL(10,2) NOT NULL CHECK (precio > 0),
 	activo BIT DEFAULT 1 NOT NULL,
 	vigencia_desde DATETIME NOT NULL,
-	vigencia_hasta DATETIME NULL 
+	vigencia_hasta DATETIME,
+	CONSTRAINT FK_actividad FOREIGN KEY(id_actividad, fecha_horario)
 )
 END
 GO
@@ -199,12 +203,12 @@ CREATE TABLE ventas.DetalleVenta
 	id_venta INT REFERENCES ventas.Venta(id),
 	linea_venta INT IDENTITY(1,1),
 	-- Al menos uno de los dos debe estar presente (validar en SP)
-	id_tarifa_parque INT NOT NULL
+	id_tarifa_parque INT NULL
 	REFERENCES ventas.TarifaParque(id),
 	id_tarifa_actividad INT NULL
 	REFERENCES actividades.TarifaActividad(id),
-	cantidad INT NOT NULL CHECK (cantidad > 0),
-	importe DECIMAL(10,2) NOT NULL,
+	cantidad INT NULL CHECK (cantidad > 0),
+	importe DECIMAL(10,2) NOT NULL CHECK (importe > 0),
 	CONSTRAINT PK_detalle_venta PRIMARY KEY(id_venta,linea_venta)
 )
 END
@@ -231,16 +235,17 @@ IF OBJECT_ID('concesiones.Concesion') IS NULL
 BEGIN
 CREATE TABLE concesiones.Concesion
 (
-	id INT PRIMARY KEY,
+	id INT IDENTITY(1,1) PRIMARY KEY,
 	id_empresa INT NOT NULL,
 	cuit_empresa CHAR(11) NOT NULL,
 	id_parque INT NOT NULL REFERENCES parques.Parque(id),
 	tipo_actividad VARCHAR(30) NOT NULL,
-	monto_mensual DECIMAL(10,2) NOT NULL,
+	monto_mensual DECIMAL(10,2) NOT NULL CHECK (monto_mensual > 0),
 	fecha_inicio_contrato DATE NOT NULL,
 	fecha_fin_contrato DATE NOT NULL,
 	CONSTRAINT FK_concesion_empresa FOREIGN KEY(id_empresa, cuit_empresa)
-	REFERENCES concesiones.Empresa(id, cuit)
+	REFERENCES concesiones.Empresa(id, cuit),
+	borrado BIT NOT NULL DEFAULT 0
 )
 END
 GO
@@ -249,12 +254,12 @@ IF OBJECT_ID('concesiones.FacturaConcesion') IS NULL
 BEGIN
 CREATE TABLE concesiones.FacturaConcesion
 (
-	id INT,
+	id INT IDENTITY(1,1),
 	id_concesion INT REFERENCES concesiones.Concesion(id),
 	fecha_vencimiento DATE NOT NULL,
 	monto_a_abonar DECIMAL(10,2) NOT NULL,
 	esta_pagada BIT NOT NULL DEFAULT 0,
-	fecha_pago DATE NOT NULL,
+	fecha_pago DATE NULL,
 	CONSTRAINT PK_factura_concesion 
 	PRIMARY KEY(id, id_concesion)
 )
