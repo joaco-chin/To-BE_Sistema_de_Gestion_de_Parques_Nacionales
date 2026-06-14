@@ -231,7 +231,7 @@ IF OBJECT_ID('concesiones.Concesion') IS NULL
 BEGIN
 CREATE TABLE concesiones.Concesion
 (
-	id INT PRIMARY KEY,
+	id INT IDENTITY(1,1) PRIMARY KEY,
 	id_empresa INT NOT NULL,
 	cuit_empresa CHAR(11) NOT NULL,
 	id_parque INT NOT NULL REFERENCES parques.Parque(id),

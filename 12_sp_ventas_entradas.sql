@@ -30,6 +30,7 @@ CREATE OR ALTER PROCEDURE ventas.FormaDePagoAlta
 AS
 BEGIN
 	SET NOCOUNT ON
+
 	INSERT INTO ventas.FormaDePago (descripcion, nro_tarjeta, cvu, cbu, alias)
 	VALUES (@descripcion, @nro_tarjeta, @cvu, @cbu, @alias)
 	
@@ -46,15 +47,19 @@ CREATE OR ALTER PROCEDURE ventas.CarritoAlta
 AS
 BEGIN
 	SET NOCOUNT ON
+
 	BEGIN TRY
 		IF NOT EXISTS (SELECT id FROM parques.Parque WHERE id = @id_parque)
-			THROW 50001, 'El parque no existe.', 1
+			THROW 50063, 'El parque no existe.', 1
 		
 		INSERT INTO ##Carrito(id_parque) VALUES(@id_parque)
+
+		PRINT('Carrito dado de alta correctamente')
 	END TRY
 
 	BEGIN CATCH
 		PRINT(CAST(ERROR_NUMBER() AS CHAR) + ' ' + ERROR_MESSAGE())
+		-- THROW
 	END CATCH
 END
 GO
@@ -68,35 +73,44 @@ CREATE OR ALTER PROCEDURE ventas.CarritoBaja
 AS
 BEGIN
 	SET NOCOUNT ON
+
 	BEGIN TRY
 		IF NOT EXISTS (SELECT id FROM ##Carrito WHERE id = @id_carrito)
-			THROW 50010, 'El carrito no existe.', 1
+			THROW 50064, 'El carrito no existe.', 1
 		
-		DELETE FROM ##Carrito WHERE id = @id_carrito
+		DELETE FROM ##Carrito WHERE id = @id_carrito -- No vamos a utilizar baja logica en carritos
 	END TRY
 
 	BEGIN CATCH
 		PRINT(CAST(ERROR_NUMBER() AS CHAR) + ' ' + ERROR_MESSAGE())
+		-- THROW
 	END CATCH
 END
 GO
 
 -- ============================================================
--- CarritoAgregar
+-- CarritoAgregarItem
 -- Agrega un detalle de venta (item) al carrito
 -- ============================================================
-CREATE OR ALTER PROCEDURE ventas.CarritoAgregar	-- ARREGLAR
+CREATE OR ALTER PROCEDURE ventas.CarritoAgregarItem
 	@id_carrito INT,
 	@id_tipo_visitante INT,
 	@id_actividad INT = NULL,
-	@cantidad INT = 0
+	@fecha_horario DATETIME = NULL,
+	@cantidad INT = NULL
 AS
 BEGIN
 	SET NOCOUNT ON
-	BEGIN TRY
 
-		IF NOT EXISTS (SELECT id FROM ventas.TipoVisitante WHERE id = @id_tipo_visitante)
-			THROW 50016, 'El tipo de visitante no existe', 1
+	BEGIN TRY
+		DECLARE @errores VARCHAR(MAX) = ''
+
+		IF NOT EXISTS (SELECT id FROM ##Carrito WHERE id = @id_carrito)
+			SET @errores += '- El carrito no existe'
+
+		IF NOT EXISTS (SELECT id FROM ventas.TipoVisitante 
+		WHERE id = @id_tipo_visitante AND borrado = 0)
+			SET @errores += '- El tipo de visitante no existe'
 		
 		DECLARE @id_parque INT
 		SET @id_parque = (SELECT id_parque FROM ventas.Carrito WHERE id = @id_carrito)
@@ -106,8 +120,16 @@ BEGIN
 
 		IF @id_actividad IS NOT NULL
 		BEGIN
-			IF NOT EXISTS (SELECT id FROM actividades.Actividad WHERE id = @id_actividad)
-				THROW 50015, 'El id de actividad no existe', 1
+			IF NOT EXISTS (SELECT id FROM actividades.Actividad 
+			WHERE id = @id_actividad AND borrado = 0)
+				SET @errores += '- La actividad no existe'
+
+			IF @cantidad IS NULL OR @cantidad < 1
+				SET @errores += '- La cantidad de actividades debe ser mayor o igual a 1'
+			
+			IF LEN(@errores) > 0
+				THROW 50065, @errores, 1
+
 			SET @id_tarifa_parque = NULL
 			
 			DECLARE @id_tarifa_actividad INT
@@ -126,20 +148,21 @@ BEGIN
 		ELSE
 		BEGIN
 		SET @id_tarifa_parque = 
-		(
-			SELECT MAX(tp.id) 
+		(	SELECT MAX(tp.id) 
 			FROM ventas.TarifaParque AS tp
 			INNER JOIN ventas.TipoVisitante AS tv
 			ON tp.id_tipo_visitante = tv.id
 			WHERE tp.id_parque = @id_parque
 			AND tv.id = @id_tipo_visitante)
 
-			SELECT @importe = tp.precio - tp.precio * tv.descuento
-			FROM ventas.TarifaParque AS tp
-			INNER JOIN ventas.TipoVisitante AS tv
-			ON tp.id_tipo_visitante = tv.id
-			WHERE tp.activo = 1
-			AND tv.id = @id_tipo_visitante
+		SELECT @importe = tp.precio - tp.precio * tv.descuento
+		FROM ventas.TarifaParque AS tp
+		INNER JOIN ventas.TipoVisitante AS tv
+		ON tp.id_tipo_visitante = tv.id
+		WHERE tp.activo = 1
+		AND tv.id = @id_tipo_visitante
+
+		SET @cantidad = NULL
 		END
 
 		INSERT INTO ventas.CarritoDetalleVenta 
@@ -147,41 +170,50 @@ BEGIN
 		VALUES 
 		(@id_carrito, @id_tarifa_parque, @id_tarifa_actividad, @cantidad, @importe)
 	END TRY
+
 	BEGIN CATCH
-		DECLARE @ErrorMessage NVARCHAR(4000) = ERROR_MESSAGE()
-		RAISERROR(@ErrorMessage, 16, 1)
+		PRINT(CAST(ERROR_NUMBER() AS CHAR) + ' ' + ERROR_MESSAGE())
+		-- THROW
 	END CATCH
 END
 GO
 
 -- ============================================================
--- CarritoEliminar
+-- CarritoEliminarItem
 -- Elimina un detalle de venta (item) del carrito
 -- ============================================================
-CREATE OR ALTER PROCEDURE ventas.CarritoEliminar
+CREATE OR ALTER PROCEDURE ventas.CarritoEliminarItem
 	@id_carrito INT,
 	@linea_venta INT
 AS
 BEGIN
+	SET NOCOUNT ON
+
 	BEGIN TRY
+		DECLARE @errores VARCHAR(MAX) = ''
+
 		IF NOT EXISTS (SELECT id_carrito 
 		FROM ventas.CarritoDetalleVenta
 		WHERE id_carrito = @id_carrito)
-			THROW 50011, 'el carrito esta vacio o no existe', 1
+			SET @errores += 'el carrito no existe o esta vacio'
 		
 		IF NOT EXISTS (SELECT linea_venta 
 		FROM ventas.CarritoDetalleVenta
 		WHERE linea_venta = @linea_venta)
-			THROW 50012, 'el item buscado no existe', 1
+			SET @errores += 'el item buscado no existe'
+
+		IF LEN(@errores) > 0
+			THROW 50066, @errores, 1
 
 		DELETE
 		FROM ventas.CarritoDetalleVenta
 		WHERE id_carrito = @id_carrito
 		AND linea_venta = @linea_venta
 	END TRY
+
 	BEGIN CATCH
-		DECLARE @ErrorMessage NVARCHAR(4000) = ERROR_MESSAGE()
-		RAISERROR(@ErrorMessage, 16, 1)
+		PRINT(CAST(ERROR_NUMBER() AS CHAR) + ' ' + ERROR_MESSAGE())
+		-- THROW
 	END CATCH
 END
 GO
@@ -194,11 +226,13 @@ CREATE OR ALTER PROCEDURE ventas.CarritoVaciar
 	@id_carrito INT
 AS
 BEGIN
+	SET NOCOUNT ON
+	
 	BEGIN TRY
 		IF NOT EXISTS (SELECT id_carrito 
 		FROM ventas.CarritoDetalleVenta
 		WHERE id_carrito = @id_carrito)
-			THROW 50011, 'el carrito esta vacio o no existe', 1
+			THROW 50064, 'el carrito esta vacio o no existe', 1
 
 		DELETE
 		FROM ventas.CarritoDetalleVenta
@@ -206,8 +240,8 @@ BEGIN
 	END TRY
 
 	BEGIN CATCH
-		DECLARE @ErrorMessage NVARCHAR(4000) = ERROR_MESSAGE()
-		RAISERROR(@ErrorMessage, 16, 1)
+		PRINT(CAST(ERROR_NUMBER() AS CHAR) + ' ' + ERROR_MESSAGE())
+		-- THROW
 	END CATCH
 END
 GO
@@ -227,6 +261,7 @@ CREATE OR ALTER PROCEDURE ventas.VentaConfirmar
 AS
 BEGIN
 	SET NOCOUNT ON
+
 	BEGIN TRY
 		BEGIN TRANSACTION
 			-- Validaciones basicas
@@ -284,9 +319,11 @@ BEGIN
 		COMMIT TRANSACTION
 	END TRY
 	BEGIN CATCH
-		IF @@TRANCOUNT > 0 ROLLBACK TRANSACTION
-		DECLARE @ErrorMessage NVARCHAR(4000) = ERROR_MESSAGE()
-		RAISERROR(@ErrorMessage, 16, 1)
+		IF @@TRANCOUNT > 0 
+			ROLLBACK TRANSACTION
+		
+		PRINT(CAST(ERROR_NUMBER() AS CHAR) + ' ' + ERROR_MESSAGE())
+		-- THROW
 	END CATCH
 END
 GO

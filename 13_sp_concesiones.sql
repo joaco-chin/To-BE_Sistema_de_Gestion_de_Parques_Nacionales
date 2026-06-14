@@ -29,25 +29,33 @@ CREATE OR ALTER PROCEDURE concesiones.EmpresaAlta
 AS
 BEGIN
 	SET NOCOUNT ON
-	DECLARE @errores VARCHAR(MAX) = ''
 
-	IF LEN(ISNULL(@cuit, '')) <> 11 SET @errores += '- El CUIT debe tener 11 caracteres.' + CHAR(13)
-	IF LTRIM(RTRIM(ISNULL(@nombre, ''))) = '' SET @errores += '- El nombre no puede estar vacio.' + CHAR(13)
-	IF LTRIM(RTRIM(ISNULL(@razon_social, ''))) = '' SET @errores += '- La razon social no puede estar vacia.' + CHAR(13)
+	BEGIN TRY
+		DECLARE @errores VARCHAR(MAX) = ''
 
-	IF EXISTS (SELECT 1 FROM concesiones.Empresa WHERE cuit = @cuit)
-		SET @errores += '- El CUIT de la empresa ya se encuentra registrado.' + CHAR(13)
+		IF LEN(ISNULL(@cuit, '')) <> 11 
+			SET @errores += '- El CUIT debe tener 11 caracteres.' + CHAR(13)
+		IF LTRIM(RTRIM(ISNULL(@nombre, ''))) = '' 
+			SET @errores += '- El nombre no puede estar vacio.' + CHAR(13)
+		IF LTRIM(RTRIM(ISNULL(@razon_social, ''))) = '' 
+			SET @errores += '- La razon social no puede estar vacia.' + CHAR(13)
 
-	IF LEN(@errores) > 0
-	BEGIN
-		RAISERROR(@errores, 16, 1)
-		RETURN
-	END
+		IF EXISTS (SELECT 1 FROM concesiones.Empresa WHERE cuit = @cuit)
+			SET @errores += '- El CUIT de la empresa ya se encuentra registrado.' + CHAR(13)
 
-	INSERT INTO concesiones.Empresa (cuit, nombre, razon_social, actividad, borrado)
-	VALUES (@cuit, @nombre, @razon_social, @actividad, 0)
+		IF LEN(@errores) > 0
+			THROW 50050, @errores, 1
 
-	PRINT 'Empresa registrada correctamente.'
+		INSERT INTO concesiones.Empresa (cuit, nombre, razon_social, actividad, borrado)
+		VALUES (@cuit, @nombre, @razon_social, @actividad, 0)
+
+		PRINT 'Empresa registrada correctamente.'
+	END TRY
+
+	BEGIN CATCH
+		PRINT(CAST(ERROR_NUMBER() AS CHAR) + ' ' + ERROR_MESSAGE())
+		-- THROW
+	END CATCH
 END
 GO
 
@@ -63,27 +71,34 @@ CREATE OR ALTER PROCEDURE concesiones.EmpresaModificar
 AS
 BEGIN
 	SET NOCOUNT ON
-	DECLARE @errores VARCHAR(MAX) = ''
 
-	IF NOT EXISTS (SELECT 1 FROM concesiones.Empresa WHERE id = @id AND borrado = 0)
-		SET @errores += '- No se encontro una empresa activa con el ID proporcionado.' + CHAR(13)
+	BEGIN TRY
+		DECLARE @errores VARCHAR(MAX) = ''
 
-	IF LEN(ISNULL(@cuit, '')) <> 11 SET @errores += '- El CUIT debe tener 11 caracteres.' + CHAR(13)
+		IF NOT EXISTS (SELECT 1 FROM concesiones.Empresa WHERE id = @id AND borrado = 0)
+			SET @errores += '- No se encontro una empresa activa con el ID proporcionado.' + CHAR(13)
 
-	IF LEN(@errores) > 0
-	BEGIN
-		RAISERROR(@errores, 16, 1)
-		RETURN
-	END
+		IF LEN(ISNULL(@cuit, '')) <> 11 
+			SET @errores += '- El CUIT debe tener 11 caracteres.' + CHAR(13)
 
-	UPDATE concesiones.Empresa
-	SET cuit = @cuit,
-		nombre = @nombre,
-		razon_social = @razon_social,
-		actividad = @actividad
-	WHERE id = @id
+		IF LEN(@errores) > 0
+			THROW 50051, @errores, 1
 
-	PRINT 'Empresa modificada correctamente.'
+		UPDATE concesiones.Empresa
+		SET 
+			cuit = @cuit,
+			nombre = @nombre,
+			razon_social = @razon_social,
+			actividad = @actividad
+		WHERE id = @id
+
+		PRINT 'Empresa modificada correctamente.'
+	END TRY
+
+	BEGIN CATCH
+		PRINT(CAST(ERROR_NUMBER() AS CHAR) + ' ' + ERROR_MESSAGE())
+		-- THROW
+	END CATCH
 END
 GO
 
@@ -91,28 +106,27 @@ GO
 -- EmpresaBaja
 -- ============================================================
 CREATE OR ALTER PROCEDURE concesiones.EmpresaBaja
-	@id INT = NULL,
-	@cuit CHAR(11) = NULL
+	@id INT,
+	@cuit CHAR(11)
 AS
 BEGIN
 	SET NOCOUNT ON
-	IF @id IS NULL AND @cuit IS NULL
-	BEGIN
-		RAISERROR('Debe proporcionar el ID o el CUIT de la empresa.', 16, 1)
-		RETURN
-	END
 
+	BEGIN TRY
 	IF NOT EXISTS (SELECT 1 FROM concesiones.Empresa WHERE (id = @id OR cuit = @cuit) AND borrado = 0)
-	BEGIN
-		RAISERROR('No se encontro una empresa activa con los datos proporcionados.', 16, 1)
-		RETURN
-	END
+		THROW 50052, 'No se encontro una empresa activa con los datos proporcionados.', 1
 
 	UPDATE concesiones.Empresa
 	SET borrado = 1
 	WHERE (id = @id OR cuit = @cuit)
 
 	PRINT 'Empresa dada de baja correctamente.'
+	END TRY
+
+	BEGIN CATCH
+		PRINT(CAST(ERROR_NUMBER() AS CHAR) + ' ' + ERROR_MESSAGE())
+		-- THROW
+	END CATCH
 END
 GO
 
@@ -147,34 +161,36 @@ CREATE OR ALTER PROCEDURE concesiones.ConcesionAlta
 AS
 BEGIN
 	SET NOCOUNT ON
-	DECLARE @errores VARCHAR(MAX) = ''
+	BEGIN TRY
+		DECLARE @errores VARCHAR(MAX) = ''
 
-	IF NOT EXISTS (SELECT 1 FROM concesiones.Empresa WHERE id = @id_empresa AND cuit = @cuit_empresa AND borrado = 0)
-		SET @errores += '- La empresa no existe o esta dada de baja.' + CHAR(13)
+		IF NOT EXISTS (SELECT 1 FROM concesiones.Empresa 
+		WHERE id = @id_empresa AND cuit = @cuit_empresa AND borrado = 0)
+			SET @errores += '- La empresa no existe o esta dada de baja.' + CHAR(13)
 
-	IF NOT EXISTS (SELECT 1 FROM parques.Parque WHERE id = @id_parque AND borrado = 0)
-		SET @errores += '- El parque no existe o esta dado de baja.' + CHAR(13)
+		IF NOT EXISTS (SELECT 1 FROM parques.Parque WHERE id = @id_parque AND borrado = 0)
+			SET @errores += '- El parque no existe o esta dado de baja.' + CHAR(13)
 
-	IF @monto_mensual < 0 SET @errores += '- El monto mensual no puede ser negativo.' + CHAR(13)
-	IF @fecha_inicio > @fecha_fin SET @errores += '- La fecha de inicio no puede ser posterior a la de fin.' + CHAR(13)
+		IF @fecha_inicio > @fecha_fin 
+			SET @errores += '- La fecha de inicio no puede ser posterior a la de fin.' + CHAR(13)
 
-	IF LEN(@errores) > 0
-	BEGIN
-		RAISERROR(@errores, 16, 1)
-		RETURN
-	END
+		IF LEN(@errores) > 0
+			THROW 50053, @errores, 1
 
-	-- Generar ID (si no es IDENTITY, pero en 02_tablas.sql no es IDENTITY para Concesion)
-	-- Revisando 02_tablas.sql:
-	-- CREATE TABLE concesiones.Concesion (id INT PRIMARY KEY, ...)
-	-- Deberia ser IDENTITY o pasarse por parametro. Lo pasare por parametro para ser flexible o usare el MAX+1.
-	
-	DECLARE @id INT = (SELECT ISNULL(MAX(id), 0) + 1 FROM concesiones.Concesion)
+		INSERT INTO concesiones.Concesion 
+		(id_empresa, cuit_empresa, id_parque, tipo_actividad, 
+		monto_mensual, fecha_inicio_contrato, fecha_fin_contrato)
+		VALUES 
+		(@id_empresa, @cuit_empresa, @id_parque, @tipo_actividad, 
+		@monto_mensual, @fecha_inicio, @fecha_fin)
 
-	INSERT INTO concesiones.Concesion (id, id_empresa, cuit_empresa, id_parque, tipo_actividad, monto_mensual, fecha_inicio_contrato, fecha_fin_contrato)
-	VALUES (@id, @id_empresa, @cuit_empresa, @id_parque, @tipo_actividad, @monto_mensual, @fecha_inicio, @fecha_fin)
+		PRINT 'Concesion registrada correctamente.'
+	END TRY
 
-	PRINT 'Concesion registrada correctamente.'
+	BEGIN CATCH
+		PRINT(CAST(ERROR_NUMBER() AS CHAR) + ' ' + ERROR_MESSAGE())
+		-- THROW
+	END CATCH
 END
 GO
 
@@ -185,38 +201,45 @@ CREATE OR ALTER PROCEDURE concesiones.ConcesionBaja
 	@id_concesion INT
 AS
 BEGIN
+	SET NOCOUNT ON
+	
 	BEGIN TRY
 		IF NOT EXISTS(SELECT id FROM concesiones.Concesion 
 		WHERE id = @id_concesion AND borrado = 0)
-			THROW 50050, 'La concesion no existe o ya fue dada de baja', 1
+			THROW 50054, 'La concesion no existe', 1
 
 		UPDATE concesiones.Concesion
 		SET borrado = 1
 		WHERE id = @id_concesion
 	END TRY
+
 	BEGIN CATCH
 		PRINT(CAST(ERROR_NUMBER() AS CHAR) + ' ' + ERROR_MESSAGE())
+		-- THROW 
 	END CATCH
 END
 GO
 
 -- ============================================================
--- ConcesionModificarPrecio
+-- ConcesionModificarMonto
 -- ============================================================
 CREATE OR ALTER PROCEDURE concesiones.ConcesionModificarMonto
 	@id_concesion INT,
 	@monto_mensual DECIMAL(10,2)
 AS
 BEGIN
+	SET NOCOUNT ON 
+
 	BEGIN TRY
 		IF NOT EXISTS(SELECT id FROM concesiones.Concesion 
 		WHERE id = @id_concesion AND borrado = 0)
-			THROW 50050, 'La concesion no existe o ya fue dada de baja', 1
+			THROW 50054, 'La concesion no existe', 1
 
 		UPDATE concesiones.Concesion
 		SET monto_mensual = @monto_mensual
 		WHERE id = @id_concesion
 	END TRY
+
 	BEGIN CATCH
 		PRINT(CAST(ERROR_NUMBER() AS CHAR) + ' ' + ERROR_MESSAGE())
 	END CATCH
@@ -229,32 +252,43 @@ GO
 CREATE OR ALTER PROCEDURE concesiones.FacturaConcesionAlta
 	@id_concesion INT
 BEGIN
+	SET NOCOUNT ON
+
 	BEGIN TRY
-		IF NOT EXISTS(SELECT 1 FROM concesiones.Concesion WHERE id = @id_concesion)
-			THROW 50040, 'El id de concesion no existe', 1
-		
-		DECLARE @monto_concesion DECIMAL(10,2) = dev.GetMontoConcesion(@id_concesion)
+		IF NOT EXISTS(SELECT 1 FROM concesiones.Concesion WHERE id = @id_concesion AND borrado = 0)
+			THROW 50054, 'La concesion no existe', 1
 
 		-- Vemos si hay o no facturas anteriores
 		IF NOT EXISTS(SELECT 1 FROM concesiones.FacturaConcesion WHERE id_concesion = @id_concesion)
 		BEGIN
 			-- Si no hay, la creamos con la fecha de inicio del contrato + 1 mes
 			INSERT INTO concesiones.FacturaConcesion(id_concesion, fecha_vencimiento, monto_a_abonar)
-			VALUES(@id_concesion, 
-			DATEADD(MONTH, 1, dev.GetFechaInicioConcesion(@id_concesion)),
-			@monto_concesion)
+			SELECT
+				@id_concesion,
+				DATEADD(MONTH, 1, fecha_inicio_contrato),
+				monto_mensual
+			FROM concesiones.Concesion
+			WHERE id = @id_concesion 
 		END
 
 		ELSE	-- Si no hay facturas anteriores, la creamos con la ultima fecha de vencimiento + 1 mes
 		BEGIN
 			INSERT INTO concesiones.FacturaConcesion(id_concesion, fecha_vencimiento, monto_a_abonar)
-			VALUES(@id_concesion, 
-			DATEADD(MONTH, 1, dev.GetFechaVencimientoFactConcesion(@id_concesion)),
-			@monto_concesion)
+			SELECT TOP 1
+				@id_concesion,
+				DATEADD(MONTH, 1, fc.fecha_vencimiento),
+				@monto_concesion)
+			FROM concesiones.FacturaConcesion AS fc
+			INNER JOIN concesiones.Concesion AS c
+			ON fc.id_concesion = c.id
+			WHERE c.id = @id_concesion 
+			ORDER BY fc.fecha_vencimiento DESC 
 		END
 	END TRY
+
 	BEGIN CATCH
 		PRINT(CAST(ERROR_NUMBER() AS CHAR) + ' ' + ERROR_MESSAGE())
+		-- THROW 
 	END CATCH
 END
 GO
@@ -264,6 +298,8 @@ CREATE OR ALTER PROCEDURE concesiones.PagoConcesionAlta
 	@id_concesion INT,
 	@fecha_pago DATE
 BEGIN
+	SET NOCOUNT ON
+
 	INSERT INTO concesiones.PagoConcesion(id_factura_concesion, id_concesion, fecha_pago)
 	VALUES (@id_factura, @id_concesion, @fecha_pago)
 END
@@ -273,6 +309,8 @@ CREATE OR ALTER PROCEDURE concesiones.FacturaConcesionPagar
 	@id_factura INT,
 	@id_concesion INT
 BEGIN
+	SET NOCOUNT ON
+
 	BEGIN TRY
 		BEGIN TRANSACTION
 			IF NOT EXISTS(SELECT 1 FROM concesiones.FacturaConcesion 
@@ -292,12 +330,13 @@ BEGIN
 			AND id_concesion = @id_concesion
 		COMMIT TRANSACTION
 	END TRY
+
 	BEGIN CATCH
 		IF @@TRANCOUNT > 0 
 			ROLLBACK TRANSACTION
 
-		DECLARE @ErrorMessage NVARCHAR(4000) = ERROR_MESSAGE()
-		RAISERROR(@ErrorMessage, 16, 1)
+		PRINT(CAST(ERROR_NUMBER() AS CHAR) + ' ' + ERROR_MESSAGE())
+		--THROW 
 	END CATCH
 END
 GO
