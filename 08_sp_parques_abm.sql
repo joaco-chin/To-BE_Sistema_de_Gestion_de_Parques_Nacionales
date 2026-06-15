@@ -35,55 +35,57 @@ AS
 BEGIN
 	SET NOCOUNT ON
 
-	DECLARE @errores VARCHAR(MAX) = ''
+	BEGIN TRY
+		DECLARE @errores VARCHAR(MAX) = ''
 
-	--  campos obligatorios no vacios
-	IF LTRIM(RTRIM(ISNULL(@nombre, ''))) = ''
-		SET @errores += '- El nombre del parque no puede estar vacio.' + CHAR(13)
+		--  campos obligatorios no vacios
+		IF LTRIM(RTRIM(ISNULL(@nombre, ''))) = ''
+			SET @errores += '- El nombre del parque no puede estar vacio.' + CHAR(13)
 
-	IF LTRIM(RTRIM(ISNULL(@tipo_parque, ''))) = ''
-		SET @errores += '- El tipo de parque no puede estar vacio.' + CHAR(13)
+		IF LTRIM(RTRIM(ISNULL(@tipo_parque, ''))) = ''
+			SET @errores += '- El tipo de parque no puede estar vacio.' + CHAR(13)
 
-	IF LTRIM(RTRIM(ISNULL(@direccion, ''))) = ''
-		SET @errores += '- La direccion no puede estar vacia.' + CHAR(13)
+		IF LTRIM(RTRIM(ISNULL(@direccion, ''))) = ''
+			SET @errores += '- La direccion no puede estar vacia.' + CHAR(13)
 
-	--  tipo_parque en valores controlados
-	IF @tipo_parque NOT IN (
-		'Parque Nacional', 'Reserva Natural', 'Monumento Natural',
-		'Reserva de Biosfera', 'Parque Interjurisdiccional'
-	)
-		SET @errores += '- El tipo de parque debe ser: Parque Nacional, Reserva Natural, Monumento Natural, Reserva de Biosfera o Parque Interjurisdiccional.' + CHAR(13)
+		--  tipo_parque en valores controlados
+		IF @tipo_parque NOT IN (
+			'Parque Nacional', 'Reserva Natural', 'Monumento Natural',
+			'Reserva de Biosfera', 'Parque Interjurisdiccional'
+		)
+			SET @errores += '- El tipo de parque debe ser: Parque Nacional, Reserva Natural, Monumento Natural, Reserva de Biosfera o Parque Interjurisdiccional.' + CHAR(13)
 
-	--  superficie positiva
-	IF @superficie_km2 <= 0
-		SET @errores += '- La superficie debe ser mayor a 0 km2.' + CHAR(13)
+		--  superficie positiva
+		IF @superficie_km2 <= 0
+			SET @errores += '- La superficie debe ser mayor a 0 km2.' + CHAR(13)
 
-	--  nombre unico
-	IF EXISTS (
-		SELECT 1 FROM parques.Parque
-		WHERE nombre = @nombre AND borrado = 0
-	)
-		SET @errores += '- Ya existe un parque con ese nombre.' + CHAR(13)
+		--  nombre unico
+		IF EXISTS (
+			SELECT 1 FROM parques.Parque
+			WHERE nombre = @nombre AND borrado = 0
+		)
+			SET @errores += '- Ya existe un parque con ese nombre.' + CHAR(13)
 
-	--  coordenadas dentro de rango
-	IF @latitud IS NOT NULL AND (@latitud < -90 OR @latitud > 90)
-		SET @errores += '- La latitud debe estar entre -90 y 90.' + CHAR(13)
+		--  coordenadas dentro de rango
+		IF @latitud IS NOT NULL AND (@latitud < -90 OR @latitud > 90)
+			SET @errores += '- La latitud debe estar entre -90 y 90.' + CHAR(13)
 
-	IF @longitud IS NOT NULL AND (@longitud < -180 OR @longitud > 180)
-		SET @errores += '- La longitud debe estar entre -180 y 180.' + CHAR(13)
+		IF @longitud IS NOT NULL AND (@longitud < -180 OR @longitud > 180)
+			SET @errores += '- La longitud debe estar entre -180 y 180.' + CHAR(13)
 
-	IF LEN(@errores) > 0
-	BEGIN
-		RAISERROR(@errores, 16, 1)
-		RETURN
-	END
+		IF LEN(@errores) > 0
+			THROW 50001, @errores, 1
 
-	INSERT INTO parques.Parque (nombre, tipo_parque, superficie_km2, direccion, provincia, latitud, longitud, activo, borrado)
-	VALUES (@nombre, @tipo_parque, @superficie_km2, @direccion, @provincia, @latitud, @longitud, 1, 0)
+		INSERT INTO parques.Parque (nombre, tipo_parque, superficie_km2, direccion, provincia, latitud, longitud, activo, borrado)
+		VALUES (@nombre, @tipo_parque, @superficie_km2, @direccion, @provincia, @latitud, @longitud, 1, 0)
 
-	SET @id_nuevo = SCOPE_IDENTITY()
+		SET @id_nuevo = SCOPE_IDENTITY()
 
-	PRINT 'Parque registrado correctamente. ID asignado: ' + CAST(@id_nuevo AS VARCHAR(10))
+		PRINT 'Parque registrado correctamente. ID asignado: ' + CAST(@id_nuevo AS VARCHAR(10))
+	END TRY
+	BEGIN CATCH
+		THROW
+	END CATCH
 END
 GO
 
@@ -104,70 +106,69 @@ AS
 BEGIN
 	SET NOCOUNT ON
 
-	DECLARE @errores VARCHAR(MAX) = ''
+	BEGIN TRY
+		DECLARE @errores VARCHAR(MAX) = ''
 
-	-- parque existe y no esta borrado
-	IF NOT EXISTS (
-		SELECT 1 FROM parques.Parque WHERE id = @id AND borrado = 0
-	)
-	BEGIN
-		RAISERROR('No se encontro un parque con el ID indicado.', 16, 1)
-		RETURN
-	END
+		-- parque existe y no esta borrado
+		IF NOT EXISTS (
+			SELECT 1 FROM parques.Parque WHERE id = @id AND borrado = 0
+		)
+			THROW 50002, 'No se encontro un parque con el ID indicado.', 1
 
-	-- campos obligatorios no vacios
-	IF LTRIM(RTRIM(ISNULL(@nombre, ''))) = ''
-		SET @errores += '- El nombre del parque no puede estar vacio.' + CHAR(13)
+		-- campos obligatorios no vacios
+		IF LTRIM(RTRIM(ISNULL(@nombre, ''))) = ''
+			SET @errores += '- El nombre del parque no puede estar vacio.' + CHAR(13)
 
-	IF LTRIM(RTRIM(ISNULL(@tipo_parque, ''))) = ''
-		SET @errores += '- El tipo de parque no puede estar vacio.' + CHAR(13)
+		IF LTRIM(RTRIM(ISNULL(@tipo_parque, ''))) = ''
+			SET @errores += '- El tipo de parque no puede estar vacio.' + CHAR(13)
 
-	IF LTRIM(RTRIM(ISNULL(@direccion, ''))) = ''
-		SET @errores += '- La direccion no puede estar vacia.' + CHAR(13)
+		IF LTRIM(RTRIM(ISNULL(@direccion, ''))) = ''
+			SET @errores += '- La direccion no puede estar vacia.' + CHAR(13)
 
-	-- tipo_parque en valores controlados
-	IF @tipo_parque NOT IN (
-		'Parque Nacional', 'Reserva Natural', 'Monumento Natural',
-		'Reserva de Biosfera', 'Parque Interjurisdiccional'
-	)
-		SET @errores += '- El tipo de parque debe ser: Parque Nacional, Reserva Natural, Monumento Natural, Reserva de Biosfera o Parque Interjurisdiccional.' + CHAR(13)
+		-- tipo_parque en valores controlados
+		IF @tipo_parque NOT IN (
+			'Parque Nacional', 'Reserva Natural', 'Monumento Natural',
+			'Reserva de Biosfera', 'Parque Interjurisdiccional'
+		)
+			SET @errores += '- El tipo de parque debe ser: Parque Nacional, Reserva Natural, Monumento Natural, Reserva de Biosfera o Parque Interjurisdiccional.' + CHAR(13)
 
-	-- superficie positiva
-	IF @superficie_km2 <= 0
-		SET @errores += '- La superficie debe ser mayor a 0 km2.' + CHAR(13)
+		-- superficie positiva
+		IF @superficie_km2 <= 0
+			SET @errores += '- La superficie debe ser mayor a 0 km2.' + CHAR(13)
 
-	-- nombre unico (excluye el propio parque)
-	IF EXISTS (
-		SELECT 1 FROM parques.Parque
-		WHERE nombre = @nombre AND borrado = 0 AND id <> @id
-	)
-		SET @errores += '- Ya existe otro parque con ese nombre.' + CHAR(13)
+		-- nombre unico (excluye el propio parque)
+		IF EXISTS (
+			SELECT 1 FROM parques.Parque
+			WHERE nombre = @nombre AND borrado = 0 AND id <> @id
+		)
+			SET @errores += '- Ya existe otro parque con ese nombre.' + CHAR(13)
 
-	-- coordenadas dentro de rango
-	IF @latitud IS NOT NULL AND (@latitud < -90 OR @latitud > 90)
-		SET @errores += '- La latitud debe estar entre -90 y 90.' + CHAR(13)
+		-- coordenadas dentro de rango
+		IF @latitud IS NOT NULL AND (@latitud < -90 OR @latitud > 90)
+			SET @errores += '- La latitud debe estar entre -90 y 90.' + CHAR(13)
 
-	IF @longitud IS NOT NULL AND (@longitud < -180 OR @longitud > 180)
-		SET @errores += '- La longitud debe estar entre -180 y 180.' + CHAR(13)
+		IF @longitud IS NOT NULL AND (@longitud < -180 OR @longitud > 180)
+			SET @errores += '- La longitud debe estar entre -180 y 180.' + CHAR(13)
 
-	IF LEN(@errores) > 0
-	BEGIN
-		RAISERROR(@errores, 16, 1)
-		RETURN
-	END
+		IF LEN(@errores) > 0
+			THROW 50003, @errores, 1
 
-	UPDATE parques.Parque
-	SET
-		nombre         = @nombre,
-		tipo_parque    = @tipo_parque,
-		superficie_km2 = @superficie_km2,
-		direccion      = @direccion,
-		provincia      = @provincia,
-		latitud        = @latitud,
-		longitud       = @longitud
-	WHERE id = @id
+		UPDATE parques.Parque
+		SET
+			nombre         = @nombre,
+			tipo_parque    = @tipo_parque,
+			superficie_km2 = @superficie_km2,
+			direccion      = @direccion,
+			provincia      = @provincia,
+			latitud        = @latitud,
+			longitud       = @longitud
+		WHERE id = @id
 
-	PRINT 'Parque modificado correctamente.'
+		PRINT 'Parque modificado correctamente.'
+	END TRY
+	BEGIN CATCH
+		THROW
+	END CATCH
 END
 GO
 
@@ -182,54 +183,53 @@ AS
 BEGIN
 	SET NOCOUNT ON
 
-	DECLARE @errores VARCHAR(MAX) = ''
+	BEGIN TRY
+		DECLARE @errores VARCHAR(MAX) = ''
 
-	-- parque existe y no esta borrado
-	IF NOT EXISTS (
-		SELECT 1 FROM parques.Parque WHERE id = @id AND borrado = 0
-	)
-	BEGIN
-		RAISERROR('No se encontro un parque con el ID indicado.', 16, 1)
-		RETURN
-	END
+		-- parque existe y no esta borrado
+		IF NOT EXISTS (
+			SELECT 1 FROM parques.Parque WHERE id = @id AND borrado = 0
+		)
+			THROW 50004, 'No se encontro un parque con el ID indicado.', 1
 
-	-- sin concesiones vigentes
-	IF EXISTS (
-		SELECT 1 FROM concesiones.Concesion
-		WHERE id_parque = @id
-		  AND fecha_fin_contrato >= CAST(GETDATE() AS DATE)
-	)
-		SET @errores += '- El parque tiene concesiones vigentes. Debe cerrarlas antes de darlo de baja.' + CHAR(13)
+		-- sin concesiones vigentes
+		IF EXISTS (
+			SELECT 1 FROM concesiones.Concesion
+			WHERE id_parque = @id
+			  AND (fecha_fin_contrato IS NULL OR fecha_fin_contrato >= CAST(GETDATE() AS DATE))
+		)
+			SET @errores += '- El parque tiene concesiones vigentes. Debe cerrarlas antes de darlo de baja.' + CHAR(13)
 
-	-- sin guardaparques asignados actualmente
-	IF EXISTS (
-		SELECT 1 FROM personal.AsignacionesGuardaParque
-		WHERE id_parque = @id
-		  AND (fecha_fin IS NULL OR fecha_fin >= CAST(GETDATE() AS DATE))
-	)
-		SET @errores += '- El parque tiene guardaparques con asignacion activa. Debe reasignarlos antes de darlo de baja.' + CHAR(13)
+		-- sin guardaparques asignados actualmente
+		IF EXISTS (
+			SELECT 1 FROM personal.AsignacionesGuardaParque
+			WHERE id_parque = @id
+			  AND (fecha_fin IS NULL OR fecha_fin >= CAST(GETDATE() AS DATE))
+		)
+			SET @errores += '- El parque tiene guardaparques con asignacion activa. Debe reasignarlos antes de darlo de baja.' + CHAR(13)
 
-	-- sin tours activos en curso
-	IF EXISTS (
-		SELECT 1
-		FROM actividades.GuiaActividad ga
-		INNER JOIN actividades.Actividad a ON a.id = ga.id_actividad
-		WHERE a.id_parque = @id
-		  AND ga.fecha_fin >= GETDATE()
-	)
-		SET @errores += '- El parque tiene tours o actividades con guia en curso. Espere a que finalicen.' + CHAR(13)
+		-- sin tours activos en curso
+		IF EXISTS (
+			SELECT 1
+			FROM actividades.GuiaActividad ga
+			INNER JOIN actividades.Actividad a ON a.id = ga.id_actividad
+			WHERE a.id_parque = @id
+			  AND (ga.fecha_fin IS NULL OR ga.fecha_fin >= GETDATE())
+		)
+			SET @errores += '- El parque tiene tours o actividades con guia en curso. Espere a que finalicen.' + CHAR(13)
 
-	IF LEN(@errores) > 0
-	BEGIN
-		RAISERROR(@errores, 16, 1)
-		RETURN
-	END
+		IF LEN(@errores) > 0
+			THROW 50005, @errores, 1
 
-	UPDATE parques.Parque
-	SET borrado = 1, activo = 0
-	WHERE id = @id
+		UPDATE parques.Parque
+		SET borrado = 1, activo = 0
+		WHERE id = @id
 
-	PRINT 'Parque dado de baja correctamente.'
+		PRINT 'Parque dado de baja correctamente.'
+	END TRY
+	BEGIN CATCH
+		THROW
+	END CATCH
 END
 GO
 
@@ -281,22 +281,44 @@ CREATE OR ALTER PROCEDURE ventas.TarifaParqueAlta
 	@vigencia_hasta DATE
 AS
 BEGIN
-	BEGIN TRY
-		IF @vigencia_desde > @vigencia_hasta
-		BEGIN
-			THROW 50003, 'La fecha de fin no puede ser menor a la fecha de inicio',1
-		END
+	SET NOCOUNT ON
 
-		INSERT INTO ventas.TarifaParque(id_parque, id_tipo_visitante,
-		precio, vigencia_desde, vigencia_hasta)
-		VALUES
-		(@id_parque, @id_tipo_visitante, @precio, @vigencia_desde,
-		@vigencia_hasta)
+	BEGIN TRY
+		DECLARE @errores VARCHAR(MAX) = ''
+
+		IF NOT EXISTS (SELECT 1 FROM parques.Parque WHERE id = @id_parque AND borrado = 0)
+			SET @errores += '- El parque no existe o esta dado de baja.' + CHAR(13)
+
+		IF NOT EXISTS (SELECT 1 FROM ventas.TipoVisitante WHERE id = @id_tipo_visitante AND borrado = 0)
+			SET @errores += '- El tipo de visitante no existe o esta dado de baja.' + CHAR(13)
+
+		IF @precio <= 0
+			SET @errores += '- El precio debe ser mayor a 0.' + CHAR(13)
+
+		IF @vigencia_desde IS NULL
+			SET @errores += '- La fecha de vigencia inicial es obligatoria.' + CHAR(13)
+
+		IF @vigencia_hasta IS NOT NULL AND @vigencia_desde > @vigencia_hasta
+			SET @errores += '- La fecha de fin no puede ser menor a la fecha de inicio.' + CHAR(13)
+
+		IF LEN(@errores) > 0
+			THROW 50013, @errores, 1
+
+		-- Desactivar tarifa anterior si existe para el mismo parque y tipo de visitante
+		UPDATE ventas.TarifaParque
+		SET activo = 0,
+			vigencia_hasta = DATEADD(DAY, -1, @vigencia_desde)
+		WHERE id_parque = @id_parque 
+		  AND id_tipo_visitante = @id_tipo_visitante
+		  AND activo = 1
+
+		INSERT INTO ventas.TarifaParque(id_parque, id_tipo_visitante, precio, vigencia_desde, vigencia_hasta, activo)
+		VALUES (@id_parque, @id_tipo_visitante, @precio, @vigencia_desde, @vigencia_hasta, 1)
+
+		PRINT 'Tarifa registrada correctamente.'
 	END TRY
 
 	BEGIN CATCH
-		SELECT 
-			ERROR_NUMBER() AS codigo_error,
-			ERROR_MESSAGE() AS mensaje_error
+		THROW
 	END CATCH
 END

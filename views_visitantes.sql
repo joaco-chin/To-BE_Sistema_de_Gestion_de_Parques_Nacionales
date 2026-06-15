@@ -7,4 +7,5 @@ SELECT
 	descripcion,
 	'% ' + CAST((descuento * 100) AS CHAR) AS descuento
 FROM ventas.TipoVisitante
+WHERE borrado = 0
 GO
