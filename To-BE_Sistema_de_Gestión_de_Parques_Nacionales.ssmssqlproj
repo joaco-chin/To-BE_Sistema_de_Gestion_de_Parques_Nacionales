@@ -151,11 +151,17 @@
           <AssociatedConnUserName>sa</AssociatedConnUserName>
           <FullPath>15_sp_importacion_superficies_csv.sql</FullPath>
         </FileNode>
-        <FileNode Name="16_test_sp_ventas.sql">
+        <FileNode Name="17_test_sp_abm_parques.sql">
           <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:JOAQUIN\SQLEXPRESS:True</AssociatedConnectionMoniker>
           <AssociatedConnSrvName>JOAQUIN\SQLEXPRESS</AssociatedConnSrvName>
           <AssociatedConnUserName />
           <FullPath>17_test_sp_abm_parques.sql</FullPath>
+        </FileNode>
+        <FileNode Name="19_test_sp_abm_personal.sql">
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:YERI-ENTA\SQL2025:False:sa</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>YERI-ENTA\SQL2025</AssociatedConnSrvName>
+          <AssociatedConnUserName>sa</AssociatedConnUserName>
+          <FullPath>19_test_sp_abm_personal.sql</FullPath>
         </FileNode>
         <FileNode Name="20_test_sp_ventas.sql">
           <AssociatedConnectionMoniker />
