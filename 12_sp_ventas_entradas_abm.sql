@@ -120,8 +120,9 @@ BEGIN
 
 		IF @id_actividad IS NOT NULL
 		BEGIN
-			IF NOT EXISTS (SELECT id FROM actividades.Actividad 
-			WHERE id = @id_actividad AND borrado = 0)
+			IF NOT EXISTS (SELECT id_tipo_actividad FROM actividades.Actividad 
+			WHERE id_tipo_actividad = @id_actividad 
+			AND fecha_horario = @fecha_horario AND borrado = 0)
 				SET @errores += '- La actividad no existe'
 
 			IF @cantidad IS NULL OR @cantidad < 1
@@ -133,7 +134,7 @@ BEGIN
 			SET @id_tarifa_parque = NULL
 			
 			DECLARE @id_tarifa_actividad INT
-			SET @id_tarifa_actividad = dev.ULTIMA_TARIFA_ACTIVIDAD(@id_actividad)
+			SET @id_tarifa_actividad = dev.GetIdUltimaTarifaAct(@id_actividad)
 			--(SELECT MAX(id)
 			--FROM actividades.TarifaActividad
 			--WHERE id_actividad = @id_actividad

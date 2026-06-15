@@ -46,15 +46,15 @@ BEGIN
 		IF LEN(@errores) > 0
 			THROW 50050, @errores, 1
 
-		INSERT INTO concesiones.Empresa (cuit, nombre, razon_social, actividad, borrado)
-		VALUES (@cuit, @nombre, @razon_social, @actividad, 0)
+		INSERT INTO concesiones.Empresa (cuit, nombre, razon_social, actividad)
+		VALUES (@cuit, @nombre, @razon_social, @actividad)
 
-		PRINT 'Empresa registrada correctamente.'
+		PRINT('Empresa registrada correctamente.')
 	END TRY
 
 	BEGIN CATCH
-		PRINT(CAST(ERROR_NUMBER() AS CHAR) + ' ' + ERROR_MESSAGE())
-		-- THROW
+		--PRINT(CAST(ERROR_NUMBER() AS CHAR) + ' ' + ERROR_MESSAGE())
+		THROW
 	END CATCH
 END
 GO
@@ -96,8 +96,8 @@ BEGIN
 	END TRY
 
 	BEGIN CATCH
-		PRINT(CAST(ERROR_NUMBER() AS CHAR) + ' ' + ERROR_MESSAGE())
-		-- THROW
+		--PRINT(CAST(ERROR_NUMBER() AS CHAR) + ' ' + ERROR_MESSAGE())
+		THROW
 	END CATCH
 END
 GO
@@ -124,8 +124,8 @@ BEGIN
 	END TRY
 
 	BEGIN CATCH
-		PRINT(CAST(ERROR_NUMBER() AS CHAR) + ' ' + ERROR_MESSAGE())
-		-- THROW
+		--PRINT(CAST(ERROR_NUMBER() AS CHAR) + ' ' + ERROR_MESSAGE())
+		THROW
 	END CATCH
 END
 GO
@@ -251,6 +251,7 @@ GO
 -- ============================================================
 CREATE OR ALTER PROCEDURE concesiones.FacturaConcesionAlta
 	@id_concesion INT
+AS
 BEGIN
 	SET NOCOUNT ON
 
@@ -277,7 +278,7 @@ BEGIN
 			SELECT TOP 1
 				@id_concesion,
 				DATEADD(MONTH, 1, fc.fecha_vencimiento),
-				@monto_concesion)
+				c.monto_mensual
 			FROM concesiones.FacturaConcesion AS fc
 			INNER JOIN concesiones.Concesion AS c
 			ON fc.id_concesion = c.id
@@ -300,6 +301,7 @@ CREATE OR ALTER PROCEDURE concesiones.PagoConcesionAlta
 	@id_factura INT,
 	@id_concesion INT,
 	@fecha_pago DATE
+AS
 BEGIN
 	SET NOCOUNT ON
 

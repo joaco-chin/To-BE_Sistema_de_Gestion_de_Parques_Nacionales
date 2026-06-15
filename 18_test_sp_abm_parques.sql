@@ -45,7 +45,7 @@ INSERT INTO @nombres_test VALUES
 
 DELETE FROM actividades.GuiaActividad
 WHERE id_actividad IN (
-    SELECT a.id FROM actividades.Actividad a
+    SELECT a.id_tipo_actividad FROM actividades.Actividad a
     WHERE a.id_parque IN (SELECT p.id FROM parques.Parque p INNER JOIN @nombres_test n ON p.nombre = n.nombre)
 )
 

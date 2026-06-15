@@ -212,7 +212,7 @@ BEGIN
 		IF EXISTS (
 			SELECT 1
 			FROM actividades.GuiaActividad ga
-			INNER JOIN actividades.Actividad a ON a.id = ga.id_actividad
+			INNER JOIN actividades.Actividad a ON a.id_tipo_actividad = ga.id_actividad
 			WHERE a.id_parque = @id
 			  AND (ga.fecha_fin IS NULL OR ga.fecha_fin >= GETDATE())
 		)

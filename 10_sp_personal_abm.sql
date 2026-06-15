@@ -365,7 +365,7 @@ BEGIN
 		IF NOT EXISTS (SELECT 1 FROM personal.Guia WHERE legajo = @legajo AND dni = @dni AND borrado = 0)
 			SET @errores += '- El guia no existe o esta dado de baja.' + CHAR(13)
 
-		IF NOT EXISTS (SELECT 1 FROM actividades.Actividad WHERE id = @id_actividad AND borrado = 0)
+		IF NOT EXISTS (SELECT 1 FROM actividades.Actividad WHERE id_tipo_actividad = @id_actividad AND borrado = 0)
 			SET @errores += '- La actividad no existe o esta dada de baja.' + CHAR(13)
 
 		IF EXISTS (
