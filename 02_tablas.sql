@@ -83,7 +83,8 @@ CREATE TABLE ventas.TipoVisitante
 (
 	id INT PRIMARY KEY,
 	descripcion VARCHAR(30) NOT NULL,
-	descuento DECIMAL(2,2)
+	descuento DECIMAL(2,2),
+	borrado BIT NOT NULL DEFAULT 0
 )
 END
 GO

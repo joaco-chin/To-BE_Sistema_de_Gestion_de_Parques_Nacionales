@@ -117,10 +117,11 @@ BEGIN
         DECLARE @msg_error VARCHAR(500) =
             'Error al leer el archivo Excel. Verifique la ruta, que el driver ACE OLEDB este instalado ' +
             'y que las consultas distribuidas ad hoc esten habilitadas. Detalle: ' + ERROR_MESSAGE()
-        RAISERROR(@msg_error, 16, 1)
+        
         DROP TABLE #raw
         DROP TABLE #errores
-        RETURN
+        
+        THROW 50014, @msg_error, 1
     END CATCH
 
     IF NOT EXISTS (SELECT 1 FROM #raw)
