@@ -39,7 +39,12 @@ BEGIN
 
 			IF NOT EXISTS(SELECT 1 FROM concesiones.FacturaConcesion 
 			WHERE id_concesion = @id_concesion AND id = @id_factura)
-				SET @errores += 'La factura de concesion no existe'
+				SET @errores += 'La factura de concesion no existe.'
+
+			IF EXISTS(SELECT 1 FROM concesiones.FacturaConcesion 
+			WHERE id_concesion = @id_concesion AND id = @id_factura
+			AND esta_pagada = 1)
+				SET @errores += 'La factura ya fue previamente pagada.'
 
 			IF @fecha_pago IS NULL
 				SET @fecha_pago = GETDATE()
@@ -53,7 +58,8 @@ BEGIN
 			IF LEN(@errores) > 0
 				THROW 50040, @errores, 1
 
-			EXECUTE concesiones.PagoConcesionAlta @id_factura, @id_concesion, @fecha_pago
+			INSERT INTO concesiones.PagoConcesion(id_factura_concesion, id_concesion, fecha_pago)
+			VALUES (@id_factura, @id_concesion, @fecha_pago)
 
 			UPDATE concesiones.FacturaConcesion
 			SET 
@@ -61,15 +67,17 @@ BEGIN
 				fecha_pago = @fecha_pago
 			WHERE id = @id_factura
 			AND id_concesion = @id_concesion
+
+			PRINT('Factura pagada.')
 		COMMIT TRANSACTION
 	END TRY
 
 	BEGIN CATCH
 		IF @@TRANCOUNT > 0 
-			ROLLBACK TRANSACTION
+			ROLLBACK TRANSACTION;
 
-		PRINT(CAST(ERROR_NUMBER() AS CHAR) + ' ' + ERROR_MESSAGE())
-		--THROW 
+		--PRINT(CAST(ERROR_NUMBER() AS CHAR) + ' ' + ERROR_MESSAGE())
+		THROW 
 	END CATCH
 END
 GO

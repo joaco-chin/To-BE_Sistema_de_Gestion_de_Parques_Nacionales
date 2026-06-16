@@ -3,20 +3,16 @@
   "WorkspaceRootPath": "D:\\Documentos\\UNLaM\\2_Base de Datos Aplicada\\Trabajo Pr\u00E1ctico\\To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{1AB1FBB9-ADC6-4A43-14C0-FA1FADD37E7E}|To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales.ssmssqlproj|D:\\Documentos\\UNLaM\\2_Base de Datos Aplicada\\Trabajo Pr\u00E1ctico\\To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales\\22_test_sp_concesiones_transacciones.sql||{B5A506EB-11BE-4782-9A18-21265C2CA0B4}",
+      "RelativeMoniker": "D:0:0:{1AB1FBB9-ADC6-4A43-14C0-FA1FADD37E7E}|To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales.ssmssqlproj|solutionrelative:22_test_sp_concesiones_transacciones.sql||{B5A506EB-11BE-4782-9A18-21265C2CA0B4}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1AB1FBB9-ADC6-4A43-14C0-FA1FADD37E7E}|To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales.ssmssqlproj|D:\\Documentos\\UNLaM\\2_Base de Datos Aplicada\\Trabajo Pr\u00E1ctico\\To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales\\15_sp_concesiones_transacciones.sql||{B5A506EB-11BE-4782-9A18-21265C2CA0B4}",
+      "RelativeMoniker": "D:0:0:{1AB1FBB9-ADC6-4A43-14C0-FA1FADD37E7E}|To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales.ssmssqlproj|solutionrelative:15_sp_concesiones_transacciones.sql||{B5A506EB-11BE-4782-9A18-21265C2CA0B4}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{1AB1FBB9-ADC6-4A43-14C0-FA1FADD37E7E}|To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales.ssmssqlproj|D:\\Documentos\\UNLaM\\2_Base de Datos Aplicada\\Trabajo Pr\u00E1ctico\\To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales\\21_test_sp_abm_concesiones.sql||{B5A506EB-11BE-4782-9A18-21265C2CA0B4}",
       "RelativeMoniker": "D:0:0:{1AB1FBB9-ADC6-4A43-14C0-FA1FADD37E7E}|To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales.ssmssqlproj|solutionrelative:21_test_sp_abm_concesiones.sql||{B5A506EB-11BE-4782-9A18-21265C2CA0B4}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{1AB1FBB9-ADC6-4A43-14C0-FA1FADD37E7E}|To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales.ssmssqlproj|D:\\Documentos\\UNLaM\\2_Base de Datos Aplicada\\Trabajo Pr\u00E1ctico\\To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales\\14_sp_concesiones_abm.sql||{B5A506EB-11BE-4782-9A18-21265C2CA0B4}",
-      "RelativeMoniker": "D:0:0:{1AB1FBB9-ADC6-4A43-14C0-FA1FADD37E7E}|To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales.ssmssqlproj|solutionrelative:14_sp_concesiones_abm.sql||{B5A506EB-11BE-4782-9A18-21265C2CA0B4}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{1AB1FBB9-ADC6-4A43-14C0-FA1FADD37E7E}|To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales.ssmssqlproj|D:\\Documentos\\UNLaM\\2_Base de Datos Aplicada\\Trabajo Pr\u00E1ctico\\To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales\\07_funciones_concesiones.sql||{B5A506EB-11BE-4782-9A18-21265C2CA0B4}",
-      "RelativeMoniker": "D:0:0:{1AB1FBB9-ADC6-4A43-14C0-FA1FADD37E7E}|To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales.ssmssqlproj|solutionrelative:07_funciones_concesiones.sql||{B5A506EB-11BE-4782-9A18-21265C2CA0B4}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{1AB1FBB9-ADC6-4A43-14C0-FA1FADD37E7E}|To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales.ssmssqlproj|D:\\Documentos\\UNLaM\\2_Base de Datos Aplicada\\Trabajo Pr\u00E1ctico\\To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales\\02_tablas.sql||{B5A506EB-11BE-4782-9A18-21265C2CA0B4}",
-      "RelativeMoniker": "D:0:0:{1AB1FBB9-ADC6-4A43-14C0-FA1FADD37E7E}|To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales.ssmssqlproj|solutionrelative:02_tablas.sql||{B5A506EB-11BE-4782-9A18-21265C2CA0B4}"
     }
   ],
   "DocumentGroupContainers": [
@@ -26,51 +22,40 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "02_tablas.sql - JOAQUIN\\SQLEXPRESS.master (JOAQUIN\\joaqu (77))",
-              "DocumentMoniker": "D:\\Documentos\\UNLaM\\2_Base de Datos Aplicada\\Trabajo Pr\u00E1ctico\\To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales\\02_tablas.sql",
-              "RelativeDocumentMoniker": "02_tablas.sql",
-              "ToolTip": "02_tablas.sql - JOAQUIN\\SQLEXPRESS.master (JOAQUIN\\joaqu (77))",
+              "DocumentIndex": 1,
+              "Title": "15_sp_concesiones_transacciones.sql - JOAQUIN\\SQLEXPRESS.ToBE (JOAQUIN\\joaqu (65))",
+              "DocumentMoniker": "D:\\Documentos\\UNLaM\\2_Base de Datos Aplicada\\Trabajo Pr\u00E1ctico\\To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales\\15_sp_concesiones_transacciones.sql",
+              "RelativeDocumentMoniker": "15_sp_concesiones_transacciones.sql",
+              "ToolTip": "15_sp_concesiones_transacciones.sql - JOAQUIN\\SQLEXPRESS.ToBE (JOAQUIN\\joaqu (65))",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
-              "WhenOpened": "2026-06-16T19:29:53.366Z",
-              "EditorCaption": " - JOAQUIN\\SQLEXPRESS.master (JOAQUIN\\joaqu (77))"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "07_funciones_concesiones.sql - JOAQUIN\\SQLEXPRESS.ToBE (JOAQUIN\\joaqu (65))",
-              "DocumentMoniker": "D:\\Documentos\\UNLaM\\2_Base de Datos Aplicada\\Trabajo Pr\u00E1ctico\\To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales\\07_funciones_concesiones.sql",
-              "RelativeDocumentMoniker": "07_funciones_concesiones.sql",
-              "ToolTip": "07_funciones_concesiones.sql - JOAQUIN\\SQLEXPRESS.ToBE (JOAQUIN\\joaqu (65))",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
-              "WhenOpened": "2026-06-16T19:20:01.807Z",
+              "WhenOpened": "2026-06-16T20:19:15.397Z",
               "EditorCaption": " - JOAQUIN\\SQLEXPRESS.ToBE (JOAQUIN\\joaqu (65))"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "14_sp_concesiones_abm.sql - JOAQUIN\\SQLEXPRESS.ToBE (JOAQUIN\\joaqu (74))",
-              "DocumentMoniker": "D:\\Documentos\\UNLaM\\2_Base de Datos Aplicada\\Trabajo Pr\u00E1ctico\\To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales\\14_sp_concesiones_abm.sql",
-              "RelativeDocumentMoniker": "14_sp_concesiones_abm.sql",
-              "ToolTip": "14_sp_concesiones_abm.sql - JOAQUIN\\SQLEXPRESS.ToBE (JOAQUIN\\joaqu (74))",
+              "DocumentIndex": 0,
+              "Title": "22_test_sp_concesiones_transacciones.sql - JOAQUIN\\SQLEXPRESS.ToBE (JOAQUIN\\joaqu (52))",
+              "DocumentMoniker": "D:\\Documentos\\UNLaM\\2_Base de Datos Aplicada\\Trabajo Pr\u00E1ctico\\To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales\\22_test_sp_concesiones_transacciones.sql",
+              "RelativeDocumentMoniker": "22_test_sp_concesiones_transacciones.sql",
+              "ToolTip": "22_test_sp_concesiones_transacciones.sql - JOAQUIN\\SQLEXPRESS.ToBE (JOAQUIN\\joaqu (52))",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
-              "WhenOpened": "2026-06-16T16:44:21.884Z",
-              "EditorCaption": " - JOAQUIN\\SQLEXPRESS.ToBE (JOAQUIN\\joaqu (74))"
+              "WhenOpened": "2026-06-16T20:15:20.02Z",
+              "EditorCaption": " - JOAQUIN\\SQLEXPRESS.ToBE (JOAQUIN\\joaqu (52))"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "21_test_sp_abm_concesiones.sql - JOAQUIN\\SQLEXPRESS.ToBE (JOAQUIN\\joaqu (63))",
+              "DocumentIndex": 2,
+              "Title": "21_test_sp_abm_concesiones.sql - JOAQUIN\\SQLEXPRESS.master (JOAQUIN\\joaqu (61))",
               "DocumentMoniker": "D:\\Documentos\\UNLaM\\2_Base de Datos Aplicada\\Trabajo Pr\u00E1ctico\\To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales\\21_test_sp_abm_concesiones.sql",
               "RelativeDocumentMoniker": "21_test_sp_abm_concesiones.sql",
-              "ToolTip": "21_test_sp_abm_concesiones.sql - JOAQUIN\\SQLEXPRESS.ToBE (JOAQUIN\\joaqu (63))",
+              "ToolTip": "21_test_sp_abm_concesiones.sql - JOAQUIN\\SQLEXPRESS.master (JOAQUIN\\joaqu (61))",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
-              "WhenOpened": "2026-06-16T16:43:24.519Z",
-              "EditorCaption": " - JOAQUIN\\SQLEXPRESS.ToBE (JOAQUIN\\joaqu (63))"
+              "WhenOpened": "2026-06-16T20:15:23.283Z",
+              "EditorCaption": " - JOAQUIN\\SQLEXPRESS.master (JOAQUIN\\joaqu (61))"
             }
           ]
         }

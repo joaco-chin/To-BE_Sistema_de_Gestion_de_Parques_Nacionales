@@ -284,20 +284,3 @@ BEGIN
 	END CATCH
 END
 GO
-
--- ============================================================
--- PagoConcesionAlta
--- ============================================================
-CREATE OR ALTER PROCEDURE concesiones.PagoConcesionAlta
-	@id_factura INT,
-	@id_concesion INT,
-	@fecha_pago DATE
-AS
-BEGIN
-	SET NOCOUNT ON
-
-	INSERT INTO concesiones.PagoConcesion(id_factura_concesion, id_concesion, fecha_pago)
-	VALUES (@id_factura, @id_concesion, @fecha_pago)
-END
-GO
-
