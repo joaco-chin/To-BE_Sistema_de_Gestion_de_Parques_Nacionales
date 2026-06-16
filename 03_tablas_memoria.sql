@@ -25,7 +25,7 @@ GO
 -- el SP CarritoCargar y para confirmar la venta deben utilizar el
 -- SP VentaConfirmar
 -- ============================================================
-IF OBJECT_ID('##Carrito') IS NULL
+IF OBJECT_ID('tempdb..##Carrito') IS NULL
 BEGIN
 CREATE TABLE ##Carrito
 (
@@ -40,7 +40,7 @@ GO
 -- Tabla temporal global usada para agregar items al carrito de 
 -- compras
 -- ============================================================
-IF OBJECT_ID('##CarritoDetalleVenta') IS NULL
+IF OBJECT_ID('tempdb..##CarritoDetalleVenta') IS NULL
 BEGIN
 CREATE TABLE ##CarritoDetalleVenta
 (
