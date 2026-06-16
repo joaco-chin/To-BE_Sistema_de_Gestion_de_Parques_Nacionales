@@ -1,7 +1,7 @@
 USE ToBE
 GO
 
-CREATE OR ALTER FUNCTION dev.GetMontoConcesion(@id_concesion INT)
+CREATE OR ALTER FUNCTION dev.getConcesionMonto(@id_concesion INT)
 RETURNS DECIMAL(10,2)
 AS
 BEGIN
@@ -16,32 +16,42 @@ BEGIN
 END
 GO
 
-CREATE OR ALTER FUNCTION dev.GetFechaInicioConcesion(@id_concesion INT)
+CREATE OR ALTER FUNCTION dev.getConcesionFechaFin(@id_concesion INT)
 RETURNS DATE
 AS
 BEGIN
-	DECLARE @fecha_inicio_contrato DATE
-	SET @fecha_inicio_contrato =
+	DECLARE @fecha_fin_contrato DATE
+	SET @fecha_fin_contrato =
 	(
-		SELECT TOP 1 fecha_inicio_contrato
+		SELECT TOP 1 fecha_fin_contrato
 		FROM concesiones.Concesion
 		WHERE id = @id_concesion
 	)
-	RETURN @fecha_inicio_contrato
+	RETURN @fecha_fin_contrato
 END
 GO
 
-CREATE OR ALTER FUNCTION dev.GetFechaVencimientoFactConcesion(@id_concesion INT)
+CREATE OR ALTER FUNCTION dev.getFactConcesionFechaVencimiento(@id_concesion INT)
 RETURNS DATE
 AS
 BEGIN
 	DECLARE @fecha_vencimiento DATE
-	SET @fecha_vencimiento =
-	(
-		SELECT TOP 1 MAX(@fecha_vencimiento)
-		FROM concesiones.FacturaConcesion
-		WHERE id = @id_concesion
-	)
-	RETURN @fecha_vencimiento
+	
+	IF NOT EXISTS (SELECT 1 FROM concesiones.FacturaConcesion WHERE id_concesion = @id_concesion)
+	BEGIN
+		SET @fecha_vencimiento = 
+		(SELECT fecha_inicio_contrato FROM concesiones.Concesion WHERE id = @id_concesion)
+	END
+	
+	ELSE
+	BEGIN
+		SET @fecha_vencimiento =
+		(
+			SELECT MAX(fecha_vencimiento)
+			FROM concesiones.FacturaConcesion
+			WHERE id_concesion = @id_concesion
+		) 
+	END
+	RETURN DATEADD(MONTH, 1, @fecha_vencimiento)
 END
 GO

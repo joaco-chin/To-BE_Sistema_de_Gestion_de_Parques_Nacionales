@@ -168,7 +168,7 @@ IF OBJECT_ID('actividades.Actividad') IS NULL
 BEGIN
 CREATE TABLE actividades.Actividad
 (
-	id_tipo_actividad INT REFERENCES TipoActividad(id),
+	id_tipo_actividad INT REFERENCES actividades.TipoActividad(id),
 	fecha_horario DATETIME,
 	id_parque INT NOT NULL REFERENCES parques.Parque(id),
 	nombre VARCHAR(50) NOT NULL,
@@ -192,7 +192,8 @@ CREATE TABLE actividades.TarifaActividad
 	activo BIT DEFAULT 1 NOT NULL,
 	vigencia_desde DATETIME NOT NULL,
 	vigencia_hasta DATETIME,
-	CONSTRAINT FK_actividad FOREIGN KEY(id_actividad, fecha_horario)
+	CONSTRAINT FK_actividad FOREIGN KEY(id_actividad, fecha_horario_act)
+	REFERENCES actividades.Actividad(id_tipo_actividad, fecha_horario)
 )
 END
 GO
@@ -206,7 +207,7 @@ CREATE TABLE ventas.DetalleVenta
 	-- Al menos uno de los dos debe estar presente (validar en SP)
 	id_tarifa_parque INT NULL
 	REFERENCES ventas.TarifaParque(id),
-	id_tarifa_actividad INT NULL
+	id_tarifa_actividad INT NULL,
 	REFERENCES actividades.TarifaActividad(id),
 	cantidad INT NULL CHECK (cantidad > 0),
 	importe DECIMAL(10,2) NOT NULL CHECK (importe > 0),
@@ -219,15 +220,18 @@ IF OBJECT_ID('actividades.GuiaActividad') IS NULL
 BEGIN
 CREATE TABLE actividades.GuiaActividad
 (
-	id_actividad INT REFERENCES actividades.Actividad(id),
+	id_actividad INT,
+	fecha_horario_act DATETIME, 
 	legajo_guia INT,
 	dni_guia CHAR(8),
 	fecha_inicio DATETIME NOT NULL,
 	fecha_fin DATETIME,
 	CONSTRAINT PK_guia_actividad 
 	PRIMARY KEY(id_actividad, legajo_guia, dni_guia, fecha_inicio),
-	CONSTRAINT FK_guia_actividad FOREIGN KEY(legajo_guia, dni_guia)
-	REFERENCES personal.Guia(legajo, dni)
+	CONSTRAINT FK_ga_guia FOREIGN KEY(legajo_guia, dni_guia)
+	REFERENCES personal.Guia(legajo, dni),
+	CONSTRAINT FK_ga_actividad FOREIGN KEY(id_actividad, fecha_horario_act)
+	REFERENCES actividades.Actividad(id_tipo_actividad, fecha_horario)
 )
 END
 GO

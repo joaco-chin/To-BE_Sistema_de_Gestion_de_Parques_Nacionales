@@ -46,15 +46,15 @@ BEGIN
 		IF LEN(@errores) > 0
 			THROW 50050, @errores, 1
 
-		INSERT INTO concesiones.Empresa (cuit, nombre, razon_social, actividad, borrado)
-		VALUES (@cuit, @nombre, @razon_social, @actividad, 0)
+		INSERT INTO concesiones.Empresa (cuit, nombre, razon_social, actividad)
+		VALUES (@cuit, @nombre, @razon_social, @actividad)
 
-		PRINT 'Empresa registrada correctamente.'
+		PRINT('Empresa registrada correctamente.')
 	END TRY
 
 	BEGIN CATCH
-		PRINT(CAST(ERROR_NUMBER() AS CHAR) + ' ' + ERROR_MESSAGE())
-		-- THROW
+		--PRINT(CAST(ERROR_NUMBER() AS CHAR) + ' ' + ERROR_MESSAGE())
+		THROW
 	END CATCH
 END
 GO
@@ -75,18 +75,19 @@ BEGIN
 	BEGIN TRY
 		DECLARE @errores VARCHAR(MAX) = ''
 
-		IF NOT EXISTS (SELECT 1 FROM concesiones.Empresa WHERE id = @id AND borrado = 0)
+		IF NOT EXISTS (SELECT 1 FROM concesiones.Empresa WHERE id = @id 
+		AND cuit = @cuit AND borrado = 0)
 			SET @errores += '- No se encontro una empresa activa con el ID proporcionado.' + CHAR(13)
-
-		IF LEN(ISNULL(@cuit, '')) <> 11 
-			SET @errores += '- El CUIT debe tener 11 caracteres.' + CHAR(13)
+		IF LTRIM(RTRIM(ISNULL(@nombre, ''))) = '' 
+			SET @errores += '- El nombre no puede estar vacio.' + CHAR(13)
+		IF LTRIM(RTRIM(ISNULL(@razon_social, ''))) = '' 
+			SET @errores += '- La razon social no puede estar vacia.' + CHAR(13)
 
 		IF LEN(@errores) > 0
 			THROW 50051, @errores, 1
 
 		UPDATE concesiones.Empresa
 		SET 
-			cuit = @cuit,
 			nombre = @nombre,
 			razon_social = @razon_social,
 			actividad = @actividad
@@ -96,8 +97,8 @@ BEGIN
 	END TRY
 
 	BEGIN CATCH
-		PRINT(CAST(ERROR_NUMBER() AS CHAR) + ' ' + ERROR_MESSAGE())
-		-- THROW
+		--PRINT(CAST(ERROR_NUMBER() AS CHAR) + ' ' + ERROR_MESSAGE())
+		THROW
 	END CATCH
 END
 GO
@@ -114,7 +115,7 @@ BEGIN
 
 	BEGIN TRY
 	IF NOT EXISTS (SELECT 1 FROM concesiones.Empresa WHERE (id = @id OR cuit = @cuit) AND borrado = 0)
-		THROW 50052, 'No se encontro una empresa activa con los datos proporcionados.', 1
+		THROW 50052, '- No se encontro una empresa activa con los datos proporcionados.', 1
 
 	UPDATE concesiones.Empresa
 	SET borrado = 1
@@ -124,8 +125,8 @@ BEGIN
 	END TRY
 
 	BEGIN CATCH
-		PRINT(CAST(ERROR_NUMBER() AS CHAR) + ' ' + ERROR_MESSAGE())
-		-- THROW
+		--PRINT(CAST(ERROR_NUMBER() AS CHAR) + ' ' + ERROR_MESSAGE())
+		THROW
 	END CATCH
 END
 GO
@@ -166,10 +167,10 @@ BEGIN
 
 		IF NOT EXISTS (SELECT 1 FROM concesiones.Empresa 
 		WHERE id = @id_empresa AND cuit = @cuit_empresa AND borrado = 0)
-			SET @errores += '- La empresa no existe o esta dada de baja.' + CHAR(13)
+			SET @errores += '- No se encontro una empresa con el ID proporcionado' + CHAR(13)
 
 		IF NOT EXISTS (SELECT 1 FROM parques.Parque WHERE id = @id_parque AND borrado = 0)
-			SET @errores += '- El parque no existe o esta dado de baja.' + CHAR(13)
+			SET @errores += '- No se encontro un parque con el ID proporcionado' + CHAR(13)
 
 		IF @fecha_inicio > @fecha_fin 
 			SET @errores += '- La fecha de inicio no puede ser posterior a la de fin.' + CHAR(13)
@@ -188,8 +189,8 @@ BEGIN
 	END TRY
 
 	BEGIN CATCH
-		PRINT(CAST(ERROR_NUMBER() AS CHAR) + ' ' + ERROR_MESSAGE())
-		-- THROW
+		--PRINT(CAST(ERROR_NUMBER() AS CHAR) + ' ' + ERROR_MESSAGE())
+		THROW
 	END CATCH
 END
 GO
@@ -206,16 +207,18 @@ BEGIN
 	BEGIN TRY
 		IF NOT EXISTS(SELECT id FROM concesiones.Concesion 
 		WHERE id = @id_concesion AND borrado = 0)
-			THROW 50054, 'La concesion no existe', 1
+			THROW 50054, 'No se encontro una concesion con el ID proporcionado', 1
 
 		UPDATE concesiones.Concesion
 		SET borrado = 1
 		WHERE id = @id_concesion
+
+		PRINT 'Concesion dada de baja correctamente.'
 	END TRY
 
 	BEGIN CATCH
-		PRINT(CAST(ERROR_NUMBER() AS CHAR) + ' ' + ERROR_MESSAGE())
-		-- THROW 
+		--PRINT(CAST(ERROR_NUMBER() AS CHAR) + ' ' + ERROR_MESSAGE())
+		THROW 
 	END CATCH
 END
 GO
@@ -233,15 +236,18 @@ BEGIN
 	BEGIN TRY
 		IF NOT EXISTS(SELECT id FROM concesiones.Concesion 
 		WHERE id = @id_concesion AND borrado = 0)
-			THROW 50054, 'La concesion no existe', 1
+			THROW 50054, 'No se encontro una concesion con el ID proporcionado', 1
 
 		UPDATE concesiones.Concesion
 		SET monto_mensual = @monto_mensual
 		WHERE id = @id_concesion
+
+		PRINT 'Concesion modificada correctamente.'
 	END TRY
 
 	BEGIN CATCH
-		PRINT(CAST(ERROR_NUMBER() AS CHAR) + ' ' + ERROR_MESSAGE())
+		--PRINT(CAST(ERROR_NUMBER() AS CHAR) + ' ' + ERROR_MESSAGE())
+		THROW
 	END CATCH
 END
 GO
@@ -251,44 +257,30 @@ GO
 -- ============================================================
 CREATE OR ALTER PROCEDURE concesiones.FacturaConcesionAlta
 	@id_concesion INT
+AS
 BEGIN
 	SET NOCOUNT ON
 
 	BEGIN TRY
 		IF NOT EXISTS(SELECT 1 FROM concesiones.Concesion WHERE id = @id_concesion AND borrado = 0)
-			THROW 50054, 'La concesion no existe', 1
+			THROW 50054, '- La concesion no existe.', 1
 
-		-- Vemos si hay o no facturas anteriores
-		IF NOT EXISTS(SELECT 1 FROM concesiones.FacturaConcesion WHERE id_concesion = @id_concesion)
-		BEGIN
-			-- Si no hay, la creamos con la fecha de inicio del contrato + 1 mes
-			INSERT INTO concesiones.FacturaConcesion(id_concesion, fecha_vencimiento, monto_a_abonar)
-			SELECT
-				@id_concesion,
-				DATEADD(MONTH, 1, fecha_inicio_contrato),
-				monto_mensual
-			FROM concesiones.Concesion
-			WHERE id = @id_concesion 
-		END
+		DECLARE @fecha_vencimiento DATE = dev.getFactConcesionFechaVencimiento(@id_concesion);
 
-		ELSE	-- Si no hay facturas anteriores, la creamos con la ultima fecha de vencimiento + 1 mes
-		BEGIN
-			INSERT INTO concesiones.FacturaConcesion(id_concesion, fecha_vencimiento, monto_a_abonar)
-			SELECT TOP 1
-				@id_concesion,
-				DATEADD(MONTH, 1, fc.fecha_vencimiento),
-				@monto_concesion)
-			FROM concesiones.FacturaConcesion AS fc
-			INNER JOIN concesiones.Concesion AS c
-			ON fc.id_concesion = c.id
-			WHERE c.id = @id_concesion 
-			ORDER BY fc.fecha_vencimiento DESC 
-		END
+		IF @fecha_vencimiento > dev.getConcesionFechaFin(@id_concesion)
+			THROW 50055, '- El plazo de concesion ha terminado, no se puede emitir otra factura.', 1
+
+		INSERT INTO concesiones.FacturaConcesion 
+		(id_concesion, fecha_vencimiento, monto_a_abonar)
+		VALUES
+		(@id_concesion, @fecha_vencimiento, dev.getConcesionMonto(@id_concesion))
+
+		PRINT('Factura emitida correctamente.')
 	END TRY
 
 	BEGIN CATCH
-		PRINT(CAST(ERROR_NUMBER() AS CHAR) + ' ' + ERROR_MESSAGE())
-		-- THROW 
+		--PRINT(CAST(ERROR_NUMBER() AS CHAR) + ' ' + ERROR_MESSAGE())
+		THROW 
 	END CATCH
 END
 GO
@@ -300,6 +292,7 @@ CREATE OR ALTER PROCEDURE concesiones.PagoConcesionAlta
 	@id_factura INT,
 	@id_concesion INT,
 	@fecha_pago DATE
+AS
 BEGIN
 	SET NOCOUNT ON
 

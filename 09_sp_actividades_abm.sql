@@ -99,6 +99,7 @@ BEGIN
 		-- THROW -- También podemos enviar los errores a capas superiores
 	END CATCH
 END
+GO
 
 -- ============================================================
 -- TipoActividadBaja
@@ -162,7 +163,7 @@ BEGIN
 		IF LEN(@errores) > 0
 			THROW 50033, @errores, 1
 
-		INSERT INTO actividades.Actividad (tipo_actividad, fecha_horario, id_parque, nombre, descripcion, cupo, duracion_minutos, borrado)
+		INSERT INTO actividades.Actividad (id_tipo_actividad, fecha_horario, id_parque, nombre, descripcion, cupo, duracion_minutos, borrado)
 		VALUES (@id_tipo_actividad, @fecha_horario, @id_parque, @nombre, @descripcion, @cupo, @duracion_minutos, 0)
 
 		PRINT('Actividad registrada correctamente.')
@@ -324,10 +325,10 @@ CREATE OR ALTER PROCEDURE actividades.ActividadConsultar
 AS
 BEGIN
 	SET NOCOUNT ON
-	SELECT id, id_parque, tipo_actividad, nombre, descripcion, cupo, duracion_minutos
+	SELECT id_tipo_actividad, fecha_horario, id_parque, nombre, descripcion, cupo, duracion_minutos
 	FROM actividades.Actividad
 	WHERE (@id_parque IS NULL OR id_parque = @id_parque)
-	  AND (@id IS NULL OR id = @id)
+	  AND (@id IS NULL OR id_tipo_actividad = @id)
 	  AND borrado = 0
 END
 GO
@@ -347,7 +348,7 @@ BEGIN
 	BEGIN TRY
 		DECLARE @errores VARCHAR(MAX) = ''
 
-		IF NOT EXISTS (SELECT 1 FROM actividades.Actividad WHERE id = @id_actividad AND borrado = 0)
+		IF NOT EXISTS (SELECT 1 FROM actividades.Actividad WHERE id_tipo_actividad = @id_actividad AND borrado = 0)
 			SET @errores += '- La actividad no existe o esta dada de baja.' + CHAR(13)
 
 		IF @precio < 0 
