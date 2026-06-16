@@ -181,23 +181,23 @@
           <AssociatedConnUserName />
           <FullPath>21_test_sp_abm_concesiones.sql</FullPath>
         </FileNode>
-        <FileNode Name="22_test_sp_importacion_parques.sql">
-          <AssociatedConnectionMoniker />
-          <AssociatedConnSrvName />
-          <AssociatedConnUserName />
-          <FullPath>22_test_sp_importacion_parques.sql</FullPath>
-        </FileNode>
-        <FileNode Name="23_test_sp_importacion_superficies_csv.sql">
-          <AssociatedConnectionMoniker />
-          <AssociatedConnSrvName />
-          <AssociatedConnUserName />
-          <FullPath>23_test_sp_importacion_superficies_csv.sql</FullPath>
-        </FileNode>
-        <FileNode Name="SQLQuery1.sql">
+        <FileNode Name="22_test_sp_concesiones_transacciones.sql">
           <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:JOAQUIN\SQLEXPRESS:True</AssociatedConnectionMoniker>
           <AssociatedConnSrvName>JOAQUIN\SQLEXPRESS</AssociatedConnSrvName>
           <AssociatedConnUserName />
-          <FullPath>SQLQuery1.sql</FullPath>
+          <FullPath>22_test_sp_concesiones_transacciones.sql</FullPath>
+        </FileNode>
+        <FileNode Name="23_test_sp_importacion_parques.sql">
+          <AssociatedConnectionMoniker />
+          <AssociatedConnSrvName />
+          <AssociatedConnUserName />
+          <FullPath>23_test_sp_importacion_parques.sql</FullPath>
+        </FileNode>
+        <FileNode Name="24_test_sp_importacion_superficies_csv.sql">
+          <AssociatedConnectionMoniker />
+          <AssociatedConnSrvName />
+          <AssociatedConnUserName />
+          <FullPath>24_test_sp_importacion_superficies_csv.sql</FullPath>
         </FileNode>
         <FileNode Name="views_visitantes.sql">
           <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:JOAQUIN\SQLEXPRESS:True</AssociatedConnectionMoniker>
