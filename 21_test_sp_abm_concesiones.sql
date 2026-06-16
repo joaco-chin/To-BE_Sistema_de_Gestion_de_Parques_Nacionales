@@ -40,10 +40,20 @@ EXECUTE concesiones.EmpresaAlta
 	@cuit			= '30645664546',
 	@nombre			= 'El Topo',
 	@razon_social	= 'EL TOPO S R L',
-	@tipo_actividad	= 'Comercial'
+	@actividad		= 'Comercial'
 
 DECLARE @id_identity INT = (SELECT MAX(id) FROM concesiones.Empresa)
 PRINT('Id asignado: ' + (CAST(@id_identity AS CHAR)))
+SELECT
+	1 AS nro_test,
+	id,
+	cuit,
+	nombre,
+	razon_social,
+	actividad,
+	borrado
+FROM concesiones.Empresa
+WHERE borrado = 0
 GO
 -- ---------------------------------------------------------------
 -- TEST 2: Fallo - cuit con longitud erronea
@@ -52,10 +62,10 @@ GO
 
 PRINT('-- TEST 2: Fallo - cuit con longitud erronea')
 EXECUTE concesiones.EmpresaAlta 
-	'3064566454',
-	'El Topo',
-	'EL TOPO S R L',
-	'Comercial'
+	@cuit			= '3064566454',
+	@nombre			= 'El Topo',
+	@razon_social	= 'EL TOPO S R L',
+	@actividad		= 'Comercial'
 GO
 
 -- ---------------------------------------------------------------
@@ -64,10 +74,10 @@ GO
 -- ---------------------------------------------------------------
 PRINT('-- TEST 3: Fallo - nombre vacio')
 EXECUTE concesiones.EmpresaAlta 
-	'30576856764',
-	'',
-	'JULIA TOURS S A',
-	'Turismo'
+	@cuit			= '30576856764',
+	@nombre			= '',
+	@razon_social	= 'JULIA TOURS S A',
+	@actividad		= 'Turismo'
 GO
 
 -- ---------------------------------------------------------------
@@ -76,10 +86,10 @@ GO
 -- ---------------------------------------------------------------
 PRINT('-- TEST 4: Fallo - razon social vacia')
 EXECUTE concesiones.EmpresaAlta 
-	'30576856764',
-	'Juliá Tours',
-	'',
-	'Turismo'
+	@cuit			= '30576856764',
+	@nombre			= 'Juliá Tours',
+	@razon_social	= '',
+	@actividad		= 'Turismo'
 GO
 
 -- ---------------------------------------------------------------
@@ -97,10 +107,10 @@ PRINT('-- -> cuit con longitud erronea')
 PRINT('-- -> nombre vacio')
 PRINT('-- -> La razon social no puede estar vacia.')
 EXECUTE concesiones.EmpresaAlta 
-	'305',
-	'',
-	'',
-	'Turismo'
+	@cuit			= '305',
+	@nombre			= '',
+	@razon_social	= '',
+	@actividad		= 'Turismo'
 GO
 
 -- ---------------------------------------------------------------
@@ -109,10 +119,10 @@ GO
 -- ---------------------------------------------------------------
 PRINT('-- TEST 6: Fallo - cuit ya existente')
 EXECUTE concesiones.EmpresaAlta 
-	'30645664546',
-	'El Topo',
-	'EL TOPO S R L',
-	'Comercial'
+	@cuit			= '30645664546',
+	@nombre			= 'El Topo',
+	@razon_social	= 'EL TOPO S R L',
+	@actividad		= 'Comercial'
 GO
 
 PRINT '======================================================='
@@ -127,11 +137,21 @@ GO
 PRINT('-- TEST 7: Modificacion exitosa')
 DECLARE @id_identity INT = (SELECT MAX(id) FROM concesiones.Empresa)
 EXECUTE concesiones.EmpresaModificar
-	@id_identity,
-	'30645664546',
-	'Los topos',
-	'LOS TOPOS S A',
-	'Gastronomia'
+	@id				= @id_identity,
+	@cuit			= '30645664546',
+	@nombre			= 'Los topos',
+	@razon_social	= 'LOS TOPOS S A',
+	@actividad		= 'Gastronomia'
+SELECT
+	7 AS nro_test,
+	id,
+	cuit,
+	nombre,
+	razon_social,
+	actividad,
+	borrado
+FROM concesiones.Empresa
+WHERE borrado = 0
 GO
 
 -- ---------------------------------------------------------------
@@ -140,11 +160,11 @@ GO
 -- ---------------------------------------------------------------
 PRINT('-- TEST 8: Falla - Empresa no existente')
 EXECUTE concesiones.EmpresaModificar
-	40,
-	'30576856764',
-	'Juliá Tours',
-	'JULIA TOURS S A',
-	'Turismo'
+	@id				= 40,
+	@cuit			= '30576856764',
+	@nombre			= 'Juliá Tours',
+	@razon_social	= 'JULIA TOURS S A',
+	@actividad		= 'Turismo'
 GO
 
 -- ---------------------------------------------------------------
@@ -154,11 +174,11 @@ GO
 PRINT('-- TEST 9: Falla - nombre vacio')
 DECLARE @id_identity INT = (SELECT MAX(id) FROM concesiones.Empresa)
 EXECUTE concesiones.EmpresaModificar
-	@id_identity,
-	'30645664546',
-	'',
-	'LOS SUPER TOPOS S A',
-	'Gastronomia'
+	@id				= @id_identity,
+	@cuit			= '30645664546',
+	@nombre			= '',
+	@razon_social	= 'LOS SUPER TOPOS S A',
+	@actividad		= 'Gastronomia'
 GO
 
 -- ---------------------------------------------------------------
@@ -168,11 +188,11 @@ GO
 PRINT('-- TEST 10: Falla - razon social vacia')
 DECLARE @id_identity INT = (SELECT MAX(id) FROM concesiones.Empresa)
 EXECUTE concesiones.EmpresaModificar
-	@id_identity,
-	'30645664546',
-	'Los Super Topos',
-	'',
-	'Gastronomia'
+	@id				= @id_identity,
+	@cuit			= '30645664546',
+	@nombre			= 'Los Super Topos',
+	@razon_social	= '',
+	@actividad		= 'Gastronomia'
 GO
 
 -- ---------------------------------------------------------------
@@ -187,11 +207,11 @@ PRINT('-> Empresa no existente')
 PRINT('-> Nombre vacio')
 PRINT('-> Razon Social vacia')
 EXECUTE concesiones.EmpresaModificar
-	-2,
-	'',
-	'',
-	'',
-	'Gastronomia'
+	@id				= -2,
+	@cuit			= '',
+	@nombre			= '',
+	@razon_social	= '',
+	@actividad		= 'Gastronomia'
 GO
 
 PRINT '======================================================='
@@ -205,7 +225,19 @@ GO
 -- ---------------------------------------------------------------
 PRINT('-- TEST 12: Baja exitosa')
 DECLARE @id_identity INT = (SELECT MAX(id) FROM concesiones.Empresa)
-EXECUTE concesiones.EmpresaBaja @id_identity, '30645664546'
+EXECUTE concesiones.EmpresaBaja 
+	@id		= @id_identity, 
+	@cuit	= '30645664546'
+SELECT
+	12 AS nro_test,
+	id,
+	cuit,
+	nombre,
+	razon_social,
+	actividad,
+	borrado
+FROM concesiones.Empresa
+WHERE borrado = 1
 GO
 
 -- ---------------------------------------------------------------
@@ -214,7 +246,9 @@ GO
 -- 'No se encontro una empresa activa con los datos proporcionados.'
 -- ---------------------------------------------------------------
 PRINT('-- TEST 13: Fallo - empresa inexistente')
-EXECUTE concesiones.EmpresaBaja -400, '1'
+EXECUTE concesiones.EmpresaBaja 
+	@id	  = -400, 
+	@cuit = '1'
 GO
 
 -- ---------------------------------------------------------------
@@ -224,7 +258,10 @@ GO
 -- ---------------------------------------------------------------
 PRINT('-- TEST 14: Fallo - empresa ya dada de baja')
 DECLARE @id_identity INT = (SELECT MAX(id) FROM concesiones.Empresa WHERE borrado = 0)
-EXECUTE concesiones.EmpresaBaja @id_identity, '30645664546' -- Enviamos los mismos datos de 'El Topo'
+EXECUTE concesiones.EmpresaBaja 
+	@id	  = @id_identity, 
+	@cuit = '30645664546' 
+	-- Enviamos los mismos datos de 'El Topo'
 GO
 
 PRINT '======================================================='
@@ -275,6 +312,23 @@ EXECUTE concesiones.ConcesionAlta
 	@monto_mensual	= 12500600.97,
 	@fecha_inicio	= '2026-06-16',
 	@fecha_fin		= '2027-06-16'
+SELECT 
+	15 AS nro_test,
+	c.id,
+	c.id_empresa,
+	e.nombre,
+	c.cuit_empresa,
+	c.id_parque,
+	p.nombre,
+	c.tipo_actividad,
+	c.monto_mensual,
+	c.fecha_inicio_contrato,
+	c.fecha_fin_contrato,
+	c.borrado 
+FROM concesiones.Concesion AS c
+INNER JOIN concesiones.Empresa AS e ON c.id_empresa = e.id
+INNER JOIN parques.Parque AS p ON c.id_parque = p.id
+WHERE c.borrado = 0
 GO
 	
 -- ---------------------------------------------------------------
@@ -373,6 +427,14 @@ DECLARE @id_ult_concesion INT = (SELECT MAX(id) FROM concesiones.Concesion WHERE
 EXECUTE concesiones.ConcesionModificarMonto
 	@id_concesion	= @id_ult_concesion,
 	@monto_mensual	= 22500600.98
+SELECT 
+	20 AS nro_test,
+	c.id,
+	c.monto_mensual
+FROM concesiones.Concesion AS c
+INNER JOIN concesiones.Empresa AS e ON c.id_empresa = e.id
+INNER JOIN parques.Parque AS p ON c.id_parque = p.id
+WHERE c.borrado = 0
 GO
 
 -- ---------------------------------------------------------------
@@ -400,6 +462,19 @@ PRINT('-- TEST 22: Baja exitosa')
 DECLARE @id_ult_concesion INT = (SELECT MAX(id) FROM concesiones.Concesion WHERE borrado = 0)
 EXECUTE concesiones.ConcesionBaja
 	@id_concesion	= @id_ult_concesion
+SELECT 
+	22 AS nro_test,
+	id,
+	id_empresa,
+	cuit_empresa,
+	id_parque,
+	tipo_actividad,
+	monto_mensual,
+	fecha_inicio_contrato,
+	fecha_fin_contrato,
+	borrado 
+FROM concesiones.Concesion
+WHERE borrado = 1
 GO
 
 -- ---------------------------------------------------------------
@@ -451,6 +526,7 @@ DECLARE @id_ult_concesion INT = (SELECT MAX(id) FROM concesiones.Concesion WHERE
 EXECUTE concesiones.FacturaConcesionAlta
 	@id_concesion	= @id_ult_concesion
 SELECT 
+	24 AS nro_test,
 	id, 
 	id_concesion, 
 	fecha_vencimiento, 
