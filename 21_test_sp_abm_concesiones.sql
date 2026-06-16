@@ -546,4 +546,44 @@ EXECUTE concesiones.FacturaConcesionAlta
 	@id_concesion	= 400
 GO
 
+-- ---------------------------------------------------------------
+-- PREVIO AL TEST - Inserciones de casos de prueba
+-- Emitimos muchas facturas de concesion hasta quedar 
+-- en el limite del fin del contrato
+-- ---------------------------------------------------------------
+PRINT('-------------------------------------------------------')
+PRINT('-- PREVIO AL TEST - Inserciones de casos de prueba')
+PRINT('-------------------------------------------------------')
+PRINT('Emisiones de facturas: ')
+DECLARE @id_ult_concesion INT = (SELECT MAX(id) FROM concesiones.Concesion WHERE borrado = 0)
 
+EXECUTE concesiones.FacturaConcesionAlta @id_concesion	= @id_ult_concesion
+EXECUTE concesiones.FacturaConcesionAlta @id_concesion	= @id_ult_concesion
+EXECUTE concesiones.FacturaConcesionAlta @id_concesion	= @id_ult_concesion
+EXECUTE concesiones.FacturaConcesionAlta @id_concesion	= @id_ult_concesion
+EXECUTE concesiones.FacturaConcesionAlta @id_concesion	= @id_ult_concesion
+EXECUTE concesiones.FacturaConcesionAlta @id_concesion	= @id_ult_concesion
+EXECUTE concesiones.FacturaConcesionAlta @id_concesion	= @id_ult_concesion
+EXECUTE concesiones.FacturaConcesionAlta @id_concesion	= @id_ult_concesion
+EXECUTE concesiones.FacturaConcesionAlta @id_concesion	= @id_ult_concesion
+EXECUTE concesiones.FacturaConcesionAlta @id_concesion	= @id_ult_concesion
+EXECUTE concesiones.FacturaConcesionAlta @id_concesion	= @id_ult_concesion
+GO
+SELECT 
+	26 AS nro_test,
+	id, 
+	id_concesion, 
+	fecha_vencimiento, 
+	monto_a_abonar,
+	esta_pagada,
+	fecha_pago
+FROM concesiones.FacturaConcesion
+-- ---------------------------------------------------------------
+-- TEST 26: Falla - Factura fuera de plazo
+-- Resultado esperado: THROW con mensaje
+-- '- El plazo de concesion ha terminado, no se puede emitir otra factura.'
+-- ---------------------------------------------------------------
+PRINT('-- TEST 26: Falla - Factura fuera de plazo')
+DECLARE @id_ult_concesion INT = (SELECT MAX(id) FROM concesiones.Concesion WHERE borrado = 0)
+EXECUTE concesiones.FacturaConcesionAlta @id_concesion	= @id_ult_concesion -- <- Falla
+GO

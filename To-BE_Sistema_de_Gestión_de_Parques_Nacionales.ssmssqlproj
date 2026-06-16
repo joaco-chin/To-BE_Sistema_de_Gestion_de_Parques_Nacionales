@@ -86,8 +86,8 @@
           <FullPath>06_funciones_ventas.sql</FullPath>
         </FileNode>
         <FileNode Name="07_funciones_concesiones.sql">
-          <AssociatedConnectionMoniker />
-          <AssociatedConnSrvName />
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:JOAQUIN\SQLEXPRESS:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>JOAQUIN\SQLEXPRESS</AssociatedConnSrvName>
           <AssociatedConnUserName />
           <FullPath>07_funciones_concesiones.sql</FullPath>
         </FileNode>
