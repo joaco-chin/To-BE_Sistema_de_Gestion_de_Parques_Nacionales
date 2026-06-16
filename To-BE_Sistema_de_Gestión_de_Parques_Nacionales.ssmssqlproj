@@ -62,8 +62,8 @@
           <FullPath>02_tablas.sql</FullPath>
         </FileNode>
         <FileNode Name="03_tablas_memoria.sql">
-          <AssociatedConnectionMoniker />
-          <AssociatedConnSrvName />
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:JOAQUIN\SQLEXPRESS:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>JOAQUIN\SQLEXPRESS</AssociatedConnSrvName>
           <AssociatedConnUserName />
           <FullPath>03_tablas_memoria.sql</FullPath>
         </FileNode>
@@ -98,8 +98,8 @@
           <FullPath>08_sp_parques_abm.sql</FullPath>
         </FileNode>
         <FileNode Name="09_sp_actividades_abm.sql">
-          <AssociatedConnectionMoniker />
-          <AssociatedConnSrvName />
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:JOAQUIN\SQLEXPRESS:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>JOAQUIN\SQLEXPRESS</AssociatedConnSrvName>
           <AssociatedConnUserName />
           <FullPath>09_sp_actividades_abm.sql</FullPath>
         </FileNode>
@@ -163,41 +163,53 @@
           <AssociatedConnUserName />
           <FullPath>18_test_sp_abm_parques.sql</FullPath>
         </FileNode>
-        <FileNode Name="19_test_sp_abm_personal.sql">
-          <AssociatedConnectionMoniker />
-          <AssociatedConnSrvName />
-          <AssociatedConnUserName />
-          <FullPath>19_test_sp_abm_personal.sql</FullPath>
-        </FileNode>
-        <FileNode Name="20_test_sp_ventas.sql">
-          <AssociatedConnectionMoniker />
-          <AssociatedConnSrvName />
-          <AssociatedConnUserName />
-          <FullPath>20_test_sp_ventas.sql</FullPath>
-        </FileNode>
-        <FileNode Name="21_test_sp_abm_concesiones.sql">
+        <FileNode Name="19_test_sp_abm_actividades.sql">
           <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:JOAQUIN\SQLEXPRESS:True</AssociatedConnectionMoniker>
           <AssociatedConnSrvName>JOAQUIN\SQLEXPRESS</AssociatedConnSrvName>
           <AssociatedConnUserName />
-          <FullPath>21_test_sp_abm_concesiones.sql</FullPath>
+          <FullPath>19_test_sp_abm_actividades.sql</FullPath>
         </FileNode>
-        <FileNode Name="22_test_sp_concesiones_transacciones.sql">
+        <FileNode Name="20_test_sp_abm_personal.sql">
+          <AssociatedConnectionMoniker />
+          <AssociatedConnSrvName />
+          <AssociatedConnUserName />
+          <FullPath>20_test_sp_abm_personal.sql</FullPath>
+        </FileNode>
+        <FileNode Name="21_test_sp_abm_ventas.sql">
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:JOAQUIN\SQLEXPRESS:False:admin_tobe</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>JOAQUIN\SQLEXPRESS</AssociatedConnSrvName>
+          <AssociatedConnUserName>admin_tobe</AssociatedConnUserName>
+          <FullPath>21_test_sp_abm_ventas.sql</FullPath>
+        </FileNode>
+        <FileNode Name="22_test_ventas_transacciones.sql">
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:JOAQUIN\SQLEXPRESS:False:admin_tobe</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>JOAQUIN\SQLEXPRESS</AssociatedConnSrvName>
+          <AssociatedConnUserName>admin_tobe</AssociatedConnUserName>
+          <FullPath>22_test_ventas_transacciones.sql</FullPath>
+        </FileNode>
+        <FileNode Name="23_test_sp_abm_concesiones.sql">
           <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:JOAQUIN\SQLEXPRESS:True</AssociatedConnectionMoniker>
           <AssociatedConnSrvName>JOAQUIN\SQLEXPRESS</AssociatedConnSrvName>
           <AssociatedConnUserName />
-          <FullPath>22_test_sp_concesiones_transacciones.sql</FullPath>
+          <FullPath>23_test_sp_abm_concesiones.sql</FullPath>
         </FileNode>
-        <FileNode Name="23_test_sp_importacion_parques.sql">
+        <FileNode Name="24_test_sp_concesiones_transacciones.sql">
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:JOAQUIN\SQLEXPRESS:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>JOAQUIN\SQLEXPRESS</AssociatedConnSrvName>
+          <AssociatedConnUserName />
+          <FullPath>24_test_sp_concesiones_transacciones.sql</FullPath>
+        </FileNode>
+        <FileNode Name="25_test_sp_importacion_parques.sql">
           <AssociatedConnectionMoniker />
           <AssociatedConnSrvName />
           <AssociatedConnUserName />
-          <FullPath>23_test_sp_importacion_parques.sql</FullPath>
+          <FullPath>25_test_sp_importacion_parques.sql</FullPath>
         </FileNode>
-        <FileNode Name="24_test_sp_importacion_superficies_csv.sql">
+        <FileNode Name="26_test_sp_importacion_superficies_csv.sql">
           <AssociatedConnectionMoniker />
           <AssociatedConnSrvName />
           <AssociatedConnUserName />
-          <FullPath>24_test_sp_importacion_superficies_csv.sql</FullPath>
+          <FullPath>26_test_sp_importacion_superficies_csv.sql</FullPath>
         </FileNode>
         <FileNode Name="views_visitantes.sql">
           <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:JOAQUIN\SQLEXPRESS:True</AssociatedConnectionMoniker>
