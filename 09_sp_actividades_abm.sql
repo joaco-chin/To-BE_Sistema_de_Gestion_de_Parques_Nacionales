@@ -51,86 +51,6 @@ END
 GO
 
 -- ============================================================
--- TipoActividadModificar
--- ============================================================
-CREATE OR ALTER PROCEDURE actividades.TipoActividadModificar
-	@id_tipo_actividad INT,
-	@nombre VARCHAR(50),
-	@descripcion VARCHAR(50)
-AS
-BEGIN
-	BEGIN TRY
-		BEGIN TRANSACTION
-			DECLARE @errores VARCHAR(MAX) = ''
-			IF NOT EXISTS (SELECT id FROM actividades.TipoActividad 
-			WHERE id = @id_tipo_actividad AND borrado = 0)
-				SET @errores += '- El tipo de actividad seleccionado no existe'
-
-			SET @nombre = LTRIM(RTRIM(@nombre))
-			SET @descripcion = LTRIM(RTRIM(@descripcion))
-		
-			IF @nombre = ''
-				SET @errores += '- El nombre no puede estar vacio.'
-
-			IF @descripcion = ''
-				SET @errores += 'La descripcion no puede estar vacia.'
-
-			IF LEN(@errores) > 0
-				THROW 50031, @errores, 1
-
-			UPDATE actividades.TipoActividad
-			SET 
-				nombre = @nombre,
-				descripcion = @descripcion
-			WHERE id = @id_tipo_actividad
-
-			EXECUTE actividades.ActividadModificarPorTipo 
-				@id_tipo_actividad,
-				@nombre,
-				@descripcion
-
-		COMMIT TRANSACTION
-	END TRY
-	BEGIN CATCH
-		IF @@TRANCOUNT > 0
-			ROLLBACK TRANSACTION
-
-		PRINT(CAST(ERROR_NUMBER() AS CHAR) + ' ' + ERROR_MESSAGE())
-		-- THROW -- También podemos enviar los errores a capas superiores
-	END CATCH
-END
-GO
-
--- ============================================================
--- TipoActividadBaja
--- ============================================================
-CREATE OR ALTER PROCEDURE actividades.TipoActividadBaja
-	@id_tipo_actividad INT
-AS
-BEGIN
-	BEGIN TRY
-		BEGIN TRANSACTION
-			IF NOT EXISTS (SELECT id FROM actividades.TipoActividad 
-			WHERE id = @id_tipo_actividad AND borrado = 0)
-				THROW 50032, 'El tipo de actividad seleccionado no existe', 1
-
-			UPDATE actividades.TipoActividad
-			SET borrado = 1
-			WHERE id = @id_tipo_actividad
-			
-			EXECUTE actividades.ActividadBajaPorTipo @id_tipo_actividad
-		COMMIT TRANSACTION
-	END TRY
-	BEGIN CATCH
-		IF @@TRANCOUNT > 0 
-			ROLLBACK TRANSACTION
-		PRINT(CAST(ERROR_NUMBER() AS CHAR) + ' ' + ERROR_MESSAGE())
-		-- THROW -- También podemos enviar los errores a capas superiores
-	END CATCH
-END
-GO
-
--- ============================================================
 -- ActividadAlta
 -- ============================================================
 CREATE OR ALTER PROCEDURE actividades.ActividadAlta
@@ -259,6 +179,57 @@ END
 GO
 
 -- ============================================================
+-- TipoActividadModificar
+-- ============================================================
+CREATE OR ALTER PROCEDURE actividades.TipoActividadModificar
+	@id_tipo_actividad INT,
+	@nombre VARCHAR(50),
+	@descripcion VARCHAR(50)
+AS
+BEGIN
+	BEGIN TRY
+		BEGIN TRANSACTION
+			DECLARE @errores VARCHAR(MAX) = ''
+			IF NOT EXISTS (SELECT id FROM actividades.TipoActividad 
+			WHERE id = @id_tipo_actividad AND borrado = 0)
+				SET @errores += '- El tipo de actividad seleccionado no existe'
+
+			SET @nombre = LTRIM(RTRIM(@nombre))
+			SET @descripcion = LTRIM(RTRIM(@descripcion))
+		
+			IF @nombre = ''
+				SET @errores += '- El nombre no puede estar vacio.'
+
+			IF @descripcion = ''
+				SET @errores += 'La descripcion no puede estar vacia.'
+
+			IF LEN(@errores) > 0
+				THROW 50031, @errores, 1
+
+			UPDATE actividades.TipoActividad
+			SET 
+				nombre = @nombre,
+				descripcion = @descripcion
+			WHERE id = @id_tipo_actividad
+
+			EXECUTE actividades.ActividadModificarPorTipo 
+				@id_tipo_actividad,
+				@nombre,
+				@descripcion
+
+		COMMIT TRANSACTION
+	END TRY
+	BEGIN CATCH
+		IF @@TRANCOUNT > 0
+			ROLLBACK TRANSACTION
+
+		PRINT(CAST(ERROR_NUMBER() AS CHAR) + ' ' + ERROR_MESSAGE())
+		-- THROW -- También podemos enviar los errores a capas superiores
+	END CATCH
+END
+GO
+
+-- ============================================================
 -- ActividadBaja
 -- ============================================================
 CREATE OR ALTER PROCEDURE actividades.ActividadBaja
@@ -313,6 +284,35 @@ BEGIN
 	WHERE id_tipo_actividad = @id_tipo_actividad
 
 	PRINT 'Actividad/es dada/s de baja correctamente.'
+END
+GO
+
+-- ============================================================
+-- TipoActividadBaja
+-- ============================================================
+CREATE OR ALTER PROCEDURE actividades.TipoActividadBaja
+	@id_tipo_actividad INT
+AS
+BEGIN
+	BEGIN TRY
+		BEGIN TRANSACTION
+			IF NOT EXISTS (SELECT id FROM actividades.TipoActividad 
+			WHERE id = @id_tipo_actividad AND borrado = 0)
+				THROW 50032, 'El tipo de actividad seleccionado no existe', 1
+
+			UPDATE actividades.TipoActividad
+			SET borrado = 1
+			WHERE id = @id_tipo_actividad
+			
+			EXECUTE actividades.ActividadBajaPorTipo @id_tipo_actividad
+		COMMIT TRANSACTION
+	END TRY
+	BEGIN CATCH
+		IF @@TRANCOUNT > 0 
+			ROLLBACK TRANSACTION
+		PRINT(CAST(ERROR_NUMBER() AS CHAR) + ' ' + ERROR_MESSAGE())
+		-- THROW -- También podemos enviar los errores a capas superiores
+	END CATCH
 END
 GO
 
