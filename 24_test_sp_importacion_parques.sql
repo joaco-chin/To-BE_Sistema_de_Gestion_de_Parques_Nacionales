@@ -51,7 +51,7 @@ PRINT '======================================================='
 
 -- Definimos la ruta y ejecutamos en el mismo bloque para que la variable sea valida
 DECLARE @ruta_archivo NVARCHAR(500) =
-    N'C:\ImportacionesBBDDA\Áreas protegidas de Argentina - Sistema de Información de Biodiversidad.xlsx';
+    N'D:\Documentos\UNLaM\2_Base de Datos Aplicada\Trabajo Práctico\To-BE_Sistema_de_Gestión_de_Parques_Nacionales\Áreas protegidas de Argentina - Sistema de Información de Biodiversidad.xlsx';
 
 EXEC importacion.ImportarParquesExcel
     @nombre_archivo = @ruta_archivo;
@@ -95,7 +95,7 @@ WHERE tipo_parque = 'Parque Nacional' AND direccion LIKE 'Provincia de %'
 
 -- Volvemos a importar para ver que no se dupliquen
 DECLARE @ruta_archivo_test2 NVARCHAR(500) =
-    N'C:\ImportacionesBBDDA\Áreas protegidas de Argentina - Sistema de Información de Biodiversidad.xlsx';
+    N'D:\Documentos\UNLaM\2_Base de Datos Aplicada\Trabajo Práctico\To-BE_Sistema_de_Gestión_de_Parques_Nacionales\Áreas protegidas de Argentina - Sistema de Información de Biodiversidad.xlsx';
 
 EXEC importacion.ImportarParquesExcel
     @nombre_archivo = @ruta_archivo_test2;

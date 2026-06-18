@@ -22,7 +22,7 @@ GO
 -- CONFIGURACION: ajustar ruta real
 -- ============================================================
 DECLARE @ruta_archivo NVARCHAR(500) = 
-    N'C:\ImportacionesBBDDA\aprn_h_ubicacion_superycatint_ha.csv'
+    N'D:\Documentos\UNLaM\2_Base de Datos Aplicada\Trabajo Práctico\To-BE_Sistema_de_Gestión_de_Parques_Nacionales\aprn_h_ubicacion_superycatint_ha.csv'
 -- Nota: Si falla por permisos, mover el archivo a C:\Imports\ y cambiar la ruta.
 
 -- 1. Ver estado previo de algunos parques
@@ -37,7 +37,7 @@ PRINT '======================================================='
 PRINT 'EJECUTANDO IMPORTACION DESDE CSV...'
 PRINT '======================================================='
 DECLARE @ruta_archivo NVARCHAR(500) = 
-    N'C:\ImportacionesBBDDA\aprn_h_ubicacion_superycatint_ha.csv'
+    N'D:\Documentos\UNLaM\2_Base de Datos Aplicada\Trabajo Práctico\To-BE_Sistema_de_Gestión_de_Parques_Nacionales\aprn_h_ubicacion_superycatint_ha.csv'
 
 EXEC importacion.ImportarSuperficiesCSV @ruta_archivo = @ruta_archivo
 GO

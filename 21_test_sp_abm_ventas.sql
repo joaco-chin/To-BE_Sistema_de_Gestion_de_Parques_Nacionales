@@ -18,4 +18,25 @@ Incluye casos exitosos y casos de validacion fallida.
 USE ToBE
 GO
 
+SELECT * FROM parques.Parque
+
+-- Declaramos un carrito
+EXECUTE ventas.CarritoAlta 901
+
+-- ---------------------------------------------------------------
+-- TEST 1: Agregamos items al carrito 
+-- ---------------------------------------------------------------
+
+EXECUTE ventas.CarritoAgregar 1,2,NULL,4
+
+EXECUTE ventas.CarritoAgregar 1,3,5,10
+
+EXECUTE ventas.CarritoAgregar 2,3,4,10
+
+EXECUTE ventas.VentaConfirmar 1, 
+
+SELECT cupo
+FROM actividades.Actividad
+WHERE id = 5
+
 

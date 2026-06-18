@@ -205,10 +205,8 @@ CREATE TABLE ventas.DetalleVenta
 	id_venta INT REFERENCES ventas.Venta(id),
 	linea_venta INT IDENTITY(1,1),
 	-- Al menos uno de los dos debe estar presente (validar en SP)
-	id_tarifa_parque INT NULL
-	REFERENCES ventas.TarifaParque(id),
-	id_tarifa_actividad INT NULL,
-	REFERENCES actividades.TarifaActividad(id),
+	id_tarifa_parque INT NULL REFERENCES ventas.TarifaParque(id),
+	id_tarifa_actividad INT NULL REFERENCES actividades.TarifaActividad(id),
 	cantidad INT NULL CHECK (cantidad > 0),
 	importe DECIMAL(10,2) NOT NULL CHECK (importe > 0),
 	CONSTRAINT PK_detalle_venta PRIMARY KEY(id_venta,linea_venta)
