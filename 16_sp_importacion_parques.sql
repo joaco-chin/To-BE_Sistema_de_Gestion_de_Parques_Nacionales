@@ -136,15 +136,22 @@ BEGIN
     END
 
     -- Procesar cada fila: validar, transformar, upsert
-    DECLARE cur CURSOR LOCAL FAST_FORWARD FOR
-        SELECT fila, provincia, nombre, sup_ha, lat, lon
-        FROM #raw
+    DECLARE @idx      INT = 1
+    DECLARE @max_fila INT
+    SELECT @max_fila = MAX(fila) FROM #raw
 
-    OPEN cur
-    FETCH NEXT FROM cur INTO @fila, @provincia_raw, @nombre_raw, @sup_ha_raw, @lat_raw, @lon_raw
-
-    WHILE @@FETCH_STATUS = 0
+    WHILE @idx <= @max_fila
     BEGIN
+        SELECT
+            @fila           = fila,
+            @provincia_raw  = provincia,
+            @nombre_raw     = nombre,
+            @sup_ha_raw     = sup_ha,
+            @lat_raw        = lat,
+            @lon_raw        = lon
+        FROM #raw
+        WHERE fila = @idx
+
         SET @errores_fila   = ''
         SET @tipo_parque    = NULL
         SET @provincia      = NULL
@@ -156,202 +163,195 @@ BEGIN
 
         -- Validacion nombre no vacio
         IF LEN(@nombre_parque) = 0
-        BEGIN
             SET @errores_fila += '- El nombre del area protegida no puede estar vacio.' + CHAR(13)
-            GOTO siguiente_fila
-        END
-
-        IF LEN(@nombre_parque) > 100
-            SET @nombre_parque = LEFT(@nombre_parque, 100)
-
-        -- Inferencia de tipo_parque a partir del nombre.
-        -- Solo se importan filas de tipo 'Parque Nacional'.
-        SET @tipo_parque = CASE
-            WHEN @nombre_parque LIKE 'Parque Nacional%'             THEN 'Parque Nacional'
-            WHEN @nombre_parque LIKE 'Parque Interjurisdiccional%'  THEN 'Parque Interjurisdiccional'
-            WHEN @nombre_parque LIKE 'Reserva Natural%'             THEN 'Reserva Natural'
-            WHEN @nombre_parque LIKE 'Reserva Nacional%'            THEN 'Reserva Natural'
-            WHEN @nombre_parque LIKE 'Monumento Natural%'           THEN 'Monumento Natural'
-            ELSE NULL
-        END
-
-        -- Tipo reconocible pero fuera de alcance: omitir sin error
-        IF @tipo_parque IS NOT NULL AND @tipo_parque <> 'Parque Nacional'
-        BEGIN
-            SET @omitidos += 1
-            GOTO fin_fila
-        END
-
-        -- Tipo no reconocible: es un error de formato del origen
-        IF @tipo_parque IS NULL
-            SET @errores_fila +=
-                '- No es posible determinar el tipo de area para "' + @nombre_parque + '". ' +
-                'Se esperaba un nombre que comience con un tipo conocido ' +
-                '(Parque Nacional, Reserva Natural, Monumento Natural, etc.).' + CHAR(13)
-
-        SET @provincia = CASE LTRIM(RTRIM(ISNULL(CAST(@provincia_raw AS VARCHAR(200)), '')))
-            WHEN 'Buenos Aires'         THEN 'Buenos Aires'
-            WHEN 'La Pampa'             THEN 'La Pampa'
-            WHEN 'Cordoba'              THEN 'Cordoba'
-            WHEN 'Entre Rios'           THEN 'Entre Rios'
-            WHEN 'Santa Fe'             THEN 'Santa Fe'
-            WHEN 'Corrientes'           THEN 'Corrientes'
-            WHEN 'Misiones'             THEN 'Misiones'
-            WHEN 'Rio Negro'            THEN 'Rio Negro'
-            WHEN 'Chubut'               THEN 'Chubut'
-            WHEN 'Santa Cruz'           THEN 'Santa Cruz'
-            WHEN 'Tierra del Fuego'     THEN 'Tierra del Fuego'
-            WHEN 'Tierra Del Fuego'     THEN 'Tierra del Fuego'
-            WHEN 'Neuquen'              THEN 'Neuquen'
-            WHEN 'Mendoza'              THEN 'Mendoza'
-            WHEN 'San Luis'             THEN 'San Luis'
-            WHEN 'San Juan'             THEN 'San Juan'
-            WHEN 'Santiago del Estero'  THEN 'Santiago del Estero'
-            WHEN 'Santiago Del Estero'  THEN 'Santiago del Estero'
-            WHEN 'Catamarca'            THEN 'Catamarca'
-            WHEN 'Salta'                THEN 'Salta'
-            WHEN 'Jujuy'                THEN 'Jujuy'
-            WHEN 'Tucuman'              THEN 'Tucuman'
-            WHEN 'La Rioja'             THEN 'La Rioja'
-            WHEN 'Formosa'              THEN 'Formosa'
-            WHEN 'Chaco'                THEN 'Chaco'
-            WHEN 'CABA'                 THEN 'CABA'
-            ELSE NULL
-        END
-
-        IF @provincia IS NULL
-            SET @errores_fila +=
-                '- La provincia "' + ISNULL(CAST(@provincia_raw AS VARCHAR(200)), '(vacia)') +
-                '" no es valida o esta vacia. ' +
-                'Verifique que corresponda a una provincia argentina valida.' + CHAR(13)
         ELSE
-            -- Derivar direccion a partir de la provincia (campo requerido no disponible en el origen)
-            SET @direccion = 'Provincia de ' + @provincia
-
-        -- Conversion de superficie: de hectareas a km2 (/ 100).
-        -- Se reemplaza coma por punto para contemplar configuraciones regionales
-        BEGIN TRY
-            SET @superficie_km2 =
-                CAST(REPLACE(REPLACE(ISNULL(@sup_ha_raw, '0'), '.', ''), ',', '.') AS DECIMAL(12,5)) / 100.0
-        END TRY
-        BEGIN CATCH
-            SET @superficie_km2 = 0
-            SET @errores_fila +=
-                '- La superficie "' + ISNULL(@sup_ha_raw, '(vacia)') + '" no tiene un formato numerico valido.' + CHAR(13)
-        END CATCH
-
-        IF @superficie_km2 <= 0 AND CHARINDEX('superficie', @errores_fila) = 0
-            SET @errores_fila += '- La superficie debe ser mayor a 0 km2.' + CHAR(13)
-
-        -- Conversion de coordenadas.
-        IF ISNULL(@lat_raw, '') <> ''
         BEGIN
-            BEGIN TRY
-                SET @latitud = CAST(REPLACE(@lat_raw, ',', '.') AS DECIMAL(9,6))
-            END TRY
-            BEGIN CATCH
-                SET @errores_fila +=
-                    '- La latitud "' + @lat_raw + '" no tiene un formato numerico valido.' + CHAR(13)
-            END CATCH
+            IF LEN(@nombre_parque) > 100
+                SET @nombre_parque = LEFT(@nombre_parque, 100)
 
-            IF @latitud IS NOT NULL AND (@latitud < -90 OR @latitud > 90)
-            BEGIN
-                SET @errores_fila += '- La latitud debe estar entre -90 y 90.' + CHAR(13)
-                SET @latitud = NULL
+            -- Inferencia de tipo_parque a partir del nombre.
+            -- Solo se importan filas de tipo 'Parque Nacional'.
+            SET @tipo_parque = CASE
+                WHEN @nombre_parque LIKE 'Parque Nacional%'             THEN 'Parque Nacional'
+                WHEN @nombre_parque LIKE 'Parque Interjurisdiccional%'  THEN 'Parque Interjurisdiccional'
+                WHEN @nombre_parque LIKE 'Reserva Natural%'             THEN 'Reserva Natural'
+                WHEN @nombre_parque LIKE 'Reserva Nacional%'            THEN 'Reserva Natural'
+                WHEN @nombre_parque LIKE 'Monumento Natural%'           THEN 'Monumento Natural'
+                ELSE NULL
             END
-        END
 
-        IF ISNULL(@lon_raw, '') <> ''
-        BEGIN
-            BEGIN TRY
-                SET @longitud = CAST(REPLACE(@lon_raw, ',', '.') AS DECIMAL(9,6))
-            END TRY
-            BEGIN CATCH
-                SET @errores_fila +=
-                    '- La longitud "' + @lon_raw + '" no tiene un formato numerico valido.' + CHAR(13)
-            END CATCH
-
-            IF @longitud IS NOT NULL AND (@longitud < -180 OR @longitud > 180)
-            BEGIN
-                SET @errores_fila += '- La longitud debe estar entre -180 y 180.' + CHAR(13)
-                SET @longitud = NULL
-            END
-        END
-
-        -- Si hay errores de validacion: registrar y saltar al siguiente registro
-        siguiente_fila:
-        IF LEN(@errores_fila) > 0
-        BEGIN
-            INSERT INTO #errores (fila_excel, nombre_area, detalle)
-            VALUES (@fila + 2, @nombre_parque, @errores_fila)
-            SET @con_errores += 1
-            GOTO fin_fila
-        END
-
-        -- UPSERT: clave de negocio = nombre del parque.
-        -- Si ya existe un parque activo con ese nombre -> UPDATE
-        --   via parques.ParqueModificar.
-        -- Si no existe -> INSERT via parques.ParqueAlta
-        --   (IDENTITY genera el id).
-        -- Los campos activo y borrado no se sobreescriben en el
-        -- UPDATE; ParqueModificar los preserva.
-        -- Las validaciones de reglas de negocio son responsabilidad
-        -- de los SPs de ABM. Si lanzan RAISERROR, el CATCH lo
-        -- captura y lo registra como error de esta fila.
-        -- ------------------------------------------------------
-        BEGIN TRY
-            IF EXISTS (
-                SELECT 1 FROM parques.Parque
-                WHERE nombre = @nombre_parque AND borrado = 0
-            )
-            BEGIN
-                DECLARE @id_existente INT
-                SELECT @id_existente = id
-                FROM parques.Parque
-                WHERE nombre = @nombre_parque AND borrado = 0
-
-                EXEC parques.ParqueModificar
-                    @id             = @id_existente,
-                    @nombre         = @nombre_parque,
-                    @tipo_parque    = @tipo_parque,
-                    @superficie_km2 = @superficie_km2,
-                    @direccion      = @direccion,
-                    @provincia      = @provincia,
-                    @latitud        = @latitud,
-                    @longitud       = @longitud
-
-                SET @actualizados += 1
-            END
+            -- Tipo reconocible pero fuera de alcance: omitir sin error
+            IF @tipo_parque IS NOT NULL AND @tipo_parque <> 'Parque Nacional'
+                SET @omitidos += 1
             ELSE
             BEGIN
-                EXEC parques.ParqueAlta
-                    @nombre         = @nombre_parque,
-                    @tipo_parque    = @tipo_parque,
-                    @superficie_km2 = @superficie_km2,
-                    @direccion      = @direccion,
-                    @provincia      = @provincia,
-                    @latitud        = @latitud,
-                    @longitud       = @longitud
+                -- Tipo no reconocible: es un error de formato del origen
+                IF @tipo_parque IS NULL
+                    SET @errores_fila +=
+                        '- No es posible determinar el tipo de area para "' + @nombre_parque + '". ' +
+                        'Se esperaba un nombre que comience con un tipo conocido ' +
+                        '(Parque Nacional, Reserva Natural, Monumento Natural, etc.).' + CHAR(13)
 
-                SET @insertados += 1
+                SET @provincia = CASE LTRIM(RTRIM(ISNULL(CAST(@provincia_raw AS VARCHAR(200)), '')))
+                    WHEN 'Buenos Aires'         THEN 'Buenos Aires'
+                    WHEN 'La Pampa'             THEN 'La Pampa'
+                    WHEN 'Cordoba'              THEN 'Cordoba'
+                    WHEN 'Entre Rios'           THEN 'Entre Rios'
+                    WHEN 'Santa Fe'             THEN 'Santa Fe'
+                    WHEN 'Corrientes'           THEN 'Corrientes'
+                    WHEN 'Misiones'             THEN 'Misiones'
+                    WHEN 'Rio Negro'            THEN 'Rio Negro'
+                    WHEN 'Chubut'               THEN 'Chubut'
+                    WHEN 'Santa Cruz'           THEN 'Santa Cruz'
+                    WHEN 'Tierra del Fuego'     THEN 'Tierra del Fuego'
+                    WHEN 'Tierra Del Fuego'     THEN 'Tierra del Fuego'
+                    WHEN 'Neuquen'              THEN 'Neuquen'
+                    WHEN 'Mendoza'              THEN 'Mendoza'
+                    WHEN 'San Luis'             THEN 'San Luis'
+                    WHEN 'San Juan'             THEN 'San Juan'
+                    WHEN 'Santiago del Estero'  THEN 'Santiago del Estero'
+                    WHEN 'Santiago Del Estero'  THEN 'Santiago del Estero'
+                    WHEN 'Catamarca'            THEN 'Catamarca'
+                    WHEN 'Salta'                THEN 'Salta'
+                    WHEN 'Jujuy'                THEN 'Jujuy'
+                    WHEN 'Tucuman'              THEN 'Tucuman'
+                    WHEN 'La Rioja'             THEN 'La Rioja'
+                    WHEN 'Formosa'              THEN 'Formosa'
+                    WHEN 'Chaco'                THEN 'Chaco'
+                    WHEN 'CABA'                 THEN 'CABA'
+                    ELSE NULL
+                END
+
+                IF @provincia IS NULL
+                    SET @errores_fila +=
+                        '- La provincia "' + ISNULL(CAST(@provincia_raw AS VARCHAR(200)), '(vacia)') +
+                        '" no es valida o esta vacia. ' +
+                        'Verifique que corresponda a una provincia argentina valida.' + CHAR(13)
+                ELSE
+                    -- Derivar direccion a partir de la provincia (campo requerido no disponible en el origen)
+                    SET @direccion = 'Provincia de ' + @provincia
+
+                -- Conversion de superficie: de hectareas a km2 (/ 100).
+                -- Se reemplaza coma por punto para contemplar configuraciones regionales
+                BEGIN TRY
+                    SET @superficie_km2 =
+                        CAST(REPLACE(REPLACE(ISNULL(@sup_ha_raw, '0'), '.', ''), ',', '.') AS DECIMAL(12,5)) / 100.0
+                END TRY
+                BEGIN CATCH
+                    SET @superficie_km2 = 0
+                    SET @errores_fila +=
+                        '- La superficie "' + ISNULL(@sup_ha_raw, '(vacia)') + '" no tiene un formato numerico valido.' + CHAR(13)
+                END CATCH
+
+                IF @superficie_km2 <= 0 AND CHARINDEX('superficie', @errores_fila) = 0
+                    SET @errores_fila += '- La superficie debe ser mayor a 0 km2.' + CHAR(13)
+
+                -- Conversion de coordenadas.
+                IF ISNULL(@lat_raw, '') <> ''
+                BEGIN
+                    BEGIN TRY
+                        SET @latitud = CAST(REPLACE(@lat_raw, ',', '.') AS DECIMAL(9,6))
+                    END TRY
+                    BEGIN CATCH
+                        SET @errores_fila +=
+                            '- La latitud "' + @lat_raw + '" no tiene un formato numerico valido.' + CHAR(13)
+                    END CATCH
+
+                    IF @latitud IS NOT NULL AND (@latitud < -90 OR @latitud > 90)
+                    BEGIN
+                        SET @errores_fila += '- La latitud debe estar entre -90 y 90.' + CHAR(13)
+                        SET @latitud = NULL
+                    END
+                END
+
+                IF ISNULL(@lon_raw, '') <> ''
+                BEGIN
+                    BEGIN TRY
+                        SET @longitud = CAST(REPLACE(@lon_raw, ',', '.') AS DECIMAL(9,6))
+                    END TRY
+                    BEGIN CATCH
+                        SET @errores_fila +=
+                            '- La longitud "' + @lon_raw + '" no tiene un formato numerico valido.' + CHAR(13)
+                    END CATCH
+
+                    IF @longitud IS NOT NULL AND (@longitud < -180 OR @longitud > 180)
+                    BEGIN
+                        SET @errores_fila += '- La longitud debe estar entre -180 y 180.' + CHAR(13)
+                        SET @longitud = NULL
+                    END
+                END
+
+                -- Si hay errores de validacion: registrar; si no, hacer upsert
+                IF LEN(@errores_fila) > 0
+                BEGIN
+                    INSERT INTO #errores (fila_excel, nombre_area, detalle)
+                    VALUES (@fila + 2, @nombre_parque, @errores_fila)
+                    SET @con_errores += 1
+                END
+                ELSE
+                BEGIN
+                    -- UPSERT: clave de negocio = nombre del parque.
+                    -- Si ya existe un parque activo con ese nombre -> UPDATE
+                    --   via parques.ParqueModificar.
+                    -- Si no existe -> INSERT via parques.ParqueAlta
+                    --   (IDENTITY genera el id).
+                    -- Los campos activo y borrado no se sobreescriben en el
+                    -- UPDATE; ParqueModificar los preserva.
+                    -- Las validaciones de reglas de negocio son responsabilidad
+                    -- de los SPs de ABM. Si lanzan RAISERROR, el CATCH lo
+                    -- captura y lo registra como error de esta fila.
+                    BEGIN TRY
+                        IF EXISTS (
+                            SELECT 1 FROM parques.Parque
+                            WHERE nombre = @nombre_parque AND borrado = 0
+                        )
+                        BEGIN
+                            DECLARE @id_existente INT
+                            SELECT @id_existente = id
+                            FROM parques.Parque
+                            WHERE nombre = @nombre_parque AND borrado = 0
+
+                            EXEC parques.ParqueModificar
+                                @id             = @id_existente,
+                                @nombre         = @nombre_parque,
+                                @tipo_parque    = @tipo_parque,
+                                @superficie_km2 = @superficie_km2,
+                                @direccion      = @direccion,
+                                @provincia      = @provincia,
+                                @latitud        = @latitud,
+                                @longitud       = @longitud
+
+                            SET @actualizados += 1
+                        END
+                        ELSE
+                        BEGIN
+                            EXEC parques.ParqueAlta
+                                @nombre         = @nombre_parque,
+                                @tipo_parque    = @tipo_parque,
+                                @superficie_km2 = @superficie_km2,
+                                @direccion      = @direccion,
+                                @provincia      = @provincia,
+                                @latitud        = @latitud,
+                                @longitud       = @longitud
+
+                            SET @insertados += 1
+                        END
+                    END TRY
+                    BEGIN CATCH
+                        INSERT INTO #errores (fila_excel, nombre_area, detalle)
+                        VALUES (
+                            @fila + 2,
+                            @nombre_parque,
+                            '- ' + ERROR_MESSAGE()
+                        )
+                        SET @con_errores += 1
+                    END CATCH
+                END
             END
-        END TRY
-        BEGIN CATCH
-            INSERT INTO #errores (fila_excel, nombre_area, detalle)
-            VALUES (
-                @fila + 2,
-                @nombre_parque,
-                '- ' + ERROR_MESSAGE()
-            )
-            SET @con_errores += 1
-        END CATCH
+        END
 
-        fin_fila:
-        FETCH NEXT FROM cur INTO @fila, @provincia_raw, @nombre_raw, @sup_ha_raw, @lat_raw, @lon_raw
+        SET @idx += 1
     END
-
-    CLOSE cur
-    DEALLOCATE cur
 
     -- Resumen de la importacion
     PRINT '================================================='
