@@ -132,6 +132,17 @@ CREATE TABLE parques.Parque
 END
 GO
 
+IF OBJECT_ID('parques.TurnoVisita') IS NULL
+BEGIN
+	CREATE TABLE parques.TurnoVisita
+	(
+		id INT IDENTITY(1,1) PRIMARY KEY,
+		id_parque INT NOT NULL REFERENCES parques.Parque(id),
+		fecha DATE NOT NULL
+	)
+END
+GO
+
 IF OBJECT_ID('ventas.Venta') IS NULL
 BEGIN
 CREATE TABLE ventas.Venta	

@@ -17,6 +17,82 @@ Registro de ventas y lógica de negocio de las mismas.
 USE ToBE
 GO
 
+-- https://api.freecurrencyapi.com/v1/latest
+-- KEY = fca_live_aYJYFfaReC0mGg6HbeKvHZPU5v7OEHFm7zL8G2EL
+
+-- ============================================================
+-- ConvertirARS_USD
+-- Convierte pesos a dolar
+-- ============================================================
+CREATE OR ALTER PROCEDURE ventas.ConvertirARS_USD
+    @monto_ars DECIMAL(10,2),
+    @monto_usd DECIMAL(10,2) = NULL OUTPUT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @url NVARCHAR(256) = 'https://dolarapi.com/v1/dolares/oficial';
+    DECLARE @object INT;
+    DECLARE @respuesta_raw VARCHAR(8000); 
+    DECLARE @cotizacion_venta DECIMAL(10,2);
+
+    EXEC sp_OACreate 'MSXML2.XMLHTTP', @object OUTPUT;
+    EXEC sp_OAMethod @object, 'open', NULL, 'GET', @url, 'false';
+    
+    EXEC sp_OAMethod @object, 'setRequestHeader', NULL, 'User-Agent', 'Mozilla/5.0';
+    
+    EXEC sp_OAMethod @object, 'send';
+
+    EXEC sp_OAGetProperty @object, 'responseText', @respuesta_raw OUTPUT;
+
+    EXEC sp_OADestroy @object;
+
+    IF @respuesta_raw IS NULL OR @respuesta_raw = ''
+    BEGIN
+        PRINT 'No se recibió respuesta de la API';
+        RETURN;
+    END
+
+    DECLARE @json_nvarchar NVARCHAR(MAX) = CAST(@respuesta_raw AS NVARCHAR(MAX));
+
+    SELECT @cotizacion_venta = [venta] 
+    FROM OPENJSON(@json_nvarchar)
+    WITH
+    (
+        [venta] DECIMAL(10,2) '$.venta'
+    );
+
+    IF @cotizacion_venta > 0
+    BEGIN
+        SET @monto_usd = @monto_ars / @cotizacion_venta;
+    END
+	
+    ELSE
+    BEGIN
+        SET @monto_usd = 0;
+    END
+	PRINT(CAST(@monto_usd AS CHAR))
+END
+GO
+
+/*
+Pasar este bloque al testing de ventas
+
+EXEC sp_configure 'show advanced options', 1;	--Este es para poder editar los permisos avanzados.
+RECONFIGURE;
+GO
+EXEC sp_configure 'Ole Automation Procedures', 1;	-- Aqui habilitamos esta opcion avanzada
+RECONFIGURE;
+GO
+
+DECLARE @usd DECIMAL(10,2)
+EXECUTE ventas.ConvertirARS_USD 
+	@monto_ars = 100000.56,
+	@monto_usd = @usd OUTPUT
+SELECT @usd
+GO
+*/
+
 -- ============================================================
 -- VentaConfirmar
 -- Confirma una venta en un parque según un carrito dado.
@@ -27,6 +103,7 @@ GO
 CREATE OR ALTER PROCEDURE ventas.VentaConfirmar	
 	@id_carrito INT,
 	@id_forma_de_pago INT,
+	@moneda CHAR(3),
 	@nro_punto_venta INT,
 	@nro_comprobante INT
 AS
