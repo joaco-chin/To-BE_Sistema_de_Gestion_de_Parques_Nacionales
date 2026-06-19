@@ -75,8 +75,58 @@ BEGIN
 END
 GO
 
-/*
-Pasar este bloque al testing de ventas
+-- ============================================================
+-- EsFeriado
+-- Devuelve en es_feriado 1 si es feriado y 0 si no lo es
+-- ============================================================
+CREATE OR ALTER PROCEDURE ventas.EsFeriado
+    @fecha DATE,
+    @es_feriado BIT OUTPUT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @ruta NVARCHAR(256) = 'https://api.argentinadatos.com/v1/feriados';
+	DECLARE @año INT = YEAR(@fecha);
+	DECLARE @url NVARCHAR(500) = @ruta + '\' + CAST(@año AS CHAR);
+    DECLARE @object INT;
+    DECLARE @respuesta_raw VARCHAR(8000); 
+
+    EXEC sp_OACreate 'MSXML2.XMLHTTP', @object OUTPUT;
+    EXEC sp_OAMethod @object, 'open', NULL, 'GET', @url, 'false';
+    
+    EXEC sp_OAMethod @object, 'setRequestHeader', NULL, 'User-Agent', 'Mozilla/5.0';
+    
+    EXEC sp_OAMethod @object, 'send';
+
+    EXEC sp_OAGetProperty @object, 'responseText', @respuesta_raw OUTPUT;
+
+    EXEC sp_OADestroy @object;
+
+    IF @respuesta_raw IS NULL OR @respuesta_raw = ''
+    BEGIN
+        PRINT 'No se recibió respuesta de la API';
+        RETURN;
+    END
+
+    DECLARE @json_nvarchar NVARCHAR(MAX) = CAST(@respuesta_raw AS NVARCHAR(MAX));
+
+	IF @fecha IN
+	(
+    SELECT [fecha] 
+    FROM OPENJSON(@json_nvarchar)
+    WITH
+    (
+        [fecha] DATE '$.fecha'
+    )
+	)
+		SET @es_feriado = 1;
+	ELSE
+		SET @es_feriado = 0;
+END
+GO
+
+
 
 EXEC sp_configure 'show advanced options', 1;	--Este es para poder editar los permisos avanzados.
 RECONFIGURE;
@@ -85,13 +135,18 @@ EXEC sp_configure 'Ole Automation Procedures', 1;	-- Aqui habilitamos esta opcio
 RECONFIGURE;
 GO
 
-DECLARE @usd DECIMAL(10,2)
-EXECUTE ventas.ConvertirARS_USD 
-	@monto_ars = 100000.56,
-	@monto_usd = @usd OUTPUT
-SELECT @usd
+--DECLARE @usd DECIMAL(10,2)
+--EXECUTE ventas.ConvertirARS_USD 
+--	@monto_ars = 100000.56,
+--	@monto_usd = @usd OUTPUT
+--SELECT @usd
+DECLARE @feriado_resultado BIT
+EXECUTE ventas.EsFeriado
+	@fecha = '2021-05-25',
+	@es_feriado = @feriado_resultado OUTPUT
+SELECT @feriado_resultado 
 GO
-*/
+
 
 -- ============================================================
 -- VentaConfirmar
