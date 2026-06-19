@@ -50,9 +50,9 @@
     <LogicalFolder Name="Consultas" Type="0" Sorted="true">
       <Items>
         <FileNode Name="01_bd_esquemas.sql">
-          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:JOAQUIN\SQLEXPRESS:False:admin_tobe</AssociatedConnectionMoniker>
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:JOAQUIN\SQLEXPRESS:True</AssociatedConnectionMoniker>
           <AssociatedConnSrvName>JOAQUIN\SQLEXPRESS</AssociatedConnSrvName>
-          <AssociatedConnUserName>admin_tobe</AssociatedConnUserName>
+          <AssociatedConnUserName />
           <FullPath>01_bd_esquemas.sql</FullPath>
         </FileNode>
         <FileNode Name="02_tablas.sql">
@@ -80,8 +80,8 @@
           <FullPath>05_usuarios.sql</FullPath>
         </FileNode>
         <FileNode Name="06_funciones_ventas.sql">
-          <AssociatedConnectionMoniker />
-          <AssociatedConnSrvName />
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:JOAQUIN\SQLEXPRESS:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>JOAQUIN\SQLEXPRESS</AssociatedConnSrvName>
           <AssociatedConnUserName />
           <FullPath>06_funciones_ventas.sql</FullPath>
         </FileNode>
@@ -122,8 +122,8 @@
           <FullPath>12_sp_ventas_entradas_abm.sql</FullPath>
         </FileNode>
         <FileNode Name="13_sp_ventas_transacciones.sql">
-          <AssociatedConnectionMoniker />
-          <AssociatedConnSrvName />
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:JOAQUIN\SQLEXPRESS:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>JOAQUIN\SQLEXPRESS</AssociatedConnSrvName>
           <AssociatedConnUserName />
           <FullPath>13_sp_ventas_transacciones.sql</FullPath>
         </FileNode>
