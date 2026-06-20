@@ -52,7 +52,7 @@ BEGIN
 		IF NOT EXISTS (SELECT id FROM parques.Parque WHERE id = @id_parque)
 			THROW 50063, 'El parque no existe.', 1
 		
-		INSERT INTO ##Carrito(id_parque) VALUES(@id_parque)
+		INSERT INTO ventas.Carrito(id_parque) VALUES(@id_parque)
 
 		PRINT('Carrito dado de alta correctamente')
 	END TRY
@@ -75,15 +75,15 @@ BEGIN
 	SET NOCOUNT ON
 
 	BEGIN TRY
-		IF NOT EXISTS (SELECT id FROM ##Carrito WHERE id = @id_carrito)
+		IF NOT EXISTS (SELECT id FROM ventas.Carrito WHERE id = @id_carrito)
 			THROW 50064, 'El carrito no existe.', 1
 		
-		DELETE FROM ##Carrito WHERE id = @id_carrito -- No vamos a utilizar baja logica en carritos
+		DELETE FROM ventas.Carrito WHERE id = @id_carrito
 	END TRY
 
 	BEGIN CATCH
-		PRINT(CAST(ERROR_NUMBER() AS CHAR) + ' ' + ERROR_MESSAGE())
-		-- THROW
+		--PRINT(CAST(ERROR_NUMBER() AS CHAR) + ' ' + ERROR_MESSAGE())
+		THROW
 	END CATCH
 END
 GO
@@ -106,7 +106,7 @@ BEGIN
 	BEGIN TRY
 		DECLARE @errores VARCHAR(MAX) = ''
 
-		IF NOT EXISTS (SELECT id FROM ##Carrito WHERE id = @id_carrito)
+		IF NOT EXISTS (SELECT id FROM ventas.Carrito WHERE id = @id_carrito)
 			SET @errores += '- El carrito no existe.' + CHAR(13)
 
 		IF NOT EXISTS (SELECT id FROM ventas.TipoVisitante 
@@ -237,8 +237,8 @@ BEGIN
 	END TRY
 
 	BEGIN CATCH
-		PRINT(CAST(ERROR_NUMBER() AS CHAR) + ' ' + ERROR_MESSAGE())
-		-- THROW
+		--PRINT(CAST(ERROR_NUMBER() AS CHAR) + ' ' + ERROR_MESSAGE())
+		THROW
 	END CATCH
 END
 GO
@@ -265,8 +265,8 @@ BEGIN
 	END TRY
 
 	BEGIN CATCH
-		PRINT(CAST(ERROR_NUMBER() AS CHAR) + ' ' + ERROR_MESSAGE())
-		-- THROW
+		--PRINT(CAST(ERROR_NUMBER() AS CHAR) + ' ' + ERROR_MESSAGE())
+		THROW
 	END CATCH
 END
 GO
