@@ -1,4 +1,4 @@
-/*
+ï»¿/*
 
 DATOS DEL GRUPO
 ===============
@@ -45,21 +45,21 @@ BEGIN
 	END TRY
 	BEGIN CATCH
 		PRINT(CAST(ERROR_NUMBER() AS CHAR) + ' ' + ERROR_MESSAGE())
-		-- THROW -- También podemos enviar los errores a capas superiores
+		-- THROW -- Tambin podemos enviar los errores a capas superiores
 	END CATCH
 END
 GO
 
 -- ============================================================
 -- ActividadAlta
+-- Registra la definicion de una actividad
 -- ============================================================
 CREATE OR ALTER PROCEDURE actividades.ActividadAlta
 	@id_tipo_actividad INT,
-	@fecha_horario DATETIME,
 	@id_parque INT,
 	@nombre VARCHAR(50),
 	@descripcion VARCHAR(100),
-	@cupo INT,
+	@cupo_maximo INT,
 	@duracion_minutos INT
 AS
 BEGIN
@@ -67,70 +67,113 @@ BEGIN
 	BEGIN TRY
 		DECLARE @errores VARCHAR(MAX) = ''
 
-		IF NOT EXISTS (SELECT id FROM actividades.TipoActividad WHERE id = @id_tipo_actividad)
-			SET @errores += '- El tipo de actividad seleccionado no existe'
+		IF NOT EXISTS (SELECT id FROM actividades.TipoActividad WHERE id = @id_tipo_actividad AND borrado = 0)
+			SET @errores += '- El tipo de actividad seleccionado no existe.' + CHAR(13)
 
 		IF NOT EXISTS (SELECT 1 FROM parques.Parque WHERE id = @id_parque AND borrado = 0)
 			SET @errores += '- El parque indicado no existe o esta dado de baja.' + CHAR(13)
 
 		IF LTRIM(RTRIM(ISNULL(@nombre, ''))) = '' 
 			SET @errores += '- El nombre no puede estar vacio.' + CHAR(13)
-		IF @cupo <= 0 
-			SET @errores += '- El cupo debe ser mayor a 0.' + CHAR(13)
+		IF @cupo_maximo <= 0 
+			SET @errores += '- El cupo maximo debe ser mayor a 0.' + CHAR(13)
 		IF @duracion_minutos <= 0 
 			SET @errores += '- La duracion debe ser mayor a 0.' + CHAR(13)
 
 		IF LEN(@errores) > 0
 			THROW 50033, @errores, 1
 
-		INSERT INTO actividades.Actividad (id_tipo_actividad, fecha_horario, id_parque, nombre, descripcion, cupo, duracion_minutos, borrado)
-		VALUES (@id_tipo_actividad, @fecha_horario, @id_parque, @nombre, @descripcion, @cupo, @duracion_minutos, 0)
+		INSERT INTO actividades.Actividad 
+		(id_tipo_actividad, id_parque, nombre, descripcion, cupo_maximo, duracion_minutos, borrado)
+		VALUES (@id_tipo_actividad, @id_parque, @nombre, @descripcion, @cupo_maximo, @duracion_minutos, 0)
 
+		SELECT SCOPE_IDENTITY() AS id_actividad
 		PRINT('Actividad registrada correctamente.')
 	END TRY
 	BEGIN CATCH
 		PRINT(CAST(ERROR_NUMBER() AS CHAR) + ' ' + ERROR_MESSAGE())
-		-- THROW -- También podemos enviar los errores a capas superiores
+		-- THROW
 	END CATCH
 END
 GO
 
 -- ============================================================
--- ActividadModificar
+-- HorarioActividadAlta
+-- Agrega una instancia de horario (dia + hora) para una actividad.
+-- La misma actividad puede tener multiples horarios distintos.
 -- ============================================================
-CREATE OR ALTER PROCEDURE actividades.ActividadModificarCupo
-	@id_tipo_actividad INT,
-	@fecha_horario DATETIME,
-	@cupo INT
+CREATE OR ALTER PROCEDURE actividades.HorarioActividadAlta
+	@id_actividad INT,
+	@fecha DATE,
+	@hora TIME
 AS
 BEGIN
 	SET NOCOUNT ON
 	BEGIN TRY
 		DECLARE @errores VARCHAR(MAX) = ''
 
-		IF NOT EXISTS (SELECT 1
-		FROM actividades.Actividad 
-		WHERE id_tipo_actividad = @id_tipo_actividad 
-		AND fecha_horario = @fecha_horario AND borrado = 0)
+		IF NOT EXISTS (SELECT id FROM actividades.Actividad WHERE id = @id_actividad AND borrado = 0)
+			SET @errores += '- La actividad no existe o esta dada de baja.' + CHAR(13)
+
+		IF @fecha < CAST(GETDATE() AS DATE)
+			SET @errores += '- La fecha del horario no puede ser anterior a hoy.' + CHAR(13)
+
+		IF EXISTS (
+			SELECT 1 FROM actividades.HorarioActividad
+			WHERE id_actividad = @id_actividad
+			AND fecha = @fecha AND hora = @hora AND borrado = 0
+		)
+			SET @errores += '- Ya existe un horario para esa actividad en esa fecha y hora.' + CHAR(13)
+
+		IF LEN(@errores) > 0
+			THROW 50039, @errores, 1
+
+		INSERT INTO actividades.HorarioActividad 
+		(id_actividad, fecha, hora, localidades_vendidas, activo, borrado)
+		VALUES (@id_actividad, @fecha, @hora, 0, 1, 0)
+
+		SELECT SCOPE_IDENTITY() AS id_horario
+		PRINT('Horario de actividad registrado correctamente.')
+	END TRY
+	BEGIN CATCH
+		PRINT(CAST(ERROR_NUMBER() AS CHAR) + ' ' + ERROR_MESSAGE())
+		-- THROW
+	END CATCH
+END
+GO
+
+-- ============================================================
+-- ActividadModificarCupo
+-- Modifica el cupo maximo por instancia de horario de una actividad.
+-- ============================================================
+CREATE OR ALTER PROCEDURE actividades.ActividadModificarCupo
+	@id_actividad INT,
+	@cupo_maximo INT
+AS
+BEGIN
+	SET NOCOUNT ON
+	BEGIN TRY
+		DECLARE @errores VARCHAR(MAX) = ''
+
+		IF NOT EXISTS (SELECT 1 FROM actividades.Actividad WHERE id = @id_actividad AND borrado = 0)
 			SET @errores += '- No se encontro una actividad activa con ese ID.' + CHAR(13)
 
-		IF @cupo <= 0 
-			SET @errores += '- El cupo debe ser mayor a 0.' + CHAR(13)
+		IF @cupo_maximo <= 0 
+			SET @errores += '- El cupo maximo debe ser mayor a 0.' + CHAR(13)
 
 		IF LEN(@errores) > 0
 			THROW 50034, @errores, 1
 
 		UPDATE actividades.Actividad
-		SET cupo = @cupo
-		WHERE id_tipo_actividad = @id_tipo_actividad
-		AND fecha_horario = @fecha_horario
+		SET cupo_maximo = @cupo_maximo
+		WHERE id = @id_actividad
 
-		PRINT 'Actividad modificada correctamente.'
+		PRINT 'Cupo maximo de actividad modificado correctamente.'
 	END TRY
 
 	BEGIN CATCH
 		PRINT(CAST(ERROR_NUMBER() AS CHAR) + ' ' + ERROR_MESSAGE())
-		-- THROW -- También podemos enviar los errores a capas superiores
+		-- THROW
 	END CATCH
 END
 GO
@@ -148,11 +191,11 @@ BEGIN
 	BEGIN TRY
 		DECLARE @errores VARCHAR(MAX) = ''
 
-		IF NOT EXISTS (SELECT @id_tipo_actividad
+		IF NOT EXISTS (SELECT 1
 		FROM actividades.Actividad 
 		WHERE id_tipo_actividad = @id_tipo_actividad 
 		AND borrado = 0)
-			SET @errores += '- No se encontro una actividad activa con ese ID.' + CHAR(13)
+			SET @errores += '- No se encontro una actividad activa con ese tipo.' + CHAR(13)
 
 		IF @nombre = ''
 			SET @errores += '- El nombre no puede estar vacio.'
@@ -224,40 +267,67 @@ BEGIN
 			ROLLBACK TRANSACTION
 
 		PRINT(CAST(ERROR_NUMBER() AS CHAR) + ' ' + ERROR_MESSAGE())
-		-- THROW -- También podemos enviar los errores a capas superiores
+		-- THROW -- Tambin podemos enviar los errores a capas superiores
 	END CATCH
 END
 GO
 
 -- ============================================================
 -- ActividadBaja
+-- Baja logica de una actividad (y sus horarios futuros)
 -- ============================================================
 CREATE OR ALTER PROCEDURE actividades.ActividadBaja
-	@id_actividad INT,
-	@fecha_horario DATETIME
+	@id_actividad INT
 AS
 BEGIN
 	SET NOCOUNT ON
 	BEGIN TRY
-		IF NOT EXISTS (SELECT 1
-		FROM actividades.Actividad 
-		WHERE id_tipo_actividad = @id_actividad 
-		AND fecha_horario = @fecha_horario AND borrado = 0)
-		BEGIN
-			THROW 50036, 'No se encontro una actividad activa con ese id u horario.', 1
-		END
+		IF NOT EXISTS (SELECT 1 FROM actividades.Actividad WHERE id = @id_actividad AND borrado = 0)
+			THROW 50036, 'No se encontro una actividad activa con ese id.', 1
+
+		-- Dar de baja los horarios futuros que aun no se ejecutaron
+		UPDATE actividades.HorarioActividad
+		SET borrado = 1, activo = 0
+		WHERE id_actividad = @id_actividad
+		AND fecha >= CAST(GETDATE() AS DATE)
+		AND borrado = 0
 
 		UPDATE actividades.Actividad
 		SET borrado = 1
-		WHERE id_tipo_actividad = @id_actividad
-		AND fecha_horario = @fecha_horario 
+		WHERE id = @id_actividad
 
 		PRINT 'Actividad dada de baja correctamente.'
 	END TRY
 	
 	BEGIN CATCH
 		PRINT(CAST(ERROR_NUMBER() AS CHAR) + ' ' + ERROR_MESSAGE())
-		-- THROW -- También podemos enviar los errores a capas superiores
+		-- THROW
+	END CATCH
+END
+GO
+
+-- ============================================================
+-- HorarioActividadBaja
+-- Baja logica de un horario especifico de una actividad
+-- ============================================================
+CREATE OR ALTER PROCEDURE actividades.HorarioActividadBaja
+	@id_horario INT
+AS
+BEGIN
+	SET NOCOUNT ON
+	BEGIN TRY
+		IF NOT EXISTS (SELECT 1 FROM actividades.HorarioActividad WHERE id = @id_horario AND borrado = 0)
+			THROW 50040, 'No se encontro un horario activo con ese id.', 1
+
+		UPDATE actividades.HorarioActividad
+		SET borrado = 1, activo = 0
+		WHERE id = @id_horario
+
+		PRINT 'Horario de actividad dado de baja correctamente.'
+	END TRY
+	BEGIN CATCH
+		PRINT(CAST(ERROR_NUMBER() AS CHAR) + ' ' + ERROR_MESSAGE())
+		-- THROW
 	END CATCH
 END
 GO
@@ -273,11 +343,20 @@ AS
 BEGIN
 	SET NOCOUNT ON
 
-	IF NOT EXISTS (SELECT id_tipo_actividad
+	IF NOT EXISTS (SELECT 1
 	FROM actividades.Actividad 
 	WHERE id_tipo_actividad = @id_tipo_actividad 
 	AND borrado = 0)
-		THROW 50037, 'No se encontraron una actividad activa con ese ID.', 1
+		THROW 50037, 'No se encontraron actividades activas con ese tipo.', 1
+
+	-- Dar de baja los horarios futuros asociados
+	UPDATE actividades.HorarioActividad
+	SET borrado = 1, activo = 0
+	WHERE id_actividad IN (
+		SELECT id FROM actividades.Actividad WHERE id_tipo_actividad = @id_tipo_actividad
+	)
+	AND fecha >= CAST(GETDATE() AS DATE)
+	AND borrado = 0
 
 	UPDATE actividades.Actividad
 	SET borrado = 1
@@ -311,25 +390,42 @@ BEGIN
 		IF @@TRANCOUNT > 0 
 			ROLLBACK TRANSACTION
 		PRINT(CAST(ERROR_NUMBER() AS CHAR) + ' ' + ERROR_MESSAGE())
-		-- THROW -- También podemos enviar los errores a capas superiores
+		-- THROW -- Tambien podemos enviar los errores a capas superiores
 	END CATCH
 END
 GO
-
+	
 -- ============================================================
 -- ActividadConsultar
+-- Consulta actividades con sus horarios y estado de cupos.
 -- ============================================================
 CREATE OR ALTER PROCEDURE actividades.ActividadConsultar
 	@id_parque INT = NULL,
-	@id INT = NULL
+	@id_actividad INT = NULL
 AS
 BEGIN
 	SET NOCOUNT ON
-	SELECT id_tipo_actividad, fecha_horario, id_parque, nombre, descripcion, cupo, duracion_minutos
-	FROM actividades.Actividad
-	WHERE (@id_parque IS NULL OR id_parque = @id_parque)
-	  AND (@id IS NULL OR id_tipo_actividad = @id)
-	  AND borrado = 0
+	SELECT 
+		a.id,
+		ta.descripcion AS tipo_actividad,
+		a.id_parque,
+		a.nombre,
+		a.descripcion,
+		a.cupo_maximo,
+		a.duracion_minutos,
+		h.id AS id_horario,
+		h.fecha,
+		h.hora,
+		h.localidades_vendidas,
+		(a.cupo_maximo - h.localidades_vendidas) AS cupo_disponible,
+		h.activo
+	FROM actividades.Actividad AS a
+	INNER JOIN actividades.TipoActividad AS ta ON a.id_tipo_actividad = ta.id
+	LEFT JOIN actividades.HorarioActividad AS h ON h.id_actividad = a.id AND h.borrado = 0
+	WHERE (@id_parque IS NULL OR a.id_parque = @id_parque)
+	  AND (@id_actividad IS NULL OR a.id = @id_actividad)
+	  AND a.borrado = 0
+	ORDER BY a.id, h.fecha, h.hora
 END
 GO
 
@@ -348,7 +444,7 @@ BEGIN
 	BEGIN TRY
 		DECLARE @errores VARCHAR(MAX) = ''
 
-		IF NOT EXISTS (SELECT 1 FROM actividades.Actividad WHERE id_tipo_actividad = @id_actividad AND borrado = 0)
+		IF NOT EXISTS (SELECT 1 FROM actividades.Actividad WHERE id = @id_actividad AND borrado = 0)
 			SET @errores += '- La actividad no existe o esta dada de baja.' + CHAR(13)
 
 		IF @precio < 0 
@@ -377,7 +473,7 @@ BEGIN
 
 	BEGIN CATCH
 		PRINT(CAST(ERROR_NUMBER() AS CHAR) + ' ' + ERROR_MESSAGE())
-		-- THROW -- También podemos enviar los errores a capas superiores
+		-- THROW -- Tambin podemos enviar los errores a capas superiores
 	END CATCH
 END
 GO

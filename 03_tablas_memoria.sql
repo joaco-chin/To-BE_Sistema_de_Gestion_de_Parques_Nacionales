@@ -13,7 +13,7 @@ DATOS DEL SCRIPT
 Creacion de las tablas en memoria para administrar las ventas del sistema.
 Las mismas tienen como durabilidad "SCHEMA_ONLY" ya que no es necesario que
 sus datos perduren luego de un reinicio o error, debido a que los mismos
-serán volcados eventualmente sobre las tablas en disco Venta y DetalleVenta.
+serï¿½n volcados eventualmente sobre las tablas en disco Venta y DetalleVenta.
 */
 
 USE ToBE
@@ -49,8 +49,13 @@ CREATE TABLE ventas.CarritoDetalleVenta
 (
 	id_carrito INT REFERENCES ventas.Carrito(id),
 	linea_venta INT IDENTITY(1,1),
-	id_tarifa_parque INT NULL,
-	id_tarifa_actividad INT NULL,
+	-- Al menos uno de los dos debe estar presente (validar en SP)
+	id_tarifa_parque INT NULL
+	REFERENCES ventas.TarifaParque(id),
+	id_tarifa_actividad INT NULL
+	REFERENCES actividades.TarifaActividad(id),
+	id_horario_actividad INT NULL
+	REFERENCES actividades.HorarioActividad(id),
 	cantidad INT NOT NULL CHECK (cantidad > 0),
 	importe DECIMAL(10,2) NOT NULL,
 	CONSTRAINT PK_carrito 

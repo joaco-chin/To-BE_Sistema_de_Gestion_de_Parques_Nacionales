@@ -150,11 +150,8 @@ PRINT 'TEST SP GuardaparqueBaja'
 PRINT '======================================================='
 GO
 
--- TEST 9: Baja exitosa - re-asignamos para verificar que se cierre automaticamente
-PRINT '-- TEST 9: Baja exitosa (cierra asignacion activa)'
-DECLARE @id_parque_test INT
-SELECT @id_parque_test = id FROM parques.Parque WHERE nombre = 'Parque Test Personal' AND borrado = 0
-EXEC personal.GuardaparqueAsignarParque @legajo = 9001, @dni = 99001001, @id_parque = @id_parque_test
+-- TEST 9: Baja exitosa
+PRINT '-- TEST 9: Baja exitosa (sin asignacion activa)'
 EXEC personal.GuardaparqueBaja          @legajo = 9001, @dni = 99001001
 SELECT legajo, borrado FROM personal.Guardaparque WHERE legajo = 9001
 -- Resultado esperado: borrado = 1
@@ -227,7 +224,7 @@ PRINT 'TEST SP GuiaAsignarActividad / GuiaDesasignarActividad'
 PRINT '======================================================='
 GO
 
--- Actividad auxiliar para los tests
+-- Actividad y horario auxiliares para los tests de GuiaAsignarActividad
 DECLARE @id_parque_test INT
 SELECT @id_parque_test = id FROM parques.Parque WHERE nombre = 'Parque Test Personal' AND borrado = 0
 DECLARE @id_tipo_act INT
@@ -235,45 +232,57 @@ SELECT TOP 1 @id_tipo_act = id FROM actividades.TipoActividad WHERE borrado = 0
 IF @id_tipo_act IS NOT NULL AND NOT EXISTS (
 	SELECT 1 FROM actividades.Actividad WHERE nombre = 'Actividad Test Personal' AND id_parque = @id_parque_test
 )
-	INSERT INTO actividades.Actividad (id_tipo_actividad, fecha_horario, id_parque, nombre, descripcion, duracion_minutos, cupo, borrado)
-	VALUES (@id_tipo_act, '2027-01-01 10:00', @id_parque_test, 'Actividad Test Personal', 'Actividad para tests', 60, 10, 0)
+BEGIN
+	INSERT INTO actividades.Actividad (id_tipo_actividad, id_parque, nombre, descripcion, duracion_minutos, cupo_maximo, borrado)
+	VALUES (@id_tipo_act, @id_parque_test, 'Actividad Test Personal', 'Actividad para tests', 60, 10, 0)
+
+	DECLARE @id_act_new INT = SCOPE_IDENTITY()
+	INSERT INTO actividades.HorarioActividad (id_actividad, fecha, hora, localidades_vendidas, activo, borrado)
+	VALUES (@id_act_new, '2027-01-01', '10:00', 0, 1, 0)
+END
 GO
 
--- TEST 14: Asignacion exitosa de guia a actividad
+-- TEST 14: Asignacion exitosa de guia a horario de actividad
 PRINT '-- TEST 14: Asignacion exitosa de guia a actividad'
-DECLARE @id_act INT
-SELECT @id_act = id FROM actividades.Actividad
-WHERE nombre = 'Actividad Test Personal'
-  AND id_parque = (SELECT id FROM parques.Parque WHERE nombre = 'Parque Test Personal')
-IF @id_act IS NOT NULL
+DECLARE @id_horario INT
+SELECT @id_horario = ha.id
+FROM actividades.HorarioActividad ha
+INNER JOIN actividades.Actividad a ON a.id = ha.id_actividad
+WHERE a.nombre = 'Actividad Test Personal'
+  AND a.id_parque = (SELECT id FROM parques.Parque WHERE nombre = 'Parque Test Personal')
+  AND ha.borrado = 0
+IF @id_horario IS NOT NULL
 BEGIN
-	EXEC personal.GuiaAsignarActividad @legajo = 9011, @dni = 99001011, @id_actividad = @id_act
-	SELECT legajo_guia, id_actividad, fecha_inicio, fecha_fin
+	EXEC personal.GuiaAsignarActividad @legajo = 9011, @dni = 99001011, @id_horario = @id_horario
+	SELECT legajo_guia, id_horario, fecha_inicio, fecha_fin
 	FROM actividades.GuiaActividad WHERE legajo_guia = 9011
 	-- Resultado esperado: 1 fila con fecha_fin NULL
 END
-ELSE PRINT 'Test 14 omitido: sin actividades disponibles.'
+ELSE PRINT 'Test 14 omitido: sin horarios disponibles.'
 GO
 
--- TEST 15: Fallo - actividad inexistente
-PRINT '-- TEST 15: Fallo - actividad inexistente'
-EXEC personal.GuiaAsignarActividad @legajo = 9011, @dni = 99001011, @id_actividad = 999999
--- Resultado esperado: THROW '- La actividad no existe o esta dada de baja.'
+-- TEST 15: Fallo - horario inexistente
+PRINT '-- TEST 15: Fallo - horario inexistente'
+EXEC personal.GuiaAsignarActividad @legajo = 9011, @dni = 99001011, @id_horario = 999999
+-- Resultado esperado: THROW '- El horario de actividad no existe o no esta activo.'
 GO
 
 -- TEST 16: Desasignacion exitosa
 PRINT '-- TEST 16: Desasignacion exitosa de guia'
-DECLARE @id_act INT
-SELECT @id_act = id FROM actividades.Actividad
-WHERE nombre = 'Actividad Test Personal'
-  AND id_parque = (SELECT id FROM parques.Parque WHERE nombre = 'Parque Test Personal')
-IF @id_act IS NOT NULL
+DECLARE @id_horario INT
+SELECT @id_horario = ha.id
+FROM actividades.HorarioActividad ha
+INNER JOIN actividades.Actividad a ON a.id = ha.id_actividad
+WHERE a.nombre = 'Actividad Test Personal'
+  AND a.id_parque = (SELECT id FROM parques.Parque WHERE nombre = 'Parque Test Personal')
+  AND ha.borrado = 0
+IF @id_horario IS NOT NULL
 BEGIN
-	EXEC personal.GuiaDesasignarActividad @legajo = 9011, @dni = 99001011, @id_actividad = @id_act
-	SELECT legajo_guia, fecha_fin FROM actividades.GuiaActividad WHERE legajo_guia = 9011
+	EXEC personal.GuiaDesasignarActividad @legajo = 9011, @dni = 99001011, @id_horario = @id_horario
+	SELECT legajo_guia, id_horario, fecha_fin FROM actividades.GuiaActividad WHERE legajo_guia = 9011
 	-- Resultado esperado: fecha_fin != NULL
 END
-ELSE PRINT 'Test 16 omitido: sin actividades disponibles.'
+ELSE PRINT 'Test 16 omitido: sin horarios disponibles.'
 GO
 
 
@@ -282,14 +291,17 @@ PRINT 'TEST SP GuiaBaja'
 PRINT '======================================================='
 GO
 
--- TEST 17: Baja exitosa - re-asignamos para verificar que se cierren actividades
+-- TEST 17: Baja exitosa - re-asignamos para verificar que se cierren horarios activos
 PRINT '-- TEST 17: Baja exitosa (cierra actividades activas)'
-DECLARE @id_act INT
-SELECT @id_act = id FROM actividades.Actividad
-WHERE nombre = 'Actividad Test Personal'
-  AND id_parque = (SELECT id FROM parques.Parque WHERE nombre = 'Parque Test Personal')
-IF @id_act IS NOT NULL
-	EXEC personal.GuiaAsignarActividad @legajo = 9011, @dni = 99001011, @id_actividad = @id_act
+DECLARE @id_horario INT
+SELECT @id_horario = ha.id
+FROM actividades.HorarioActividad ha
+INNER JOIN actividades.Actividad a ON a.id = ha.id_actividad
+WHERE a.nombre = 'Actividad Test Personal'
+  AND a.id_parque = (SELECT id FROM parques.Parque WHERE nombre = 'Parque Test Personal')
+  AND ha.borrado = 0
+IF @id_horario IS NOT NULL
+	EXEC personal.GuiaAsignarActividad @legajo = 9011, @dni = 99001011, @id_horario = @id_horario
 EXEC personal.GuiaBaja @legajo = 9011, @dni = 99001011
 SELECT legajo, borrado FROM personal.Guia WHERE legajo = 9011
 -- Resultado esperado: borrado = 1
@@ -311,6 +323,7 @@ GO
 DECLARE @id_parque_test INT
 SELECT @id_parque_test = id FROM parques.Parque WHERE nombre = 'Parque Test Personal'
 DELETE FROM actividades.GuiaActividad         WHERE legajo_guia IN (9011)
+DELETE FROM actividades.HorarioActividad      WHERE id_actividad IN (SELECT id FROM actividades.Actividad WHERE nombre = 'Actividad Test Personal' AND id_parque = @id_parque_test)
 DELETE FROM actividades.Actividad             WHERE nombre = 'Actividad Test Personal' AND id_parque = @id_parque_test
 DELETE FROM personal.AsignacionesGuardaParque WHERE legajo_guardaparque IN (9001)
 DELETE FROM personal.Guardaparque             WHERE legajo IN (9001)
