@@ -50,16 +50,13 @@ CREATE TABLE ventas.CarritoDetalleVenta
 	id_carrito INT REFERENCES ventas.Carrito(id),
 	linea_venta INT IDENTITY(1,1),
 	-- Al menos uno de los dos debe estar presente (validar en SP)
-	id_tarifa_parque INT NULL
-	REFERENCES ventas.TarifaParque(id),
-	id_tarifa_actividad INT NULL
-	REFERENCES actividades.TarifaActividad(id),
-	id_horario_actividad INT NULL
-	REFERENCES actividades.HorarioActividad(id),
+	id_tarifa_parque INT NULL,
+	id_tarifa_actividad INT NULL,
+	id_horario_actividad INT NULL,
 	cantidad INT NOT NULL CHECK (cantidad > 0),
 	importe DECIMAL(10,2) NOT NULL,
 	CONSTRAINT PK_carrito 
-	PRIMARY KEY (id_carrito,linea_venta) 
+	PRIMARY KEY NONCLUSTERED (id_carrito,linea_venta)
 )
 WITH(MEMORY_OPTIMIZED = ON, DURABILITY = SCHEMA_ONLY)
 END

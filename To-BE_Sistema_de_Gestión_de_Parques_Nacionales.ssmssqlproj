@@ -17,7 +17,7 @@
           <ConnectionProtocol>NotSpecified</ConnectionProtocol>
           <ApplicationName>Microsoft SQL Server Management Studio - Consulta</ApplicationName>
         </ConnectionNode>
-        <ConnectionNode Name="JOAQUIN\SQLEXPRESS:AzureAD\YerimenLombardo">
+        <ConnectionNode Name="JOAQUIN\SQLEXPRESS:JOAQUIN\joaqu">
           <Created>2026-05-19T21:42:18.0390613-03:00</Created>
           <Type>SQL</Type>
           <Server>JOAQUIN\SQLEXPRESS</Server>
@@ -50,21 +50,21 @@
     <LogicalFolder Name="Consultas" Type="0" Sorted="true">
       <Items>
         <FileNode Name="01_bd_esquemas.sql">
-          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:YERI-ENTA\SQL2025:False:sa</AssociatedConnectionMoniker>
-          <AssociatedConnSrvName>YERI-ENTA\SQL2025</AssociatedConnSrvName>
-          <AssociatedConnUserName>sa</AssociatedConnUserName>
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:JOAQUIN\SQLEXPRESS:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>JOAQUIN\SQLEXPRESS</AssociatedConnSrvName>
+          <AssociatedConnUserName />
           <FullPath>01_bd_esquemas.sql</FullPath>
         </FileNode>
         <FileNode Name="02_tablas.sql">
-          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:YERI-ENTA\SQL2025:False:sa</AssociatedConnectionMoniker>
-          <AssociatedConnSrvName>YERI-ENTA\SQL2025</AssociatedConnSrvName>
-          <AssociatedConnUserName>sa</AssociatedConnUserName>
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:JOAQUIN\SQLEXPRESS:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>JOAQUIN\SQLEXPRESS</AssociatedConnSrvName>
+          <AssociatedConnUserName />
           <FullPath>02_tablas.sql</FullPath>
         </FileNode>
         <FileNode Name="03_tablas_memoria.sql">
-          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:YERI-ENTA\SQL2025:False:sa</AssociatedConnectionMoniker>
-          <AssociatedConnSrvName>YERI-ENTA\SQL2025</AssociatedConnSrvName>
-          <AssociatedConnUserName>sa</AssociatedConnUserName>
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:JOAQUIN\SQLEXPRESS:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>JOAQUIN\SQLEXPRESS</AssociatedConnSrvName>
+          <AssociatedConnUserName />
           <FullPath>03_tablas_memoria.sql</FullPath>
         </FileNode>
         <FileNode Name="04_logins.sql">
@@ -80,9 +80,9 @@
           <FullPath>05_usuarios.sql</FullPath>
         </FileNode>
         <FileNode Name="06_funciones_ventas.sql">
-          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:YERI-ENTA\SQL2025:False:sa</AssociatedConnectionMoniker>
-          <AssociatedConnSrvName>YERI-ENTA\SQL2025</AssociatedConnSrvName>
-          <AssociatedConnUserName>sa</AssociatedConnUserName>
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:JOAQUIN\SQLEXPRESS:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>JOAQUIN\SQLEXPRESS</AssociatedConnSrvName>
+          <AssociatedConnUserName />
           <FullPath>06_funciones_ventas.sql</FullPath>
         </FileNode>
         <FileNode Name="07_funciones_concesiones.sql">
@@ -116,15 +116,15 @@
           <FullPath>11_sp_ventas_visitante_abm.sql</FullPath>
         </FileNode>
         <FileNode Name="12_sp_ventas_entradas_abm.sql">
-          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:YERI-ENTA\SQL2025:False:sa</AssociatedConnectionMoniker>
-          <AssociatedConnSrvName>YERI-ENTA\SQL2025</AssociatedConnSrvName>
-          <AssociatedConnUserName>sa</AssociatedConnUserName>
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:JOAQUIN\SQLEXPRESS:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>JOAQUIN\SQLEXPRESS</AssociatedConnSrvName>
+          <AssociatedConnUserName />
           <FullPath>12_sp_ventas_entradas_abm.sql</FullPath>
         </FileNode>
         <FileNode Name="13_sp_ventas_transacciones.sql">
-          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:YERI-ENTA\SQL2025:False:sa</AssociatedConnectionMoniker>
-          <AssociatedConnSrvName>YERI-ENTA\SQL2025</AssociatedConnSrvName>
-          <AssociatedConnUserName>sa</AssociatedConnUserName>
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:JOAQUIN\SQLEXPRESS:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>JOAQUIN\SQLEXPRESS</AssociatedConnSrvName>
+          <AssociatedConnUserName />
           <FullPath>13_sp_ventas_transacciones.sql</FullPath>
         </FileNode>
         <FileNode Name="14_sp_concesiones_abm.sql">
@@ -152,9 +152,9 @@
           <FullPath>17_sp_importacion_superficies_csv.sql</FullPath>
         </FileNode>
         <FileNode Name="18_test_sp_abm_parques.sql">
-          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:YERI-ENTA\SQL2025:False:sa</AssociatedConnectionMoniker>
-          <AssociatedConnSrvName>YERI-ENTA\SQL2025</AssociatedConnSrvName>
-          <AssociatedConnUserName>sa</AssociatedConnUserName>
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:JOAQUIN\SQLEXPRESS:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>JOAQUIN\SQLEXPRESS</AssociatedConnSrvName>
+          <AssociatedConnUserName />
           <FullPath>18_test_sp_abm_parques.sql</FullPath>
         </FileNode>
         <FileNode Name="19_test_sp_abm_actividades.sql">
