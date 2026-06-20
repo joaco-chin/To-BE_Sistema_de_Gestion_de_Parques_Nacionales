@@ -353,7 +353,7 @@ GO
 CREATE OR ALTER PROCEDURE personal.GuiaAsignarActividad
 	@legajo INT,
 	@dni INT,
-	@id_actividad INT,
+	@id_horario INT,
 	@fecha_inicio DATETIME = NULL
 AS
 BEGIN
@@ -365,23 +365,23 @@ BEGIN
 		IF NOT EXISTS (SELECT 1 FROM personal.Guia WHERE legajo = @legajo AND dni = @dni AND borrado = 0)
 			SET @errores += '- El guia no existe o esta dado de baja.' + CHAR(13)
 
-		IF NOT EXISTS (SELECT 1 FROM actividades.Actividad WHERE id_tipo_actividad = @id_actividad AND borrado = 0)
-			SET @errores += '- La actividad no existe o esta dada de baja.' + CHAR(13)
+		IF NOT EXISTS (SELECT 1 FROM actividades.HorarioActividad WHERE id = @id_horario AND borrado = 0 AND activo = 1)
+			SET @errores += '- El horario de actividad no existe o no esta activo.' + CHAR(13)
 
 		IF EXISTS (
 			SELECT 1 FROM actividades.GuiaActividad
-			WHERE legajo_guia = @legajo AND dni_guia = @dni AND id_actividad = @id_actividad
+			WHERE legajo_guia = @legajo AND dni_guia = @dni AND id_horario = @id_horario
 			  AND (fecha_fin IS NULL OR fecha_fin > GETDATE())
 		)
-			SET @errores += '- El guia ya tiene una asignacion activa en esta actividad.' + CHAR(13)
+			SET @errores += '- El guia ya tiene una asignacion activa en este horario de actividad.' + CHAR(13)
 
 		IF LEN(@errores) > 0
 			THROW 50017, @errores, 1
 
 		SET @fecha_inicio = ISNULL(@fecha_inicio, GETDATE())
 
-		INSERT INTO actividades.GuiaActividad (id_actividad, legajo_guia, dni_guia, fecha_inicio)
-		VALUES (@id_actividad, @legajo, @dni, @fecha_inicio)
+		INSERT INTO actividades.GuiaActividad (id_horario, legajo_guia, dni_guia, fecha_inicio)
+		VALUES (@id_horario, @legajo, @dni, @fecha_inicio)
 
 		PRINT 'Guia asignado a la actividad correctamente.'
 	END TRY
@@ -398,7 +398,7 @@ GO
 CREATE OR ALTER PROCEDURE personal.GuiaDesasignarActividad
 	@legajo INT,
 	@dni INT,
-	@id_actividad INT
+	@id_horario INT
 AS
 BEGIN
 	SET NOCOUNT ON
@@ -409,14 +409,14 @@ BEGIN
 
 		IF NOT EXISTS (
 			SELECT 1 FROM actividades.GuiaActividad
-			WHERE legajo_guia = @legajo AND dni_guia = @dni AND id_actividad = @id_actividad
+			WHERE legajo_guia = @legajo AND dni_guia = @dni AND id_horario = @id_horario
 			  AND (fecha_fin IS NULL OR fecha_fin > GETDATE())
 		)
-			THROW 50019, 'El guia no tiene una asignacion activa en esa actividad.', 1
+			THROW 50019, 'El guia no tiene una asignacion activa en ese horario de actividad.', 1
 
 		UPDATE actividades.GuiaActividad
 		SET fecha_fin = GETDATE()
-		WHERE legajo_guia = @legajo AND dni_guia = @dni AND id_actividad = @id_actividad
+		WHERE legajo_guia = @legajo AND dni_guia = @dni AND id_horario = @id_horario
 		  AND (fecha_fin IS NULL OR fecha_fin > GETDATE())
 
 		PRINT 'Guia desasignado de la actividad correctamente.'

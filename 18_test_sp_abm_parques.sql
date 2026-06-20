@@ -44,8 +44,9 @@ INSERT INTO @nombres_test VALUES
     ('Monumento Natural Bosques Petrificados')
 
 DELETE FROM actividades.GuiaActividad
-WHERE id_actividad IN (
-    SELECT a.id_tipo_actividad FROM actividades.Actividad a
+WHERE id_horario IN (
+    SELECT ha.id FROM actividades.HorarioActividad ha
+    INNER JOIN actividades.Actividad a ON a.id = ha.id_actividad
     WHERE a.id_parque IN (SELECT p.id FROM parques.Parque p INNER JOIN @nombres_test n ON p.nombre = n.nombre)
 )
 
@@ -307,20 +308,29 @@ GO
 -- Resultado esperado: RAISERROR con mensaje sobre concesiones vigentes
 -- ---------------------------------------------------------------
 PRINT '-- TEST 15: Fallo - parque con concesion vigente'
-DECLARE @id_parque1 INT
+DECLARE @id_parque1 INT, @id_empresa_test INT, @id_concesion_test INT
 SELECT @id_parque1 = id FROM #ids_test WHERE label = 'parque1'
 
-INSERT INTO concesiones.Empresa (id, cuit, nombre, razon_social, actividad)
-VALUES (9001, '30999888777', 'Empresa Test SA', 'Empresa Test Sociedad Anonima', 'Turismo')
+INSERT INTO concesiones.Empresa (cuit, nombre, razon_social, actividad)
+VALUES ('30999888777', 'Empresa Test SA', 'Empresa Test Sociedad Anonima', 'Turismo')
+SET @id_empresa_test = SCOPE_IDENTITY()
 
-INSERT INTO concesiones.Concesion (id, id_empresa, cuit_empresa, id_parque, tipo_actividad, monto_mensual, fecha_inicio_contrato, fecha_fin_contrato)
-VALUES (9001, 9001, '30999888777', @id_parque1, 'Gastronomia', 50000.00, '2025-01-01', '2027-12-31')
+INSERT INTO concesiones.Concesion (id_empresa, cuit_empresa, id_parque, tipo_actividad, monto_mensual, fecha_inicio_contrato, fecha_fin_contrato)
+VALUES (@id_empresa_test, '30999888777', @id_parque1, 'Gastronomia', 50000.00, '2025-01-01', '2027-12-31')
+SET @id_concesion_test = SCOPE_IDENTITY()
 
-EXEC parques.ParqueBaja @id = @id_parque1
+BEGIN TRY
+	EXEC parques.ParqueBaja @id = @id_parque1
+	PRINT 'ERROR: Se esperaba fallo por concesion vigente pero el SP tuvo exito.'
+END TRY
+BEGIN CATCH
+	PRINT 'Error esperado: ' + ERROR_MESSAGE()
+END CATCH
 -- Resultado esperado: error indicando concesion vigente
 
-DELETE FROM concesiones.Concesion WHERE id = 9001
-DELETE FROM concesiones.Empresa WHERE id = 9001
+DELETE FROM concesiones.FacturaConcesion WHERE id_concesion = @id_concesion_test
+DELETE FROM concesiones.Concesion         WHERE id = @id_concesion_test
+DELETE FROM concesiones.Empresa           WHERE id = @id_empresa_test
 GO
 
 -- ---------------------------------------------------------------

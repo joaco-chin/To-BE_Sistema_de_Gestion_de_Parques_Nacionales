@@ -11,7 +11,7 @@ Joaquin Chinchurreta|45.683.986
 DATOS DEL SCRIPT
 ================
 Stored Procedures - Ventas y Pagos
-Registro de ventas y lógica de negocio de las mismas.
+Registro de ventas y lï¿½gica de negocio de las mismas.
 
 */
 USE ToBE
@@ -150,8 +150,8 @@ GO
 
 -- ============================================================
 -- VentaConfirmar
--- Confirma una venta en un parque según un carrito dado.
--- En caso de que no hayan errores, vacía el mismo al final
+-- Confirma una venta en un parque segï¿½n un carrito dado.
+-- En caso de que no hayan errores, vacï¿½a el mismo al final
 -- y actualiza la tabla de actividades para cambiar la cantidad
 -- de cupos disponibles
 -- ============================================================
@@ -196,25 +196,26 @@ BEGIN
 			SET @id_venta = (SELECT MAX(id) FROM ventas.Venta)
 
 			INSERT INTO ventas.DetalleVenta
-			(id_venta, linea_venta, id_tarifa_parque, id_tarifa_actividad, cantidad, importe)
+			(id_venta, linea_venta, id_tarifa_parque, id_tarifa_actividad, id_horario_actividad, cantidad, importe)
 			SELECT
 			@id_venta, 
 			linea_venta, 
 			id_tarifa_parque,
 			id_tarifa_actividad,
+			id_horario_actividad,
 			cantidad,
 			importe 
 			FROM ventas.CarritoDetalleVenta
 			WHERE id_carrito = @id_carrito 
 
-			UPDATE a
-			SET cupo = cupo - dv.cantidad
-			FROM actividades.Actividad AS a
-			INNER JOIN ventas.TarifaActividad AS ta
-			ON a.id = ta.id_tarifa_actividad
-			INNER JOIN ventas.DetalleVenta AS dv
-			ON ta.id = dv.id_tarifa_actividad
-			WHERE dv.id_venta = @id_venta 
+			-- Actualizar localidades vendidas por cada horario de actividad comprado
+			UPDATE h
+			SET h.localidades_vendidas = h.localidades_vendidas + cdv.cantidad
+			FROM actividades.HorarioActividad AS h
+			INNER JOIN ventas.CarritoDetalleVenta AS cdv
+			ON h.id = cdv.id_horario_actividad
+			WHERE cdv.id_carrito = @id_carrito
+			AND cdv.id_horario_actividad IS NOT NULL
 
 			EXECUTE ventas.CarritoVaciar @id_carrito
 
