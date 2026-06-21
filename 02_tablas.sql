@@ -170,8 +170,10 @@ CREATE TABLE ventas.TarifaParque
 	id INT IDENTITY(1,1) PRIMARY KEY,
 	id_parque INT NOT NULL REFERENCES parques.Parque(id),
 	id_tipo_visitante INT NOT NULL REFERENCES ventas.TipoVisitante(id),
-	precio DECIMAL(10,2) NOT NULL,
-	precio_feriado DECIMAL(10,2) NOT NULL,
+	precio DECIMAL(10,2) NOT NULL
+	CHECK (precio > 0),
+	precio_feriado DECIMAL(10,2) NOT NULL
+	CHECK (precio > 0),
 	activo BIT DEFAULT 1 NOT NULL,
 	vigencia_desde DATE NOT NULL,
 	vigencia_hasta DATE

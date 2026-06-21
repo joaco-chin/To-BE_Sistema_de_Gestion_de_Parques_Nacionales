@@ -92,9 +92,9 @@
           <FullPath>07_funciones_concesiones.sql</FullPath>
         </FileNode>
         <FileNode Name="08_sp_parques_abm.sql">
-          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:YERI-ENTA\SQL2025:False:sa</AssociatedConnectionMoniker>
-          <AssociatedConnSrvName>YERI-ENTA\SQL2025</AssociatedConnSrvName>
-          <AssociatedConnUserName>sa</AssociatedConnUserName>
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:JOAQUIN\SQLEXPRESS:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>JOAQUIN\SQLEXPRESS</AssociatedConnSrvName>
+          <AssociatedConnUserName />
           <FullPath>08_sp_parques_abm.sql</FullPath>
         </FileNode>
         <FileNode Name="09_sp_actividades_abm.sql">
@@ -175,29 +175,41 @@
           <AssociatedConnUserName />
           <FullPath>21_test_sp_abm_ventas.sql</FullPath>
         </FileNode>
-        <FileNode Name="22_test_sp_abm_concesiones.sql">
+        <FileNode Name="22_test_sp_abm_ventas_entradas.sql">
           <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:JOAQUIN\SQLEXPRESS:True</AssociatedConnectionMoniker>
           <AssociatedConnSrvName>JOAQUIN\SQLEXPRESS</AssociatedConnSrvName>
           <AssociatedConnUserName />
-          <FullPath>22_test_sp_abm_concesiones.sql</FullPath>
+          <FullPath>22_test_sp_abm_ventas_entradas.sql</FullPath>
         </FileNode>
-        <FileNode Name="23_test_sp_concesiones_transacciones.sql">
+        <FileNode Name="23_test_sp_ventas_transacciones.sql">
           <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:JOAQUIN\SQLEXPRESS:True</AssociatedConnectionMoniker>
           <AssociatedConnSrvName>JOAQUIN\SQLEXPRESS</AssociatedConnSrvName>
           <AssociatedConnUserName />
-          <FullPath>23_test_sp_concesiones_transacciones.sql</FullPath>
+          <FullPath>23_test_sp_ventas_transacciones.sql</FullPath>
         </FileNode>
-        <FileNode Name="24_test_sp_importacion_parques.sql">
+        <FileNode Name="24_test_sp_abm_concesiones.sql">
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:JOAQUIN\SQLEXPRESS:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>JOAQUIN\SQLEXPRESS</AssociatedConnSrvName>
+          <AssociatedConnUserName />
+          <FullPath>24_test_sp_abm_concesiones.sql</FullPath>
+        </FileNode>
+        <FileNode Name="25_test_sp_concesiones_transacciones.sql">
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:JOAQUIN\SQLEXPRESS:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>JOAQUIN\SQLEXPRESS</AssociatedConnSrvName>
+          <AssociatedConnUserName />
+          <FullPath>25_test_sp_concesiones_transacciones.sql</FullPath>
+        </FileNode>
+        <FileNode Name="26_test_sp_importacion_parques.sql">
           <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:JOAQUIN\SQLEXPRESS:False:admin_tobe</AssociatedConnectionMoniker>
           <AssociatedConnSrvName>JOAQUIN\SQLEXPRESS</AssociatedConnSrvName>
           <AssociatedConnUserName>admin_tobe</AssociatedConnUserName>
-          <FullPath>24_test_sp_importacion_parques.sql</FullPath>
+          <FullPath>26_test_sp_importacion_parques.sql</FullPath>
         </FileNode>
-        <FileNode Name="25_test_sp_importacion_superficies_csv.sql">
+        <FileNode Name="27_test_sp_importacion_superficies_csv.sql">
           <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:JOAQUIN\SQLEXPRESS:False:admin_tobe</AssociatedConnectionMoniker>
           <AssociatedConnSrvName>JOAQUIN\SQLEXPRESS</AssociatedConnSrvName>
           <AssociatedConnUserName>admin_tobe</AssociatedConnUserName>
-          <FullPath>25_test_sp_importacion_superficies_csv.sql</FullPath>
+          <FullPath>27_test_sp_importacion_superficies_csv.sql</FullPath>
         </FileNode>
         <FileNode Name="views_visitantes.sql">
           <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:JOAQUIN\SQLEXPRESS:True</AssociatedConnectionMoniker>

@@ -180,33 +180,19 @@ BEGIN
 				@fecha = @fecha_visita,
 				@es_feriado = @es_feriado_output OUTPUT
 
-			SET @id_tarifa_parque = 
-			(	SELECT MAX(tp.id) 
-				FROM ventas.TarifaParque AS tp
-				INNER JOIN ventas.TipoVisitante AS tv ON tp.id_tipo_visitante = tv.id
-				WHERE tp.id_parque = @id_parque
-				AND tv.id = @id_tipo_visitante
-				AND tp.activo = 1)
+			SET @id_tarifa_parque = dev.getIdUltimaTarifaParque(@id_parque)
 
 			IF @id_tarifa_parque IS NULL
 				THROW 50065, '- No se encontro una tarifa vigente para ese tipo de visitante en ese parque.', 1
 
-			IF @es_feriado_output = 1
+			IF @es_feriado_output = 0
 			BEGIN
-				SELECT @importe = tp.precio - tp.precio * tv.descuento
-				FROM ventas.TarifaParque AS tp
-				INNER JOIN ventas.TipoVisitante AS tv ON tp.id_tipo_visitante = tv.id
-				WHERE tp.id = @id_tarifa_parque
-				AND tv.id = @id_tipo_visitante
+				SET @importe = dev.getPrecioFinalParque(@id_tarifa_parque)
 			END
 
 			ELSE
 			BEGIN
-				SELECT @importe = tp.precio_feriado - tp.precio_feriado * tv.descuento
-				FROM ventas.TarifaParque AS tp
-				INNER JOIN ventas.TipoVisitante AS tv ON tp.id_tipo_visitante = tv.id
-				WHERE tp.id = @id_tarifa_parque
-				AND tv.id = @id_tipo_visitante
+				SET @importe = dev.getPrecioFeriadoFinalParque(@id_tarifa_parque)
 			END
 
 			INSERT INTO ventas.CarritoDetalleVenta 

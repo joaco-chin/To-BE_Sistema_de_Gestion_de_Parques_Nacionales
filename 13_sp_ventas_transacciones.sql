@@ -136,9 +136,13 @@ BEGIN
 			DECLARE @fecha DATE
 			SET @fecha = GETDATE()
 
+			IF @fecha > ANY(SELECT fecha_visita 
+			FROM ventas.CarritoDetalleVenta WHERE id = @id_carrito)
+				THROW 50101, 'La fecha de pago no puede ser mayor a las fechas de visita', 1;
+
 			DECLARE @importe DECIMAL(10,2)
 			SET @importe =
-			(	SELECT SUM(importe)
+			(	SELECT SUM(importe)	-- importe total del costo de cada item del carrito
 				FROM ventas.CarritoDetalleVenta
 				WHERE id_carrito = @id_carrito 
 			)
@@ -186,6 +190,7 @@ BEGIN
 			AND cdv.id_horario_actividad IS NOT NULL
 
 			EXECUTE ventas.CarritoVaciar @id_carrito
+			EXECUTE ventas.CarritoBaja @id_carrito
 
 			SELECT SCOPE_IDENTITY() AS id_venta
 		COMMIT TRANSACTION

@@ -278,6 +278,7 @@ CREATE OR ALTER PROCEDURE ventas.TarifaParqueAlta
 	@id_parque INT,
 	@id_tipo_visitante INT,
 	@precio DECIMAL(10,2),
+	@precio_feriado DECIMAL(10,2),
 	@vigencia_desde DATE,
 	@vigencia_hasta DATE
 AS
@@ -292,9 +293,6 @@ BEGIN
 
 		IF NOT EXISTS (SELECT 1 FROM ventas.TipoVisitante WHERE id = @id_tipo_visitante AND borrado = 0)
 			SET @errores += '- El tipo de visitante no existe o esta dado de baja.' + CHAR(13)
-
-		IF @precio <= 0
-			SET @errores += '- El precio debe ser mayor a 0.' + CHAR(13)
 
 		IF @vigencia_desde IS NULL
 			SET @errores += '- La fecha de vigencia inicial es obligatoria.' + CHAR(13)
@@ -313,8 +311,10 @@ BEGIN
 		  AND id_tipo_visitante = @id_tipo_visitante
 		  AND activo = 1
 
-		INSERT INTO ventas.TarifaParque(id_parque, id_tipo_visitante, precio, vigencia_desde, vigencia_hasta, activo)
-		VALUES (@id_parque, @id_tipo_visitante, @precio, @vigencia_desde, @vigencia_hasta, 1)
+		INSERT INTO ventas.TarifaParque(id_parque, id_tipo_visitante, precio, 
+		precio_feriado, vigencia_desde, vigencia_hasta, activo)
+		VALUES (@id_parque, @id_tipo_visitante, @precio, 
+		@precio_feriado, @vigencia_desde, @vigencia_hasta, 1)
 
 		PRINT 'Tarifa registrada correctamente.'
 	END TRY
