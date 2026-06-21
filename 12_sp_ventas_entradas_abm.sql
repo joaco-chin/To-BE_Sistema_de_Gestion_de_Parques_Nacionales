@@ -97,6 +97,7 @@ GO
 CREATE OR ALTER PROCEDURE ventas.CarritoAgregarItem
 	@id_carrito INT,
 	@id_tipo_visitante INT,
+	@fecha_visita INT,
 	@id_horario INT = NULL,		-- id de HorarioActividad (instancia de horario especifica)
 	@cantidad INT = NULL
 AS
@@ -162,15 +163,22 @@ BEGIN
 			WHERE id = @id_tarifa_actividad)
 
 			INSERT INTO ventas.CarritoDetalleVenta 
-			(id_carrito, id_tarifa_parque, id_tarifa_actividad, id_horario_actividad, cantidad, importe)
+			(id_carrito, id_tarifa_parque, fecha_visita, es_feriado,
+			id_tarifa_actividad, id_horario_actividad, cantidad, importe)
 			VALUES 
-			(@id_carrito, NULL, @id_tarifa_actividad, @id_horario, @cantidad, @importe)
+			(@id_carrito, NULL, NULL, NULL, @id_tarifa_actividad, 
+			@id_horario, @cantidad, @importe)
 		END
 
 		ELSE
 		BEGIN
 			IF LEN(@errores) > 0
 				THROW 50065, @errores, 1
+
+			DECLARE @es_feriado_output BIT;
+			EXECUTE ventas.EsFeriado
+				@fecha = @fecha_visita,
+				@es_feriado = @es_feriado_output OUTPUT
 
 			SET @id_tarifa_parque = 
 			(	SELECT MAX(tp.id) 
@@ -183,22 +191,36 @@ BEGIN
 			IF @id_tarifa_parque IS NULL
 				THROW 50065, '- No se encontro una tarifa vigente para ese tipo de visitante en ese parque.', 1
 
-			SELECT @importe = tp.precio - tp.precio * tv.descuento
-			FROM ventas.TarifaParque AS tp
-			INNER JOIN ventas.TipoVisitante AS tv ON tp.id_tipo_visitante = tv.id
-			WHERE tp.id = @id_tarifa_parque
-			AND tv.id = @id_tipo_visitante
+			IF @es_feriado_output = 1
+			BEGIN
+				SELECT @importe = tp.precio - tp.precio * tv.descuento
+				FROM ventas.TarifaParque AS tp
+				INNER JOIN ventas.TipoVisitante AS tv ON tp.id_tipo_visitante = tv.id
+				WHERE tp.id = @id_tarifa_parque
+				AND tv.id = @id_tipo_visitante
+			END
+
+			ELSE
+			BEGIN
+				SELECT @importe = tp.precio_feriado - tp.precio_feriado * tv.descuento
+				FROM ventas.TarifaParque AS tp
+				INNER JOIN ventas.TipoVisitante AS tv ON tp.id_tipo_visitante = tv.id
+				WHERE tp.id = @id_tarifa_parque
+				AND tv.id = @id_tipo_visitante
+			END
 
 			INSERT INTO ventas.CarritoDetalleVenta 
-			(id_carrito, id_tarifa_parque, id_tarifa_actividad, id_horario_actividad, cantidad, importe)
+			(id_carrito, id_tarifa_parque, fecha_visita, es_feriado,
+			id_tarifa_actividad, id_horario_actividad, cantidad, importe)
 			VALUES 
-			(@id_carrito, @id_tarifa_parque, NULL, NULL, 1, @importe)
+			(@id_carrito, @id_tarifa_parque, @fecha_visita, 
+			@es_feriado_output, NULL, NULL, 1, @importe)
 		END
 	END TRY
 
 	BEGIN CATCH
-		PRINT(CAST(ERROR_NUMBER() AS CHAR) + ' ' + ERROR_MESSAGE())
-		-- THROW
+		--PRINT(CAST(ERROR_NUMBER() AS CHAR) + ' ' + ERROR_MESSAGE())
+		THROW
 	END CATCH
 END
 GO

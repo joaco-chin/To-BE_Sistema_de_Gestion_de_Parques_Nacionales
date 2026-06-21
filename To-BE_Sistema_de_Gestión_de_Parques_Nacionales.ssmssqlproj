@@ -109,11 +109,11 @@
           <AssociatedConnUserName>sa</AssociatedConnUserName>
           <FullPath>10_sp_personal_abm.sql</FullPath>
         </FileNode>
-        <FileNode Name="11_sp_ventas_visitante_abm.sql">
-          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:YERI-ENTA\SQL2025:False:sa</AssociatedConnectionMoniker>
-          <AssociatedConnSrvName>YERI-ENTA\SQL2025</AssociatedConnSrvName>
-          <AssociatedConnUserName>sa</AssociatedConnUserName>
-          <FullPath>11_sp_ventas_visitante_abm.sql</FullPath>
+        <FileNode Name="11_sp_ventas_visitas_abm.sql">
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:JOAQUIN\SQLEXPRESS:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>JOAQUIN\SQLEXPRESS</AssociatedConnSrvName>
+          <AssociatedConnUserName />
+          <FullPath>11_sp_ventas_visitas_abm.sql</FullPath>
         </FileNode>
         <FileNode Name="12_sp_ventas_entradas_abm.sql">
           <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:JOAQUIN\SQLEXPRESS:True</AssociatedConnectionMoniker>

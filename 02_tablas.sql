@@ -132,16 +132,18 @@ CREATE TABLE parques.Parque
 END
 GO
 
-IF OBJECT_ID('parques.TurnoVisita') IS NULL
-BEGIN
-	CREATE TABLE parques.TurnoVisita
-	(
-		id INT IDENTITY(1,1) PRIMARY KEY,
-		id_parque INT NOT NULL REFERENCES parques.Parque(id),
-		fecha DATE NOT NULL
-	)
-END
-GO
+--IF OBJECT_ID('parques.TurnoVisita') IS NULL
+--BEGIN
+--	CREATE TABLE parques.TurnoVisita
+--	(
+--		id INT IDENTITY(1,1) PRIMARY KEY,
+--		id_parque INT NOT NULL REFERENCES parques.Parque(id),
+--		fecha DATE NOT NULL UNIQUE,
+--		es_feriado BIT NOT NULL,
+--		borrado BIT NOT NULL DEFAULT 0
+--	)
+--END
+--GO
 
 IF OBJECT_ID('ventas.Venta') IS NULL
 BEGIN
@@ -154,7 +156,8 @@ CREATE TABLE ventas.Venta
 	nro_comprobante INT NOT NULL,
 	fecha DATE NOT NULL,
 	importe DECIMAL(10,2) NOT NULL
-	CHECK (importe > 0)
+	CHECK (importe > 0),
+	moneda CHAR(3) NOT NULL
 )
 END
 GO
@@ -168,6 +171,7 @@ CREATE TABLE ventas.TarifaParque
 	id_parque INT NOT NULL REFERENCES parques.Parque(id),
 	id_tipo_visitante INT NOT NULL REFERENCES ventas.TipoVisitante(id),
 	precio DECIMAL(10,2) NOT NULL,
+	precio_feriado DECIMAL(10,2) NOT NULL,
 	activo BIT DEFAULT 1 NOT NULL,
 	vigencia_desde DATE NOT NULL,
 	vigencia_hasta DATE
@@ -229,6 +233,9 @@ CREATE TABLE ventas.DetalleVenta
 	linea_venta INT IDENTITY(1,1),
 	-- Al menos uno de los dos debe estar presente (validar en SP)
 	id_tarifa_parque INT NULL REFERENCES ventas.TarifaParque(id),
+	fecha_visita DATE NULL,
+	es_feriado BIT NULL,
+	--id_turno_visita INT NULL REFERENCES ventas.TurnoVisita(id),
 	id_tarifa_actividad INT NULL REFERENCES actividades.TarifaActividad(id),
 	id_horario_actividad INT NULL REFERENCES actividades.HorarioActividad(id),
 	cantidad INT NULL CHECK (cantidad > 0),

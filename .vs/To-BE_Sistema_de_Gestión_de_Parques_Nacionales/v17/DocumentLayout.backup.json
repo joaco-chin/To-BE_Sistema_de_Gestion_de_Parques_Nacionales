@@ -5,14 +5,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{1AB1FBB9-ADC6-4A43-14C0-FA1FADD37E7E}|To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales.ssmssqlproj|D:\\Documentos\\UNLaM\\2_Base de Datos Aplicada\\Trabajo Pr\u00E1ctico\\To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales\\13_sp_ventas_transacciones.sql||{B5A506EB-11BE-4782-9A18-21265C2CA0B4}",
       "RelativeMoniker": "D:0:0:{1AB1FBB9-ADC6-4A43-14C0-FA1FADD37E7E}|To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales.ssmssqlproj|solutionrelative:13_sp_ventas_transacciones.sql||{B5A506EB-11BE-4782-9A18-21265C2CA0B4}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{1AB1FBB9-ADC6-4A43-14C0-FA1FADD37E7E}|To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales.ssmssqlproj|D:\\Documentos\\UNLaM\\2_Base de Datos Aplicada\\Trabajo Pr\u00E1ctico\\To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales\\12_sp_ventas_entradas_abm.sql||{B5A506EB-11BE-4782-9A18-21265C2CA0B4}",
-      "RelativeMoniker": "D:0:0:{1AB1FBB9-ADC6-4A43-14C0-FA1FADD37E7E}|To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales.ssmssqlproj|solutionrelative:12_sp_ventas_entradas_abm.sql||{B5A506EB-11BE-4782-9A18-21265C2CA0B4}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{1AB1FBB9-ADC6-4A43-14C0-FA1FADD37E7E}|To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales.ssmssqlproj|D:\\Documentos\\UNLaM\\2_Base de Datos Aplicada\\Trabajo Pr\u00E1ctico\\To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales\\03_tablas_memoria.sql||{B5A506EB-11BE-4782-9A18-21265C2CA0B4}",
-      "RelativeMoniker": "D:0:0:{1AB1FBB9-ADC6-4A43-14C0-FA1FADD37E7E}|To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales.ssmssqlproj|solutionrelative:03_tablas_memoria.sql||{B5A506EB-11BE-4782-9A18-21265C2CA0B4}"
     }
   ],
   "DocumentGroupContainers": [
@@ -27,35 +19,13 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "13_sp_ventas_transacciones.sql - JOAQUIN\\SQLEXPRESS.ToBE (JOAQUIN\\joaqu (68))",
+              "Title": "13_sp_ventas_transacciones.sql - JOAQUIN\\SQLEXPRESS.ToBE (JOAQUIN\\joaqu (51))",
               "DocumentMoniker": "D:\\Documentos\\UNLaM\\2_Base de Datos Aplicada\\Trabajo Pr\u00E1ctico\\To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales\\13_sp_ventas_transacciones.sql",
               "RelativeDocumentMoniker": "13_sp_ventas_transacciones.sql",
-              "ToolTip": "13_sp_ventas_transacciones.sql - JOAQUIN\\SQLEXPRESS.ToBE (JOAQUIN\\joaqu (68))",
+              "ToolTip": "13_sp_ventas_transacciones.sql - JOAQUIN\\SQLEXPRESS.ToBE (JOAQUIN\\joaqu (51))",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
-              "WhenOpened": "2026-06-20T22:11:16.687Z",
-              "EditorCaption": " - JOAQUIN\\SQLEXPRESS.ToBE (JOAQUIN\\joaqu (68))"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "12_sp_ventas_entradas_abm.sql - JOAQUIN\\SQLEXPRESS.ToBE (JOAQUIN\\joaqu (51))",
-              "DocumentMoniker": "D:\\Documentos\\UNLaM\\2_Base de Datos Aplicada\\Trabajo Pr\u00E1ctico\\To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales\\12_sp_ventas_entradas_abm.sql",
-              "RelativeDocumentMoniker": "12_sp_ventas_entradas_abm.sql",
-              "ToolTip": "12_sp_ventas_entradas_abm.sql - JOAQUIN\\SQLEXPRESS.ToBE (JOAQUIN\\joaqu (51))",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
-              "WhenOpened": "2026-06-20T22:05:02.412Z",
+              "WhenOpened": "2026-06-21T02:45:22.485Z",
               "EditorCaption": " - JOAQUIN\\SQLEXPRESS.ToBE (JOAQUIN\\joaqu (51))"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "03_tablas_memoria.sql - JOAQUIN\\SQLEXPRESS.ToBE (JOAQUIN\\joaqu (52))",
-              "DocumentMoniker": "D:\\Documentos\\UNLaM\\2_Base de Datos Aplicada\\Trabajo Pr\u00E1ctico\\To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales\\03_tablas_memoria.sql",
-              "RelativeDocumentMoniker": "03_tablas_memoria.sql",
-              "ToolTip": "03_tablas_memoria.sql - JOAQUIN\\SQLEXPRESS.ToBE (JOAQUIN\\joaqu (52))",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
-              "WhenOpened": "2026-06-20T22:00:48.192Z",
-              "EditorCaption": " - JOAQUIN\\SQLEXPRESS.ToBE (JOAQUIN\\joaqu (52))"
             }
           ]
         }

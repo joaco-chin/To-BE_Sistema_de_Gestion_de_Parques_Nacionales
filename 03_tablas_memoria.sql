@@ -51,6 +51,9 @@ CREATE TABLE ventas.CarritoDetalleVenta
 	linea_venta INT IDENTITY(1,1),
 	-- Al menos uno de los dos debe estar presente (validar en SP)
 	id_tarifa_parque INT NULL,
+	fecha_visita DATE NULL,
+	es_feriado BIT NULL,
+	--id_turno_visita INT NULL,
 	id_tarifa_actividad INT NULL,
 	id_horario_actividad INT NULL,
 	cantidad INT NOT NULL CHECK (cantidad > 0),
