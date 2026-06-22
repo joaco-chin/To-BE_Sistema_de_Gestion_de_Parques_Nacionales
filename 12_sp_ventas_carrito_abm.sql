@@ -22,19 +22,21 @@ GO
 -- FormaDePagoAlta
 -- ============================================================
 CREATE OR ALTER PROCEDURE ventas.FormaDePagoAlta
-	@descripcion VARCHAR(40),
-	@nro_tarjeta CHAR(4) = NULL,
-	@cvu CHAR(22) = NULL,
-	@cbu CHAR(22) = NULL,
-	@alias VARCHAR(50) = NULL
+	@descripcion VARCHAR(40)
 AS
 BEGIN
+	BEGIN TRY
 	SET NOCOUNT ON
 
-	INSERT INTO ventas.FormaDePago (descripcion, nro_tarjeta, cvu, cbu, alias)
-	VALUES (@descripcion, @nro_tarjeta, @cvu, @cbu, @alias)
+	INSERT INTO ventas.FormaDePago (descripcion)
+	VALUES (@descripcion)
 	
-	SELECT SCOPE_IDENTITY() AS id
+	PRINT('Forma de pago registrada correctamente')
+	END TRY
+
+	BEGIN CATCH
+		THROW
+	END CATCH
 END
 GO
 
@@ -77,8 +79,13 @@ BEGIN
 	BEGIN TRY
 		IF NOT EXISTS (SELECT id FROM ventas.Carrito WHERE id = @id_carrito)
 			THROW 50064, 'El carrito no existe.', 1
-		
+		/*
+		IF EXISTS (SELECT id_carrito	-- Revisamos si el carrito tiene items, para eliminarlos 
+		FROM ventas.CarritoDetalleVenta
+		WHERE id_carrito = @id_carrito)
+		*/
 		DELETE FROM ventas.Carrito WHERE id = @id_carrito
+		PRINT('Carrito dado de baja correctamente')
 	END TRY
 
 	BEGIN CATCH
@@ -96,8 +103,8 @@ GO
 -- ============================================================
 CREATE OR ALTER PROCEDURE ventas.CarritoAgregarItem
 	@id_carrito INT,
-	@id_tipo_visitante INT,
-	@fecha_visita INT,
+	@id_tipo_visitante INT = NULL,
+	@fecha_visita DATE = NULL,
 	@id_horario INT = NULL,		-- id de HorarioActividad (instancia de horario especifica)
 	@cantidad INT = NULL
 AS
@@ -110,7 +117,8 @@ BEGIN
 		IF NOT EXISTS (SELECT id FROM ventas.Carrito WHERE id = @id_carrito)
 			SET @errores += '- El carrito no existe.' + CHAR(13)
 
-		IF NOT EXISTS (SELECT id FROM ventas.TipoVisitante 
+		IF @id_tipo_visitante IS NOT NULL 
+		AND NOT EXISTS (SELECT id FROM ventas.TipoVisitante 
 		WHERE id = @id_tipo_visitante AND borrado = 0)
 			SET @errores += '- El tipo de visitante no existe.' + CHAR(13)
 		
@@ -202,6 +210,8 @@ BEGIN
 			(@id_carrito, @id_tarifa_parque, @fecha_visita, 
 			@es_feriado_output, NULL, NULL, 1, @importe)
 		END
+
+		PRINT('Item agregado al carrito.')
 	END TRY
 
 	BEGIN CATCH

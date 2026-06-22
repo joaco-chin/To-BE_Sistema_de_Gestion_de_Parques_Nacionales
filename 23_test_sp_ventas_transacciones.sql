@@ -16,3 +16,11 @@ Incluye casos exitosos y casos de validacion fallida.
 */
 USE ToBE
 GO
+
+EXEC sp_configure 'show advanced options', 1;	--Este es para poder editar los permisos avanzados.
+RECONFIGURE;
+GO
+EXEC sp_configure 'Ole Automation Procedures', 1;	-- Aqui habilitamos esta opcion avanzada
+RECONFIGURE;
+GO
+

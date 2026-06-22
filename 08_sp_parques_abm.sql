@@ -280,7 +280,7 @@ CREATE OR ALTER PROCEDURE ventas.TarifaParqueAlta
 	@precio DECIMAL(10,2),
 	@precio_feriado DECIMAL(10,2),
 	@vigencia_desde DATE,
-	@vigencia_hasta DATE
+	@vigencia_hasta DATE = NULL
 AS
 BEGIN
 	SET NOCOUNT ON
@@ -289,13 +289,10 @@ BEGIN
 		DECLARE @errores VARCHAR(MAX) = ''
 
 		IF NOT EXISTS (SELECT 1 FROM parques.Parque WHERE id = @id_parque AND borrado = 0)
-			SET @errores += '- El parque no existe o esta dado de baja.' + CHAR(13)
+			SET @errores += '- El parque no existe.' + CHAR(13)
 
 		IF NOT EXISTS (SELECT 1 FROM ventas.TipoVisitante WHERE id = @id_tipo_visitante AND borrado = 0)
-			SET @errores += '- El tipo de visitante no existe o esta dado de baja.' + CHAR(13)
-
-		IF @vigencia_desde IS NULL
-			SET @errores += '- La fecha de vigencia inicial es obligatoria.' + CHAR(13)
+			SET @errores += '- El tipo de visitante no existe.' + CHAR(13)
 
 		IF @vigencia_hasta IS NOT NULL AND @vigencia_desde > @vigencia_hasta
 			SET @errores += '- La fecha de fin no puede ser menor a la fecha de inicio.' + CHAR(13)
@@ -305,7 +302,8 @@ BEGIN
 
 		-- Desactivar tarifa anterior si existe para el mismo parque y tipo de visitante
 		UPDATE ventas.TarifaParque
-		SET activo = 0,
+		SET 
+			activo = 0,
 			vigencia_hasta = DATEADD(DAY, -1, @vigencia_desde)
 		WHERE id_parque = @id_parque 
 		  AND id_tipo_visitante = @id_tipo_visitante

@@ -106,9 +106,10 @@ GO
 CREATE OR ALTER PROCEDURE ventas.VentaConfirmar	
 	@id_carrito INT,
 	@id_forma_de_pago INT,
+	@pago_datos CHAR(22),
 	@nro_punto_venta INT,
 	@nro_comprobante INT,
-	@moneda CHAR(3) = 'ARS'
+	@moneda CHAR(3) = 'ARS'	
 AS
 BEGIN
 	SET NOCOUNT ON
@@ -127,18 +128,27 @@ BEGIN
 			IF LEN(@moneda) < 3
 				SET @errores += 'Moneda invalida' + CHAR(13);
 
+			DECLARE @fecha DATE
+			SET @fecha = GETDATE()
+
+			IF @fecha > ANY(SELECT fecha_visita 
+			FROM ventas.CarritoDetalleVenta WHERE id_carrito = @id_carrito)
+				SET @errores += 'La fecha de pago no puede ser mayor a las fechas de visita' + CHAR(13);
+
+			IF @fecha > ANY(SELECT ha.fecha FROM ventas.CarritoDetalleVenta AS cdv 
+			INNER JOIN actividades.HorarioActividad AS ha
+			ON cdv.id_horario_actividad = ha.id
+			WHERE id_carrito = @id_carrito)
+				SET @errores += 'La fecha de pago no puede ser mayor a las fechas de actividad' + CHAR(13);
+
 			IF LEN(@errores) > 0
 				THROW 50100, @errores, 1;
 
 			DECLARE @id_parque INT
 			SET @id_parque = (SELECT id_parque FROM ventas.Carrito WHERE id = @id_carrito)
 
-			DECLARE @fecha DATE
-			SET @fecha = GETDATE()
-
-			IF @fecha > ANY(SELECT fecha_visita 
-			FROM ventas.CarritoDetalleVenta WHERE id = @id_carrito)
-				THROW 50101, 'La fecha de pago no puede ser mayor a las fechas de visita', 1;
+			DECLARE @pago_descripcion CHAR(13) = (SELECT descripcion FROM ventas.FormaDePago
+			WHERE id = @id_forma_de_pago)
 
 			DECLARE @importe DECIMAL(10,2)
 			SET @importe =
@@ -155,11 +165,11 @@ BEGIN
 			END
 
 			INSERT INTO ventas.Venta 
-			(id_parque, id_forma_de_pago, nro_punto_venta, 
-			nro_comprobante, fecha, importe, moneda)
+			(id_parque, id_forma_de_pago, pago_descripcion, pago_datos,
+			nro_punto_venta, nro_comprobante, fecha, importe, moneda)
 			VALUES 
-			(@id_parque, @id_forma_de_pago, @nro_punto_venta, 
-			@nro_comprobante, @fecha, @importe, @moneda)
+			(@id_parque, @id_forma_de_pago, @pago_descripcion, @pago_datos,
+			@nro_punto_venta, @nro_comprobante, @fecha, @importe, @moneda)
 			
 			DECLARE @id_venta INT
 			SET @id_venta = (SELECT MAX(id) FROM ventas.Venta)
