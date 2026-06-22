@@ -327,3 +327,20 @@ CREATE TABLE personal.AsignacionesGuardaParque
 )
 END
 GO
+
+IF OBJECT_ID('estadisticas.VisitaMensual') IS NULL
+BEGIN
+CREATE TABLE estadisticas.VisitaMensual
+(
+	indice_tiempo           DATE         NOT NULL,
+	visitas_no_residentes   INT          NOT NULL,
+	visitas_residentes      INT          NOT NULL,
+	visitas_total           INT          NOT NULL,
+	observaciones           VARCHAR(500) NULL,
+	CONSTRAINT PK_visita_mensual PRIMARY KEY (indice_tiempo),
+	CONSTRAINT CK_vm_no_res CHECK (visitas_no_residentes >= 0),
+	CONSTRAINT CK_vm_res    CHECK (visitas_residentes    >= 0),
+	CONSTRAINT CK_vm_total  CHECK (visitas_total         >= 0)
+)
+END
+GO
