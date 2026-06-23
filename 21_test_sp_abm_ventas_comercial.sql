@@ -16,13 +16,12 @@ Incluye casos exitosos y casos de validacion fallida.
 
 */
 
-USE ToBE
+USE GestionParquesNacionales
 GO
 
 DELETE FROM ventas.TarifaParque
 DELETE FROM parques.Parque
 DELETE FROM ventas.TipoVisitante
-DELETE FROM ventas.FormaDePago
 
 PRINT '======================================================='
 PRINT 'TEST SP TipoVisitanteAlta'
@@ -369,21 +368,4 @@ SELECT
 	vigencia_hasta
 FROM ventas.TarifaParque
 WHERE activo = 0
-GO
-
-PRINT '======================================================='
-PRINT 'TEST SP FormaDePagoAlta'
-PRINT '======================================================='
-GO
--- ---------------------------------------------------------------
--- TEST 14: Alta exitosa
--- Resultado esperado: 
--- ---------------------------------------------------------------
-PRINT('-- TEST 14: Alta exitosa')
-EXECUTE ventas.FormaDePagoAlta @descripcion = 'Nro Tarjeta C'
-SELECT
-	14 AS nro_test,
-	id,
-	descripcion
-FROM ventas.FormaDePago
 GO

@@ -14,7 +14,7 @@ Stored Procedures - Ventas y Pagos
 Registro de ventas y l�gica de negocio de las mismas.
 
 */
-USE ToBE
+USE GestionParquesNacionales
 GO
 
 -- https://api.freecurrencyapi.com/v1/latest
@@ -83,10 +83,9 @@ GO
 -- ============================================================
 CREATE OR ALTER PROCEDURE ventas.VentaConfirmar	
 	@id_carrito INT,
-	@id_forma_de_pago INT,
-	@pago_datos CHAR(22),
-	@nro_punto_venta INT,
-	@nro_comprobante INT,
+	@forma_de_pago CHAR(13),
+	@datos_de_pago CHAR(22),
+	@punto_de_venta CHAR(4),
 	@moneda CHAR(3) = 'ARS'	
 AS
 BEGIN
@@ -99,9 +98,6 @@ BEGIN
 			-- Validaciones basicas
 			IF NOT EXISTS (SELECT id FROM ventas.Carrito WHERE id = @id_carrito)
 				SET @errores += 'El carrito no existe.' + CHAR(13);
-
-			IF NOT EXISTS (SELECT 1 FROM ventas.FormaDePago WHERE id = @id_forma_de_pago)
-				SET @errores += 'La forma de pago no existe.' + CHAR(13);
 
 			IF @moneda NOT IN ('ARS', 'USD')
 				SET @errores += 'Moneda invalida.' + CHAR(13);
@@ -125,9 +121,6 @@ BEGIN
 			DECLARE @id_parque INT
 			SET @id_parque = (SELECT id_parque FROM ventas.Carrito WHERE id = @id_carrito)
 
-			DECLARE @pago_descripcion CHAR(13) = (SELECT descripcion FROM ventas.FormaDePago
-			WHERE id = @id_forma_de_pago)
-
 			DECLARE @importe DECIMAL(10,2)
 			SET @importe =
 			(	SELECT SUM(importe)	-- importe total del costo de cada item del carrito
@@ -143,14 +136,14 @@ BEGIN
 			END
 
 			INSERT INTO ventas.Venta 
-			(id_parque, id_forma_de_pago, pago_descripcion, pago_datos,
-			nro_punto_venta, nro_comprobante, fecha, importe, moneda)
+			(punto_de_venta, id_parque, forma_de_pago, 
+			datos_de_pago, fecha, importe, moneda)
 			VALUES 
-			(@id_parque, @id_forma_de_pago, @pago_descripcion, @pago_datos,
-			@nro_punto_venta, @nro_comprobante, @fecha, @importe, @moneda)
+			(@punto_de_venta, @id_parque, @forma_de_pago, 
+			@datos_de_pago, @fecha, @importe, @moneda)
 			
 			DECLARE @id_venta INT
-			SET @id_venta = (SELECT MAX(id) FROM ventas.Venta)
+			SET @id_venta = (SELECT MAX(nro_comprobante) FROM ventas.Venta)
 
 			INSERT INTO ventas.DetalleVenta
 			(id_venta, id_tarifa_parque, fecha_visita, es_feriado,

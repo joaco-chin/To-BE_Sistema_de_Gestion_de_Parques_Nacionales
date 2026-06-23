@@ -15,7 +15,7 @@ de las tablas del esquema de ventas
 
 */
 
-USE ToBE
+USE GestionParquesNacionales
 GO
 
 CREATE OR ALTER FUNCTION dev.getIdUltimaTarifaAct(@id_actividad INT)

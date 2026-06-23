@@ -14,20 +14,7 @@ Creacion de las tablas y constraints
 
 */
 
-USE TOBE 
-
-IF OBJECT_ID('ventas.FormaDePago') IS NULL
-BEGIN
-CREATE TABLE ventas.FormaDePago
-(
-	id INT IDENTITY(1,1) PRIMARY KEY,
-	descripcion CHAR(13) NOT NULL
-	CHECK (descripcion IN 
-	('Nro Tarjeta C', 'Nro Tarjeta D', 'CVU', 'CBU', 'Efectivo')
-	)
-)
-END
-GO
+USE GestionParquesNacionales
 
 IF OBJECT_ID('concesiones.Empresa') IS NULL
 BEGIN
@@ -131,34 +118,20 @@ CREATE TABLE parques.Parque
 END
 GO
 
---IF OBJECT_ID('parques.TurnoVisita') IS NULL
---BEGIN
---	CREATE TABLE parques.TurnoVisita
---	(
---		id INT IDENTITY(1,1) PRIMARY KEY,
---		id_parque INT NOT NULL REFERENCES parques.Parque(id),
---		fecha DATE NOT NULL UNIQUE,
---		es_feriado BIT NOT NULL,
---		borrado BIT NOT NULL DEFAULT 0
---	)
---END
---GO
-
 IF OBJECT_ID('ventas.Venta') IS NULL
 BEGIN
 CREATE TABLE ventas.Venta	
 (
-	id INT IDENTITY(1,1) PRIMARY KEY,
+	nro_comprobante INT IDENTITY(1,1) PRIMARY KEY,
+	punto_de_venta CHAR(4) NOT NULL,
 	id_parque INT NOT NULL REFERENCES parques.Parque(id),
-	id_forma_de_pago INT NOT NULL REFERENCES ventas.FormaDePago(id),
-	pago_descripcion CHAR(13) NOT NULL,
-	pago_datos CHAR(22) NOT NULL,	-- 22 es el numero de caracteres de los CVU y CBU	-- encriptar
-	nro_punto_venta INT NOT NULL,
-	nro_comprobante INT NOT NULL,
+	forma_de_pago CHAR(13) NOT NULL CHECK (forma_de_pago IN		-- encriptar
+	('Tarjeta C', 'Tarjeta D', 'CVU', 'CBU', 'Efectivo')),
+	datos_de_pago CHAR(22) NOT NULL,	-- 22 es el numero de caracteres de los CVU y CBU	-- encriptar
 	fecha DATE NOT NULL,
 	importe DECIMAL(10,2) NOT NULL	-- encriptar
 	CHECK (importe > 0),
-	moneda CHAR(3) NOT NULL,
+	moneda CHAR(3) NOT NULL CHECK (moneda IN ('ARS', 'USD'))
 )
 END
 GO
@@ -232,13 +205,12 @@ IF OBJECT_ID('ventas.DetalleVenta') IS NULL
 BEGIN
 CREATE TABLE ventas.DetalleVenta
 (
-	id_venta INT REFERENCES ventas.Venta(id),
+	id_venta INT REFERENCES ventas.Venta(nro_comprobante),
 	linea_venta INT IDENTITY(1,1),
 	-- Al menos uno de los dos debe estar presente (validar en SP)
 	id_tarifa_parque INT NULL REFERENCES ventas.TarifaParque(id),
 	fecha_visita DATE NULL,
 	es_feriado BIT NULL,
-	--id_turno_visita INT NULL REFERENCES ventas.TurnoVisita(id),
 	id_tarifa_actividad INT NULL REFERENCES actividades.TarifaActividad(id),
 	id_horario_actividad INT NULL REFERENCES actividades.HorarioActividad(id),
 	cantidad INT NULL CHECK (cantidad > 0),

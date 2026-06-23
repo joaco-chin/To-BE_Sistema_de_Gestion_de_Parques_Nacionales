@@ -1,50 +1,12 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "D:\\Documentos\\UNLaM\\2_Base de Datos Aplicada\\Trabajo Pr\u00E1ctico\\To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales\\",
-  "Documents": [
-    {
-      "AbsoluteMoniker": "D:0:0:{1AB1FBB9-ADC6-4A43-14C0-FA1FADD37E7E}|To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales.ssmssqlproj|D:\\Documentos\\UNLaM\\2_Base de Datos Aplicada\\Trabajo Pr\u00E1ctico\\To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales\\29_seed_data_core.sql||{B5A506EB-11BE-4782-9A18-21265C2CA0B4}",
-      "RelativeMoniker": "D:0:0:{1AB1FBB9-ADC6-4A43-14C0-FA1FADD37E7E}|To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales.ssmssqlproj|solutionrelative:29_seed_data_core.sql||{B5A506EB-11BE-4782-9A18-21265C2CA0B4}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{1AB1FBB9-ADC6-4A43-14C0-FA1FADD37E7E}|To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales.ssmssqlproj|D:\\Documentos\\UNLaM\\2_Base de Datos Aplicada\\Trabajo Pr\u00E1ctico\\To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales\\01_bd_esquemas.sql||{B5A506EB-11BE-4782-9A18-21265C2CA0B4}",
-      "RelativeMoniker": "D:0:0:{1AB1FBB9-ADC6-4A43-14C0-FA1FADD37E7E}|To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales.ssmssqlproj|solutionrelative:01_bd_esquemas.sql||{B5A506EB-11BE-4782-9A18-21265C2CA0B4}"
-    }
-  ],
+  "Documents": [],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
       "VerticalTabListWidth": 256,
-      "DocumentGroups": [
-        {
-          "DockedWidth": 200,
-          "SelectedChildIndex": 0,
-          "Children": [
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "29_seed_data_core.sql - JOAQUIN\\SQLEXPRESS.master (JOAQUIN\\joaqu (53))",
-              "DocumentMoniker": "D:\\Documentos\\UNLaM\\2_Base de Datos Aplicada\\Trabajo Pr\u00E1ctico\\To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales\\29_seed_data_core.sql",
-              "RelativeDocumentMoniker": "29_seed_data_core.sql",
-              "ToolTip": "29_seed_data_core.sql - JOAQUIN\\SQLEXPRESS.master (JOAQUIN\\joaqu (53))",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
-              "WhenOpened": "2026-06-23T17:11:55.541Z",
-              "EditorCaption": " - JOAQUIN\\SQLEXPRESS.master (JOAQUIN\\joaqu (53))"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "01_bd_esquemas.sql - JOAQUIN\\SQLEXPRESS.master (JOAQUIN\\joaqu (55))",
-              "DocumentMoniker": "D:\\Documentos\\UNLaM\\2_Base de Datos Aplicada\\Trabajo Pr\u00E1ctico\\To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales\\01_bd_esquemas.sql",
-              "RelativeDocumentMoniker": "01_bd_esquemas.sql",
-              "ToolTip": "01_bd_esquemas.sql - JOAQUIN\\SQLEXPRESS.master (JOAQUIN\\joaqu (55))",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
-              "WhenOpened": "2026-06-23T17:11:40.239Z",
-              "EditorCaption": " - JOAQUIN\\SQLEXPRESS.master (JOAQUIN\\joaqu (55))"
-            }
-          ]
-        }
-      ]
+      "DocumentGroups": []
     }
   ]
 }

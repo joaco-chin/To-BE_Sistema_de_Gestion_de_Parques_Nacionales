@@ -32,7 +32,7 @@ Parametro:
 
 */
 
-USE ToBE
+USE GestionParquesNacionales
 GO
 
 -- Crear esquema de importacion si no existe

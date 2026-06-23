@@ -15,7 +15,7 @@ Operaciones de alta, modificacion, baja logica y consulta.
 
 */
 
-USE	ToBE
+USE	GestionParquesNacionales
 GO
 
 -- ============================================================

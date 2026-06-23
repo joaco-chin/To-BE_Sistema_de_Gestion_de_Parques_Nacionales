@@ -15,7 +15,7 @@ Alta, Baja y Modificacion del tipo de visitante y de los turnos de visita.
 
 */
 
-USE ToBE
+USE GestionParquesNacionales
 GO
 
 CREATE OR ALTER PROCEDURE ventas.TipoVisitanteAlta
@@ -159,27 +159,3 @@ BEGIN
 		SET @es_feriado = 0;
 END
 GO
-
--- ============================================================
--- TurnoVisitaAlta
--- Da de alta un turno para que se pueda ingresar al parque
--- en la fecha enviada como parametro.
--- ============================================================
---CREATE OR ALTER PROCEDURE ventas.TurnoVisitaAlta
---	@id_parque INT,
---	@fecha_visita DATE
---AS
---BEGIN
---	BEGIN TRY
---		DECLARE @feriado BIT;
---		EXECUTE ventas.EsFeriado
---			@fecha = @fecha_visita,
---			@es_feriado = @feriado OUTPUT
-		
---		INSERT INTO ventas.TurnoVisita VALUES(@id_parque, @fecha_visita, @feriado)
---	END TRY
-
---	BEGIN CATCH
---		THROW
---	END CATCH
---END

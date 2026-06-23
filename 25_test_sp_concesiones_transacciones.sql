@@ -16,15 +16,19 @@ Incluye casos exitosos y casos de validacion fallida.
 
 */
 
-USE ToBE
+USE GestionParquesNacionales
 GO
 
-DELETE FROM concesiones.PagoConcesion
-DELETE FROM concesiones.FacturaConcesion
-DELETE FROM concesiones.Concesion
-DELETE FROM concesiones.Empresa
-DELETE FROM parques.Parque
-
+DELETE FROM concesiones.FacturaConcesion WHERE id IS NOT NULL
+DELETE FROM concesiones.Concesion WHERE id IS NOT NULL
+DELETE FROM ventas.DetalleVenta
+DELETE FROM ventas.Venta	
+DELETE FROM actividades.TarifaActividad
+DELETE FROM actividades.HorarioActividad
+DELETE FROM actividades.Actividad
+DELETE FROM ventas.TarifaParque
+DELETE FROM parques.Parque WHERE id IS NOT NULL
+DELETE FROM concesiones.Empresa WHERE cuit IS NOT NULL
 PRINT '======================================================='
 PRINT 'TEST SP PagarFactura'
 PRINT '======================================================='

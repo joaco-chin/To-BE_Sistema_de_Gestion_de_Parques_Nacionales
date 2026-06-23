@@ -19,7 +19,7 @@ NOTA: Los tests crean su propio parque y tipo de actividad de prueba.
 Los IDs generados se comparten entre batches usando la tabla temporal #ids_test.
 */
 
-USE ToBE
+USE GestionParquesNacionales
 GO
 
 -- ============================================================

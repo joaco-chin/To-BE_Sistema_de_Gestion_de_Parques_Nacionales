@@ -14,7 +14,7 @@ Creacion de usuarios de la base de datos para cada login
 
 */
 
-USE ToBE
+USE GestionParquesNacionales
 GO
 
 CREATE USER administrador FOR LOGIN admin_tobe

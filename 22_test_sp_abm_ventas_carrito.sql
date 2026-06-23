@@ -16,9 +16,15 @@ Incluye casos exitosos y casos de validacion fallida.
 
 */
 
-USE TOBE
+USE GestionParquesNacionales
 GO
- 
+
+EXEC sp_configure 'show advanced options', 1;
+RECONFIGURE;
+GO
+EXEC sp_configure 'Ole Automation Procedures', 1;	
+RECONFIGURE;
+GO
 
 DELETE FROM ventas.CarritoDetalleVenta 
 DELETE FROM ventas.Carrito 
