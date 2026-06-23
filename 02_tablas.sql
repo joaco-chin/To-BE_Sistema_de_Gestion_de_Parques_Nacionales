@@ -21,11 +21,10 @@ BEGIN
 CREATE TABLE ventas.FormaDePago
 (
 	id INT IDENTITY(1,1) PRIMARY KEY,
-	descripcion VARCHAR(40) NOT NULL,
-	nro_tarjeta CHAR(4) NULL,
-	cvu CHAR(22) NULL,
-	cbu CHAR(22) NULL,
-	alias VARCHAR(50) NULL
+	descripcion CHAR(13) NOT NULL
+	CHECK (descripcion IN 
+	('Nro Tarjeta C', 'Nro Tarjeta D', 'CVU', 'CBU', 'Efectivo')
+	)
 )
 END
 GO
@@ -81,7 +80,7 @@ IF OBJECT_ID('ventas.TipoVisitante') IS NULL
 BEGIN
 CREATE TABLE ventas.TipoVisitante	
 (
-	id INT PRIMARY KEY,
+	id INT IDENTITY(1,1) PRIMARY KEY,
 	descripcion VARCHAR(30) NOT NULL,
 	descuento DECIMAL(2,2),
 	borrado BIT NOT NULL DEFAULT 0
@@ -132,16 +131,18 @@ CREATE TABLE parques.Parque
 END
 GO
 
-IF OBJECT_ID('parques.TurnoVisita') IS NULL
-BEGIN
-	CREATE TABLE parques.TurnoVisita
-	(
-		id INT IDENTITY(1,1) PRIMARY KEY,
-		id_parque INT NOT NULL REFERENCES parques.Parque(id),
-		fecha DATE NOT NULL
-	)
-END
-GO
+--IF OBJECT_ID('parques.TurnoVisita') IS NULL
+--BEGIN
+--	CREATE TABLE parques.TurnoVisita
+--	(
+--		id INT IDENTITY(1,1) PRIMARY KEY,
+--		id_parque INT NOT NULL REFERENCES parques.Parque(id),
+--		fecha DATE NOT NULL UNIQUE,
+--		es_feriado BIT NOT NULL,
+--		borrado BIT NOT NULL DEFAULT 0
+--	)
+--END
+--GO
 
 IF OBJECT_ID('ventas.Venta') IS NULL
 BEGIN
@@ -150,11 +151,14 @@ CREATE TABLE ventas.Venta
 	id INT IDENTITY(1,1) PRIMARY KEY,
 	id_parque INT NOT NULL REFERENCES parques.Parque(id),
 	id_forma_de_pago INT NOT NULL REFERENCES ventas.FormaDePago(id),
+	pago_descripcion CHAR(13) NOT NULL,
+	pago_datos CHAR(22) NOT NULL,	-- 22 es el numero de caracteres de los CVU y CBU	-- encriptar
 	nro_punto_venta INT NOT NULL,
 	nro_comprobante INT NOT NULL,
 	fecha DATE NOT NULL,
-	importe DECIMAL(10,2) NOT NULL
-	CHECK (importe > 0)
+	importe DECIMAL(10,2) NOT NULL	-- encriptar
+	CHECK (importe > 0),
+	moneda CHAR(3) NOT NULL,
 )
 END
 GO
@@ -167,7 +171,10 @@ CREATE TABLE ventas.TarifaParque
 	id INT IDENTITY(1,1) PRIMARY KEY,
 	id_parque INT NOT NULL REFERENCES parques.Parque(id),
 	id_tipo_visitante INT NOT NULL REFERENCES ventas.TipoVisitante(id),
-	precio DECIMAL(10,2) NOT NULL,
+	precio DECIMAL(10,2) NOT NULL
+	CHECK (precio > 0),
+	precio_feriado DECIMAL(10,2) NOT NULL
+	CHECK (precio_feriado > 0),
 	activo BIT DEFAULT 1 NOT NULL,
 	vigencia_desde DATE NOT NULL,
 	vigencia_hasta DATE
@@ -229,6 +236,9 @@ CREATE TABLE ventas.DetalleVenta
 	linea_venta INT IDENTITY(1,1),
 	-- Al menos uno de los dos debe estar presente (validar en SP)
 	id_tarifa_parque INT NULL REFERENCES ventas.TarifaParque(id),
+	fecha_visita DATE NULL,
+	es_feriado BIT NULL,
+	--id_turno_visita INT NULL REFERENCES ventas.TurnoVisita(id),
 	id_tarifa_actividad INT NULL REFERENCES actividades.TarifaActividad(id),
 	id_horario_actividad INT NULL REFERENCES actividades.HorarioActividad(id),
 	cantidad INT NULL CHECK (cantidad > 0),
@@ -244,7 +254,7 @@ CREATE TABLE actividades.GuiaActividad
 (
 	id_horario INT NOT NULL REFERENCES actividades.HorarioActividad(id),
 	legajo_guia INT,
-	dni_guia CHAR(8),
+	dni_guia CHAR(8),	-- encriptar
 	fecha_inicio DATETIME NOT NULL,
 	fecha_fin DATETIME,
 	CONSTRAINT PK_guia_actividad 
@@ -264,7 +274,7 @@ CREATE TABLE concesiones.Concesion
 	cuit_empresa CHAR(11) NOT NULL,
 	id_parque INT NOT NULL REFERENCES parques.Parque(id),
 	tipo_actividad VARCHAR(30) NOT NULL,
-	monto_mensual DECIMAL(10,2) NOT NULL CHECK (monto_mensual > 0),
+	monto_mensual DECIMAL(10,2) NOT NULL CHECK (monto_mensual > 0),	-- encriptar
 	fecha_inicio_contrato DATE NOT NULL,
 	fecha_fin_contrato DATE NOT NULL,
 	CONSTRAINT FK_concesion_empresa FOREIGN KEY(id_empresa, cuit_empresa)
@@ -281,9 +291,9 @@ CREATE TABLE concesiones.FacturaConcesion
 	id INT IDENTITY(1,1),
 	id_concesion INT REFERENCES concesiones.Concesion(id),
 	fecha_vencimiento DATE NOT NULL,
-	monto_a_abonar DECIMAL(10,2) NOT NULL,
-	esta_pagada BIT NOT NULL DEFAULT 0,
-	fecha_pago DATE NULL,
+	monto_a_abonar DECIMAL(10,2) NOT NULL,	-- encriptar
+	esta_pagada BIT NOT NULL DEFAULT 0,	
+	fecha_pago DATE NULL,	
 	CONSTRAINT PK_factura_concesion 
 	PRIMARY KEY(id, id_concesion)
 )
@@ -310,7 +320,7 @@ CREATE TABLE personal.AsignacionesGuardaParque
 (
 	id_parque INT REFERENCES parques.Parque(id),
 	legajo_guardaparque INT,
-	dni_guardaparque CHAR(8),
+	dni_guardaparque CHAR(8),	-- encriptar
 	fecha_inicio DATE,
 	fecha_fin DATE,
 	CONSTRAINT FK_guardaparque_guia 
