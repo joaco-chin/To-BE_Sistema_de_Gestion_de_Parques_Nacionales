@@ -151,7 +151,7 @@ CREATE TABLE ventas.Venta
 	id INT IDENTITY(1,1) PRIMARY KEY,
 	id_parque INT NOT NULL REFERENCES parques.Parque(id),
 	id_forma_de_pago INT NOT NULL REFERENCES ventas.FormaDePago(id),
-	pago_descripcion CHAR(11) NOT NULL,
+	pago_descripcion CHAR(13) NOT NULL,
 	pago_datos CHAR(22) NOT NULL,	-- 22 es el numero de caracteres de los CVU y CBU	-- encriptar
 	nro_punto_venta INT NOT NULL,
 	nro_comprobante INT NOT NULL,

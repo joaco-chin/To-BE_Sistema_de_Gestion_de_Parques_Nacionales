@@ -125,7 +125,7 @@ BEGIN
 			IF NOT EXISTS (SELECT 1 FROM ventas.FormaDePago WHERE id = @id_forma_de_pago)
 				SET @errores += 'La forma de pago no existe.' + CHAR(13);
 
-			IF LEN(@moneda) < 3
+			IF @moneda NOT IN ('ARS', 'USD')
 				SET @errores += 'Moneda invalida' + CHAR(13);
 
 			DECLARE @fecha DATE
@@ -175,11 +175,10 @@ BEGIN
 			SET @id_venta = (SELECT MAX(id) FROM ventas.Venta)
 
 			INSERT INTO ventas.DetalleVenta
-			(id_venta, linea_venta, id_tarifa_parque, fecha_visita, es_feriado,
+			(id_venta, id_tarifa_parque, fecha_visita, es_feriado,
 			id_tarifa_actividad, id_horario_actividad, cantidad, importe)
 			SELECT
 			@id_venta, 
-			linea_venta, 
 			id_tarifa_parque,
 			fecha_visita,
 			es_feriado,
@@ -199,15 +198,22 @@ BEGIN
 			WHERE cdv.id_carrito = @id_carrito
 			AND cdv.id_horario_actividad IS NOT NULL
 
-			EXECUTE ventas.CarritoVaciar @id_carrito
+			IF EXISTS (SELECT ha.id
+			FROM actividades.HorarioActividad AS ha
+			INNER JOIN actividades.Actividad AS a
+			ON ha.id_actividad = a.id
+			WHERE ha.localidades_vendidas > a.cupo_maximo
+			)
+				THROW 50101, 'No hay cupo disponible para la/s actividade/s seleccionadas.', 1; 
+
 			EXECUTE ventas.CarritoBaja @id_carrito
 
-			SELECT SCOPE_IDENTITY() AS id_venta
+			PRINT('Venta realizada correctamente.')
 		COMMIT TRANSACTION
 	END TRY
 	BEGIN CATCH
 		IF @@TRANCOUNT > 0 
-			ROLLBACK TRANSACTION
+			ROLLBACK TRANSACTION;
 		
 		--PRINT(CAST(ERROR_NUMBER() AS CHAR) + ' ' + ERROR_MESSAGE())
 		THROW

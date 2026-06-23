@@ -18,11 +18,12 @@ Incluye casos exitosos y casos de validacion fallida.
 
 USE TOBE
 GO
+ 
 
-DELETE FROM ventas.CarritoDetalleVenta
-DELETE FROM ventas.Carrito
-DELETE FROM ventas.TarifaParque
-DELETE FROM ventas.TipoVisitante
+DELETE FROM ventas.CarritoDetalleVenta 
+DELETE FROM ventas.Carrito 
+DELETE FROM ventas.TarifaParque 
+DELETE FROM ventas.TipoVisitante 
 DELETE FROM actividades.HorarioActividad
 DELETE FROM actividades.TarifaActividad
 DELETE FROM actividades.Actividad
@@ -461,8 +462,6 @@ PRINT 'TEST SP CarritoBaja'
 PRINT '======================================================='
 GO
 
-SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;
-
 -- ---------------------------------------------------------------
 -- TEST 19 - Baja exitosa
 -- Resultados esperados:
@@ -477,13 +476,13 @@ SELECT
 	'Previo al test' AS detalle_test,
 	id_carrito,
 	linea_venta
-FROM ventas.CarritoDetalleVenta
+FROM ventas.CarritoDetalleVenta 
 WHERE id_carrito = @ult_carrito
 SELECT 
 	19 AS nro_test,
 	'Previo al test' AS detalle_test,
 	id
-FROM ventas.Carrito
+FROM ventas.Carrito 
 EXECUTE ventas.CarritoBaja @id_carrito = @ult_carrito
 SELECT
 	19 AS nro_test,
@@ -496,7 +495,7 @@ SELECT
 	19 AS nro_test,
 	'Luego del test' AS detalle_test,
 	id
-FROM ventas.Carrito
+FROM ventas.Carrito 
 GO
 -- ---------------------------------------------------------------
 -- TEST 20 - Falla - Carrito inexistente
