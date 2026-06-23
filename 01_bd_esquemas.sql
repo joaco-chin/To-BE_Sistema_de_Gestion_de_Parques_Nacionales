@@ -86,3 +86,9 @@ BEGIN
 	EXECUTE('CREATE SCHEMA dev')
 END
 GO
+
+IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = 'estadisticas')
+BEGIN
+	EXECUTE('CREATE SCHEMA estadisticas')
+END
+GO
