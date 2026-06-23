@@ -17,7 +17,7 @@
           <ConnectionProtocol>NotSpecified</ConnectionProtocol>
           <ApplicationName>Microsoft SQL Server Management Studio - Consulta</ApplicationName>
         </ConnectionNode>
-        <ConnectionNode Name="JOAQUIN\SQLEXPRESS:AzureAD\YerimenLombardo">
+        <ConnectionNode Name="JOAQUIN\SQLEXPRESS:JOAQUIN\joaqu">
           <Created>2026-05-19T21:42:18.0390613-03:00</Created>
           <Type>SQL</Type>
           <Server>JOAQUIN\SQLEXPRESS</Server>
@@ -217,17 +217,17 @@
           <AssociatedConnUserName>admin_tobe</AssociatedConnUserName>
           <FullPath>27_test_sp_importacion_superficies_csv.sql</FullPath>
         </FileNode>
-        <FileNode Name="26_seed_data_core.sql">
+        <FileNode Name="28_test_sp_importacion_visitas_csv.sql">
           <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:YERI-ENTA\SQL2025:False:sa</AssociatedConnectionMoniker>
           <AssociatedConnSrvName>YERI-ENTA\SQL2025</AssociatedConnSrvName>
           <AssociatedConnUserName>sa</AssociatedConnUserName>
-          <FullPath>26_seed_data_core.sql</FullPath>
+          <FullPath>28_test_sp_importacion_visitas_csv.sql</FullPath>
         </FileNode>
-        <FileNode Name="27_test_sp_importacion_visitas_csv.sql">
-          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:YERI-ENTA\SQL2025:False:sa</AssociatedConnectionMoniker>
-          <AssociatedConnSrvName>YERI-ENTA\SQL2025</AssociatedConnSrvName>
-          <AssociatedConnUserName>sa</AssociatedConnUserName>
-          <FullPath>27_test_sp_importacion_visitas_csv.sql</FullPath>
+        <FileNode Name="29_seed_data_core.sql">
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:JOAQUIN\SQLEXPRESS:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>JOAQUIN\SQLEXPRESS</AssociatedConnSrvName>
+          <AssociatedConnUserName />
+          <FullPath>29_seed_data_core.sql</FullPath>
         </FileNode>
         <FileNode Name="views_visitantes.sql">
           <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:JOAQUIN\SQLEXPRESS:True</AssociatedConnectionMoniker>
