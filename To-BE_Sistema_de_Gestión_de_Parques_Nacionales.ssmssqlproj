@@ -205,6 +205,12 @@
           <AssociatedConnUserName>admin_tobe</AssociatedConnUserName>
           <FullPath>25_test_sp_importacion_superficies_csv.sql</FullPath>
         </FileNode>
+        <FileNode Name="26_seed_data_core.sql">
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:YERI-ENTA\SQL2025:False:sa</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>YERI-ENTA\SQL2025</AssociatedConnSrvName>
+          <AssociatedConnUserName>sa</AssociatedConnUserName>
+          <FullPath>26_seed_data_core.sql</FullPath>
+        </FileNode>
         <FileNode Name="27_test_sp_importacion_visitas_csv.sql">
           <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:YERI-ENTA\SQL2025:False:sa</AssociatedConnectionMoniker>
           <AssociatedConnSrvName>YERI-ENTA\SQL2025</AssociatedConnSrvName>
