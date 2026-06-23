@@ -1342,6 +1342,29 @@ IF NOT EXISTS (SELECT 1 FROM concesiones.Concesion WHERE id_empresa = @emp3 AND 
         @tipo_actividad = 'Comercio',       @monto_mensual = 88000.00,
         @fecha_inicio = '2024-07-10',       @fecha_fin = '2026-07-10'
 
+-- ============================================================
+-- FACTURAS DE CONCESIONES 
+-- ============================================================
+
+-- ============================================================
+-- CONCESION 1  - Emision de Facturas
+-- Empresa: @emp3   - Parque: @p6
+-- ============================================================
+DECLARE @concesion1 INT = (SELECT MIN(id) FROM concesiones.Concesion 
+WHERE borrado = 0) 
+
+BEGIN TRY
+    WHILE 1 = 1
+    BEGIN
+        EXECUTE concesiones.FacturaConcesionAlta
+            @id_concesion = @concesion1
+    END
+END TRY
+
+BEGIN CATCH
+    PRINT('Fin de emision')
+END CATCH
+
 -- ================================================================
 -- RESUMEN FINAL
 -- ================================================================
