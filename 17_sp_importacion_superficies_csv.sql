@@ -23,7 +23,7 @@ Logica:
 
 */
 
-USE ToBE
+USE GestionParquesNacionales
 GO
 
 IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = 'importacion')

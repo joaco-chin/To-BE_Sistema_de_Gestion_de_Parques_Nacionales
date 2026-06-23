@@ -15,7 +15,7 @@ de las tablas del esquema de concesiones
 
 */
 
-USE ToBE
+USE GestionParquesNacionales
 GO
 
 CREATE OR ALTER FUNCTION dev.getConcesionMonto(@id_concesion INT)

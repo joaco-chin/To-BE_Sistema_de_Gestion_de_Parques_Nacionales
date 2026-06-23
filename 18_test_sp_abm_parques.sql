@@ -18,7 +18,7 @@ NOTA: ParqueAlta ya no recibe @id; el ID es generado por IDENTITY.
 Los tests usan la tabla temporal #ids_test para compartir IDs entre batches.
 */
 
-USE ToBE
+USE GestionParquesNacionales
 GO
 
 -- ============================================================

@@ -15,7 +15,7 @@ Logica de negocio sobre las transacciones
 
 */
 
-USE ToBE
+USE GestionParquesNacionales
 GO
 
 -- ============================================================

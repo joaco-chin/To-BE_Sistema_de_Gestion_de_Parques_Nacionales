@@ -152,9 +152,9 @@
           <FullPath>17_sp_importacion_superficies_csv.sql</FullPath>
         </FileNode>
         <FileNode Name="17_sp_importacion_visitas_csv.sql">
-          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:YERI-ENTA\SQL2025:False:sa</AssociatedConnectionMoniker>
-          <AssociatedConnSrvName>YERI-ENTA\SQL2025</AssociatedConnSrvName>
-          <AssociatedConnUserName>sa</AssociatedConnUserName>
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:JOAQUIN\SQLEXPRESS:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>JOAQUIN\SQLEXPRESS</AssociatedConnSrvName>
+          <AssociatedConnUserName />
           <FullPath>17_sp_importacion_visitas_csv.sql</FullPath>
         </FileNode>
         <FileNode Name="18_test_sp_abm_parques.sql">
@@ -206,9 +206,9 @@
           <FullPath>25_test_sp_concesiones_transacciones.sql</FullPath>
         </FileNode>
         <FileNode Name="26_test_sp_importacion_parques.sql">
-          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:JOAQUIN\SQLEXPRESS:False:admin_tobe</AssociatedConnectionMoniker>
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:JOAQUIN\SQLEXPRESS:True</AssociatedConnectionMoniker>
           <AssociatedConnSrvName>JOAQUIN\SQLEXPRESS</AssociatedConnSrvName>
-          <AssociatedConnUserName>admin_tobe</AssociatedConnUserName>
+          <AssociatedConnUserName />
           <FullPath>26_test_sp_importacion_parques.sql</FullPath>
         </FileNode>
         <FileNode Name="27_test_sp_importacion_superficies_csv.sql">

@@ -23,32 +23,32 @@ GO
 
 --DROP DATABASE ToBE
 
-IF NOT EXISTS (SELECT name FROM master.dbo.sysdatabases WHERE name = 'TOBE')
+IF NOT EXISTS (SELECT name FROM master.dbo.sysdatabases WHERE name = 'GestionParquesNacionales')
 BEGIN
-	CREATE DATABASE ToBE
+	CREATE DATABASE GestionParquesNacionales
 	 CONTAINMENT = NONE
 	 ON  PRIMARY 
-	( NAME = N'ToBE', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL16.SQLEXPRESS\MSSQL\DATA\ToBE.mdf' ), 
+	( NAME = N'GestionParquesNacionales', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL16.SQLEXPRESS\MSSQL\DATA\GestionParquesNacionales.mdf' ), 
 	 FILEGROUP [Memoria] CONTAINS MEMORY_OPTIMIZED_DATA  DEFAULT
-	( NAME = N'MemoryDBInMemoryData', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL16.SQLEXPRESS\MSSQL\DATA\ToBEMemoria.mdf' )
+	( NAME = N'MemoryDBInMemoryData', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL16.SQLEXPRESS\MSSQL\DATA\GestionParquesNacionalesMemoria.mdf' )
 	 LOG ON 
-	( NAME = N'ToBE_log', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL16.SQLEXPRESS\MSSQL\DATA\ToBE_log.ldf'  )
+	( NAME = N'GestionParquesNacionales_log', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL16.SQLEXPRESS\MSSQL\DATA\GestionParquesNacionales_log.ldf'  )
 END
 GO
 
-ALTER DATABASE ToBE
+ALTER DATABASE GestionParquesNacionales
 SET RECOVERY FULL;
 GO
 
-ALTER DATABASE ToBE
+ALTER DATABASE GestionParquesNacionales
 SET ALLOW_SNAPSHOT_ISOLATION ON;
 GO
 
-ALTER DATABASE TOBE 
+ALTER DATABASE GestionParquesNacionales
 SET MEMORY_OPTIMIZED_ELEVATE_TO_SNAPSHOT = ON;
 GO
 
-USE ToBE
+USE GestionParquesNacionales
 GO
 
 IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = 'parques')

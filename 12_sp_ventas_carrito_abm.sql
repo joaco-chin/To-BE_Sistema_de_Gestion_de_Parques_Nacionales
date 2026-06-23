@@ -15,29 +15,7 @@ Alta, Baja y Modificacion de formas de pago y del "carrito" de ventas.
 
 */
 
-USE ToBE
-GO
-
--- ============================================================
--- FormaDePagoAlta
--- ============================================================
-CREATE OR ALTER PROCEDURE ventas.FormaDePagoAlta
-	@descripcion VARCHAR(40)
-AS
-BEGIN
-	BEGIN TRY
-	SET NOCOUNT ON
-
-	INSERT INTO ventas.FormaDePago (descripcion)
-	VALUES (@descripcion)
-	
-	PRINT('Forma de pago registrada correctamente')
-	END TRY
-
-	BEGIN CATCH
-		THROW
-	END CATCH
-END
+USE GestionParquesNacionales
 GO
 
 -- ============================================================

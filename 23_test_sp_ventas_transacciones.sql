@@ -14,7 +14,7 @@ Pruebas de los SPs: ConvertirARS_USD, VentaConfirmar
 Incluye casos exitosos y casos de validacion fallida.
 
 */
-USE ToBE
+USE GestionParquesNacionales
 GO
 
 EXEC sp_configure 'show advanced options', 1;
@@ -26,7 +26,6 @@ GO
 
 DELETE FROM ventas.DetalleVenta
 DELETE FROM ventas.Venta
-DELETE FROM ventas.FormaDePago
 DELETE FROM ventas.CarritoDetalleVenta 
 DELETE FROM ventas.Carrito 
 DELETE FROM ventas.TarifaParque 
@@ -114,9 +113,6 @@ EXECUTE actividades.HorarioActividadAlta
 	@fecha = '2026-07-01',
 	@hora = '18:00:00'
 GO
-PRINT('Insercion de forma de pago:')
-EXECUTE ventas.FormaDePagoAlta @descripcion = 'Nro Tarjeta C'
-GO
 PRINT('Insercion de carritos:')
 DECLARE @ult_parque INT = (SELECT MAX(id) FROM parques.Parque WHERE borrado = 0)
 EXECUTE ventas.CarritoAlta @id_parque = @ult_parque
@@ -146,7 +142,6 @@ GO
 -- ha.localidades_vendidas = 10
 -- ---------------------------------------------------------------
 DECLARE @ult_carrito INT = (SELECT MAX(id) FROM ventas.Carrito)
-DECLARE @ult_forma_pago INT = (SELECT MAX(id) FROM ventas.FormaDePago)
 DECLARE @primer_carrito INT = @ult_carrito - 1
 SELECT
 	1 AS nro_test,
@@ -160,13 +155,12 @@ WHERE cdv.id_carrito = @primer_carrito
 
 EXECUTE ventas.VentaConfirmar
 	@id_carrito = @primer_carrito,
-	@id_forma_de_pago = @ult_forma_pago,
-	@pago_datos = '4444',
-	@nro_punto_venta = 23,
-	@nro_comprobante = 2,
+	@forma_de_pago = 'Tarjeta C',
+	@datos_de_pago = '4444',
+	@punto_de_venta = '0023',
 	@moneda = 'USD'
 
-DECLARE @ult_venta INT = (SELECT MAX(id) FROM ventas.Venta)
+DECLARE @ult_venta INT = (SELECT MAX(nro_comprobante) FROM ventas.Venta)
 DECLARE @ult_detalle_venta INT = (SELECT MAX(linea_venta) FROM ventas.DetalleVenta
 WHERE id_venta = @ult_venta)
 
@@ -184,17 +178,15 @@ AND dv.id_venta = @ult_venta
 SELECT
 	1 AS nro_test,
 	'Tabla Venta luego del test' AS detalle_test,
-	id,
-	id_forma_de_pago,
-	pago_descripcion,
-	pago_datos,
-	nro_punto_venta,
+	punto_de_venta,
 	nro_comprobante,
+	forma_de_pago,
+	datos_de_pago,
 	fecha,
 	importe,
 	moneda
 FROM ventas.Venta
-WHERE id = @ult_venta 
+WHERE nro_comprobante = @ult_venta 
 
 SELECT
 	1 AS nro_test,
@@ -293,19 +285,16 @@ GO
 -- 'Venta realizada correctamente.'
 -- ---------------------------------------------------------------
 DECLARE @ult_carrito INT = (SELECT MAX(id) FROM ventas.Carrito)
-DECLARE @tarjeta INT = (SELECT MAX(id) FROM ventas.FormaDePago
-WHERE descripcion = 'Nro Tarjeta C')
 
 PRINT('-- TEST 3: Transaccion exitosa con multiples items ')
 EXECUTE ventas.VentaConfirmar
 	@id_carrito = @ult_carrito,
-	@id_forma_de_pago = @tarjeta,
-	@pago_datos = '3333',
-	@nro_punto_venta = 23,
-	@nro_comprobante = 144,
+	@forma_de_pago = 'Tarjeta C',
+	@datos_de_pago = '3333',
+	@punto_de_venta = '0023',
 	@moneda = 'ARS'
 
-DECLARE @ult_venta INT = (SELECT MAX(id) FROM ventas.Venta)
+DECLARE @ult_venta INT = (SELECT MAX(nro_comprobante) FROM ventas.Venta)
 DECLARE @ult_detalle_venta INT = (SELECT MAX(linea_venta) FROM ventas.DetalleVenta
 WHERE id_venta = @ult_venta)
 
@@ -322,17 +311,15 @@ AND dv.id_venta = @ult_venta
 SELECT
 	3 AS nro_test,
 	'Tabla Venta luego del test' AS detalle_test,
-	id,
-	id_forma_de_pago,
-	pago_descripcion,
-	pago_datos,
-	nro_punto_venta,
+	punto_de_venta,
 	nro_comprobante,
+	forma_de_pago,
+	datos_de_pago,
 	fecha,
 	importe,
 	moneda
 FROM ventas.Venta
-WHERE id = @ult_venta 
+WHERE nro_comprobante = @ult_venta 
 
 SELECT
 	3 AS nro_test,
@@ -385,68 +372,46 @@ GO
 -- 'El carrito no existe.'
 -- ---------------------------------------------------------------
 PRINT('-- TEST 4: Falla - Carrito inexistente')
-DECLARE @tarjeta INT = (SELECT MAX(id) FROM ventas.FormaDePago
-WHERE descripcion = 'Nro Tarjeta C')
-
 EXECUTE ventas.VentaConfirmar
 	@id_carrito = -50,
-	@id_forma_de_pago = @tarjeta,
-	@pago_datos = '1111',
-	@nro_punto_venta = 20,
-	@nro_comprobante = 16,
+	@forma_de_pago = 'Tarjeta D',
+	@datos_de_pago = '1111',
+	@punto_de_venta = '0020',
 	@moneda = 'USD'
 GO
 
 -- ---------------------------------------------------------------
--- TEST 5: Falla - Forma de pago inexistente    
--- Resultado esperado: THROW con mensajes
--- ---------------------------------------------------------------
-PRINT('-- TEST 5: Falla - Forma de pago inexistente')
-DECLARE @ult_carrito INT = (SELECT MAX(id) FROM ventas.Carrito)
-
-EXECUTE ventas.VentaConfirmar
-	@id_carrito = @ult_carrito,
-	@id_forma_de_pago = -10,
-	@pago_datos = '1111',
-	@nro_punto_venta = 20,
-	@nro_comprobante = 16,
-	@moneda = 'USD'
-GO
--- ---------------------------------------------------------------
--- TEST 6: Falla - Moneda invalida
+-- TEST 5: Falla - Moneda invalida
 -- Resultado esperado: THROW con mensajes
 -- 'Moneda invalida.'
 -- ---------------------------------------------------------------
-PRINT('-- TEST 6: Falla - Moneda invalida')
+PRINT('-- TEST 5: Falla - Moneda invalida')
 DECLARE @ult_carrito INT = (SELECT MAX(id) FROM ventas.Carrito)
-DECLARE @tarjeta INT = (SELECT MAX(id) FROM ventas.FormaDePago
-WHERE descripcion = 'Nro Tarjeta C')
-
 EXECUTE ventas.VentaConfirmar
 	@id_carrito = @ult_carrito,
-	@id_forma_de_pago = @tarjeta,
-	@pago_datos = '1111',
-	@nro_punto_venta = 20,
-	@nro_comprobante = 16,
+	@forma_de_pago = 'Tarjeta D',
+	@datos_de_pago = '1111',
+	@punto_de_venta = '0020',
 	@moneda = 'LLL'
 GO
 
 -- ---------------------------------------------------------------
--- TEST 7: Falla multiple   
+-- TEST 6: Falla multiple   
 -- Resultado esperado: THROW con mensajes
+-- -> 'El carrito no existe.'
+-- -> 'Moneda invalida.'
 -- ---------------------------------------------------------------
-PRINT('-- TEST 7: Falla multiple')
+PRINT('-- TEST 6: Falla multiple')
 EXECUTE ventas.VentaConfirmar
 	@id_carrito = 1,
-	@id_forma_de_pago = -3,
-	@pago_datos = 2222,
-	@nro_punto_venta = 56,
-	@nro_comprobante = 42,
+	@forma_de_pago = 'Tarjeta D',
+	@datos_de_pago = '2222',
+	@punto_de_venta = '0156',
 	@moneda = 'LLL'
 GO
 
 -- ---------------------------------------------------------------
--- TEST 8: Falla - cupo no disponible
+-- TEST 7: Falla - cupo no disponible
 -- Ambos carritos eligieron la misma actividad, la cual tiene
 -- 10 cupos. El primero compro 7 entradas para la misma y el 
 -- segundo 4, quedando 11 en total y evitando la confirmacion de
@@ -458,11 +423,9 @@ GO
 -- ---------------------------------------------------------------
 DECLARE @ult_carrito INT = (SELECT MAX(id) FROM ventas.Carrito)
 DECLARE @primer_carrito INT = @ult_carrito - 1
-DECLARE @tarjeta INT = (SELECT MAX(id) FROM ventas.FormaDePago
-WHERE descripcion = 'Nro Tarjeta C')
 
 SELECT
-	8 AS nro_test,
+	7 AS nro_test,
 	'Tabla HorarioActividad previo al test' AS detalle_test,
 	ha.id AS id_horario_actividad,
 	ha.localidades_vendidas
@@ -471,28 +434,26 @@ INNER JOIN ventas.CarritoDetalleVenta AS cdv
 ON ha.id = cdv.id_horario_actividad
 WHERE cdv.id_carrito = @ult_carrito
 
-PRINT('-- PREV TEST 8: Transaccion existosa (carrito 1)')
+PRINT('-- PREV TEST 7: Transaccion existosa (carrito 1)')
 EXECUTE ventas.VentaConfirmar
 	@id_carrito = @primer_carrito,
-	@id_forma_de_pago = @tarjeta,
-	@pago_datos = '1111',
-	@nro_punto_venta = 20,
-	@nro_comprobante = 16,
+	@forma_de_pago = 'Tarjeta C',
+	@datos_de_pago = '1111',
+	@punto_de_venta = '1120',
 	@moneda = 'USD'
-PRINT('-- TEST 8: Falla - cupo no disponible (carrito 2)')
+PRINT('-- TEST 7: Falla - cupo no disponible (carrito 2)')
 EXECUTE ventas.VentaConfirmar
 	@id_carrito = @ult_carrito,
-	@id_forma_de_pago = @tarjeta,
-	@pago_datos = '1122',
-	@nro_punto_venta = 20,
-	@nro_comprobante = 19,
+	@forma_de_pago = 'Tarjeta D',
+	@datos_de_pago = '1122',
+	@punto_de_venta = '0020',
 	@moneda = 'USD'
 GO
 
-DECLARE @ult_venta INT = (SELECT MAX(id) FROM ventas.Venta)
+DECLARE @ult_venta INT = (SELECT MAX(nro_comprobante) FROM ventas.Venta)
 
 SELECT
-	8 AS nro_test,
+	7 AS nro_test,
 	'Tabla HorarioActividad luego del test' AS detalle_test,
 	ha.id AS id_horario_actividad,
 	ha.localidades_vendidas
@@ -502,22 +463,20 @@ ON ha.id = dv.id_horario_actividad
 AND dv.id_venta = @ult_venta 
 
 SELECT
-	8 AS nro_test,
+	7 AS nro_test,
 	'Tabla Venta luego del test' AS detalle_test,
-	id,
-	id_forma_de_pago,
-	pago_descripcion,
-	pago_datos,
-	nro_punto_venta,
+	punto_de_venta,
 	nro_comprobante,
+	forma_de_pago,
+	datos_de_pago,
 	fecha,
 	importe,
 	moneda
 FROM ventas.Venta
-WHERE id = @ult_venta 
+WHERE nro_comprobante = @ult_venta 
 
 SELECT
-	8 AS nro_test,
+	7 AS nro_test,
 	'Tabla DetalleVenta luego del test' AS detalle_test,
 	id_venta,
 	linea_venta,

@@ -16,7 +16,7 @@ sus datos perduren luego de un reinicio o error, debido a que los mismos
 ser�n volcados eventualmente sobre las tablas en disco Venta y DetalleVenta.
 */
 
-USE ToBE
+USE GestionParquesNacionales
 GO
 
 -- ============================================================
@@ -53,7 +53,6 @@ CREATE TABLE ventas.CarritoDetalleVenta
 	id_tarifa_parque INT NULL,
 	fecha_visita DATE NULL,
 	es_feriado BIT NULL,
-	--id_turno_visita INT NULL,
 	id_tarifa_actividad INT NULL,
 	id_horario_actividad INT NULL,
 	cantidad INT NOT NULL CHECK (cantidad > 0),

@@ -20,7 +20,7 @@ Formato de fecha en el CSV: YYYY-M-DD (ej: 2008-1-01)
 
 */
 
-USE ToBE
+USE GestionParquesNacionales
 GO
 
 IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = 'importacion')

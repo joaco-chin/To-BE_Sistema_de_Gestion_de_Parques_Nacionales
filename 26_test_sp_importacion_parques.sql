@@ -23,7 +23,7 @@ PRECONDICIONES:
 
 */
 
-USE ToBE
+USE GestionParquesNacionales
 GO
 
 -- 1. Configuraciones de Servidor (Requiere sysadmin)
