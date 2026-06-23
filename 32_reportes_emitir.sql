@@ -19,7 +19,7 @@ USE GestionParquesNacionales
 GO
 
 EXECUTE ventas.VisitasReportar
-
+EXECUTE ventas.ParqueIngresosReportar
 EXECUTE ventas.VisitasMatrizReportar
 EXECUTE concesiones.ConcesionDeudoresReportar
 EXECUTE concesiones.ConcesionPorParqueReportar

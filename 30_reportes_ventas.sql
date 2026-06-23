@@ -40,20 +40,52 @@ BEGIN
 END
 GO
 
---CREATE OR ALTER PROCEDURE ventas.ParqueIngresosReportar
---AS
---BEGIN
---	SELECT 
---		p.id
-
---	FROM parques.Parque AS p
---	LEFT JOIN concesiones.Concesion AS c
---	ON 
---	LEFT JOIN ventas.Venta AS v
---	ON p.id = v.id_parque
---	WHERE p.borrado = 0 AND fc.esta_pagada = 1
---END
---GO
+CREATE OR ALTER PROCEDURE ventas.ParqueIngresosReportar
+AS
+BEGIN
+	WITH TotalVentasPorParque(id_parque, total_semanal, total_mensual, total_anual)
+	AS
+	(
+	SELECT 
+		id_parque,
+		SUM(importe) OVER (PARTITION BY id_parque, DATENAME(WEEK, fecha)) 
+		AS total_semanal,
+		SUM(importe) OVER (PARTITION BY id_parque, DATENAME(MONTH, fecha)) 
+		AS total_mensual,
+		SUM(importe) OVER (PARTITION BY id_parque, DATENAME(YEAR, fecha)) 
+		AS total_anual
+	FROM ventas.Venta
+	),
+	TotalConcesionesPorParque(id_parque, total_semanal, total_mensual, total_anual)
+	AS
+	(
+	SELECT 
+		c.id_parque,
+		SUM(fc.monto_a_abonar) OVER (PARTITION BY c.id_parque, DATENAME(WEEK, fc.fecha_pago)) 
+		AS total_semanal,
+		SUM(fc.monto_a_abonar) OVER (PARTITION BY c.id_parque, DATENAME(MONTH, fc.fecha_pago)) 
+		AS total_mensual,
+		SUM(fc.monto_a_abonar) OVER (PARTITION BY c.id_parque, DATENAME(YEAR, fc.fecha_pago)) 
+		AS total_anual
+	FROM concesiones.Concesion AS c
+	INNER JOIN concesiones.FacturaConcesion AS fc
+	ON c.id = fc.id_concesion
+	WHERE fc.esta_pagada = 1
+	)
+	SELECT 
+		DISTINCT p.id,
+		ISNULL(tvp.total_semanal,0) + ISNULL(tpc.total_semanal,0) AS total_semanal,
+		ISNULL(tvp.total_mensual,0) + ISNULL(tpc.total_mensual,0) AS total_mensual,
+		ISNULL(tvp.total_anual,0) + ISNULL(tpc.total_anual,0) AS total_anual
+	FROM parques.Parque AS p
+	LEFT JOIN TotalVentasPorParque AS tvp
+	ON p.id = tvp.id_parque
+	LEFT JOIN TotalConcesionesPorParque AS tpc 
+	ON p.id = tpc.id_parque
+	WHERE p.borrado = 0
+	FOR XML RAW, ELEMENTS, ROOT('IngresosPorParque')
+END
+GO
 
 CREATE OR ALTER PROCEDURE ventas.VisitasMatrizReportar
 AS
