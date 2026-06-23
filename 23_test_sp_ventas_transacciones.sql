@@ -382,6 +382,7 @@ GO
 -- ---------------------------------------------------------------
 -- TEST 4: Falla - Carrito inexistente    
 -- Resultado esperado: THROW con mensajes
+-- 'El carrito no existe.'
 -- ---------------------------------------------------------------
 PRINT('-- TEST 4: Falla - Carrito inexistente')
 DECLARE @tarjeta INT = (SELECT MAX(id) FROM ventas.FormaDePago
@@ -414,6 +415,7 @@ GO
 -- ---------------------------------------------------------------
 -- TEST 6: Falla - Moneda invalida
 -- Resultado esperado: THROW con mensajes
+-- 'Moneda invalida.'
 -- ---------------------------------------------------------------
 PRINT('-- TEST 6: Falla - Moneda invalida')
 DECLARE @ult_carrito INT = (SELECT MAX(id) FROM ventas.Carrito)
@@ -449,12 +451,25 @@ GO
 -- 10 cupos. El primero compro 7 entradas para la misma y el 
 -- segundo 4, quedando 11 en total y evitando la confirmacion de
 -- la venta del segundo.
--- Resultado esperado: THROW con mensajes
+-- Resultados esperados: THROW con mensaje
+-- 'No hay cupo disponible para la/s actividade/s seleccionadas.'
+-- localidades vendidas de la actividad = 7 (cant. del primer
+-- carrito)
 -- ---------------------------------------------------------------
 DECLARE @ult_carrito INT = (SELECT MAX(id) FROM ventas.Carrito)
 DECLARE @primer_carrito INT = @ult_carrito - 1
 DECLARE @tarjeta INT = (SELECT MAX(id) FROM ventas.FormaDePago
 WHERE descripcion = 'Nro Tarjeta C')
+
+SELECT
+	8 AS nro_test,
+	'Tabla HorarioActividad previo al test' AS detalle_test,
+	ha.id AS id_horario_actividad,
+	ha.localidades_vendidas
+FROM actividades.HorarioActividad AS ha
+INNER JOIN ventas.CarritoDetalleVenta AS cdv
+ON ha.id = cdv.id_horario_actividad
+WHERE cdv.id_carrito = @ult_carrito
 
 PRINT('-- PREV TEST 8: Transaccion existosa (carrito 1)')
 EXECUTE ventas.VentaConfirmar
@@ -472,5 +487,47 @@ EXECUTE ventas.VentaConfirmar
 	@nro_punto_venta = 20,
 	@nro_comprobante = 19,
 	@moneda = 'USD'
+GO
 
---SELECT * FROM ventas.Venta
+DECLARE @ult_venta INT = (SELECT MAX(id) FROM ventas.Venta)
+
+SELECT
+	8 AS nro_test,
+	'Tabla HorarioActividad luego del test' AS detalle_test,
+	ha.id AS id_horario_actividad,
+	ha.localidades_vendidas
+FROM actividades.HorarioActividad AS ha
+INNER JOIN ventas.DetalleVenta AS dv
+ON ha.id = dv.id_horario_actividad
+AND dv.id_venta = @ult_venta 
+
+SELECT
+	8 AS nro_test,
+	'Tabla Venta luego del test' AS detalle_test,
+	id,
+	id_forma_de_pago,
+	pago_descripcion,
+	pago_datos,
+	nro_punto_venta,
+	nro_comprobante,
+	fecha,
+	importe,
+	moneda
+FROM ventas.Venta
+WHERE id = @ult_venta 
+
+SELECT
+	8 AS nro_test,
+	'Tabla DetalleVenta luego del test' AS detalle_test,
+	id_venta,
+	linea_venta,
+	id_tarifa_parque,
+	fecha_visita,
+	es_feriado,
+	id_tarifa_actividad,
+	id_horario_actividad,
+	cantidad,
+	importe 
+FROM ventas.DetalleVenta
+WHERE id_venta = @ult_venta
+GO

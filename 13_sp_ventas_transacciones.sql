@@ -49,8 +49,7 @@ BEGIN
 
     IF @respuesta_raw IS NULL OR @respuesta_raw = ''
     BEGIN
-        PRINT 'No se recibió respuesta de la API';
-        RETURN;
+        THROW 50201, 'No se recibió respuesta de la API', 1;
     END
 
     DECLARE @json_nvarchar NVARCHAR(MAX) = CAST(@respuesta_raw AS NVARCHAR(MAX));
@@ -71,35 +70,14 @@ BEGIN
     BEGIN
         SET @monto_usd = 0;
     END
-	PRINT(CAST(@monto_usd AS CHAR))
+	--PRINT(CAST(@monto_usd AS CHAR))
 END
 GO
 
-/*
-EXEC sp_configure 'show advanced options', 1;	--Este es para poder editar los permisos avanzados.
-RECONFIGURE;
-GO
-EXEC sp_configure 'Ole Automation Procedures', 1;	-- Aqui habilitamos esta opcion avanzada
-RECONFIGURE;
-GO
-
---DECLARE @usd DECIMAL(10,2)
---EXECUTE ventas.ConvertirARS_USD 
---	@monto_ars = 100000.56,
---	@monto_usd = @usd OUTPUT
---SELECT @usd
-DECLARE @feriado_resultado BIT
-EXECUTE ventas.EsFeriado
-	@fecha = '2021-05-25',
-	@es_feriado = @feriado_resultado OUTPUT
-SELECT @feriado_resultado 
-GO
-*/
-
 -- ============================================================
 -- VentaConfirmar
--- Confirma una venta en un parque segï¿½n un carrito dado.
--- En caso de que no hayan errores, vacï¿½a el mismo al final
+-- Confirma una venta en un parque segun un carrito dado.
+-- En caso de que no hayan errores, vacia el mismo al final
 -- y actualiza la tabla de actividades para cambiar la cantidad
 -- de cupos disponibles
 -- ============================================================
@@ -120,26 +98,26 @@ BEGIN
 			
 			-- Validaciones basicas
 			IF NOT EXISTS (SELECT id FROM ventas.Carrito WHERE id = @id_carrito)
-				SET @errores += 'El carrito no existe' + CHAR(13);
+				SET @errores += 'El carrito no existe.' + CHAR(13);
 
 			IF NOT EXISTS (SELECT 1 FROM ventas.FormaDePago WHERE id = @id_forma_de_pago)
 				SET @errores += 'La forma de pago no existe.' + CHAR(13);
 
 			IF @moneda NOT IN ('ARS', 'USD')
-				SET @errores += 'Moneda invalida' + CHAR(13);
+				SET @errores += 'Moneda invalida.' + CHAR(13);
 
 			DECLARE @fecha DATE
 			SET @fecha = GETDATE()
 
 			IF @fecha > ANY(SELECT fecha_visita 
 			FROM ventas.CarritoDetalleVenta WHERE id_carrito = @id_carrito)
-				SET @errores += 'La fecha de pago no puede ser mayor a las fechas de visita' + CHAR(13);
+				SET @errores += 'La fecha de pago no puede ser mayor a las fechas de visita.' + CHAR(13);
 
 			IF @fecha > ANY(SELECT ha.fecha FROM ventas.CarritoDetalleVenta AS cdv 
 			INNER JOIN actividades.HorarioActividad AS ha
 			ON cdv.id_horario_actividad = ha.id
 			WHERE id_carrito = @id_carrito)
-				SET @errores += 'La fecha de pago no puede ser mayor a las fechas de actividad' + CHAR(13);
+				SET @errores += 'La fecha de pago no puede ser mayor a las fechas de actividad.' + CHAR(13);
 
 			IF LEN(@errores) > 0
 				THROW 50100, @errores, 1;
@@ -198,13 +176,32 @@ BEGIN
 			WHERE cdv.id_carrito = @id_carrito
 			AND cdv.id_horario_actividad IS NOT NULL
 
-			IF EXISTS (SELECT ha.id
+			DECLARE @ActividadesSinCupo TABLE
+			(
+				id_horario_actividad INT
+			);
+
+			INSERT INTO @ActividadesSinCupo 
+			SELECT ha.id
 			FROM actividades.HorarioActividad AS ha
+			INNER JOIN ventas.CarritoDetalleVenta AS cdv
+			ON ha.id = cdv.id_horario_actividad
 			INNER JOIN actividades.Actividad AS a
 			ON ha.id_actividad = a.id
-			WHERE ha.localidades_vendidas > a.cupo_maximo
-			)
-				THROW 50101, 'No hay cupo disponible para la/s actividade/s seleccionadas.', 1; 
+			WHERE cdv.id_carrito = @id_carrito
+			AND ha.activo = 1 
+			AND ha.localidades_vendidas > a.cupo_maximo
+
+			IF(SELECT COUNT(id_horario_actividad) FROM @ActividadesSinCupo) > 0
+			BEGIN
+				--SELECT id_horario_actividad AS horario_actividad_sin_cupo
+				--FROM @ActividadesSinCupo;
+				DECLARE @xmltmp XML = (SELECT id_horario_actividad 
+				AS horario_actividad_sin_cupo
+				FROM @ActividadesSinCupo FOR XML AUTO)
+				DECLARE @error VARCHAR(MAX) = 'No hay cupo disponible para la/s actividade/s seleccionadas:' + CONVERT(NVARCHAR(MAX), @xmltmp);
+				THROW 50101, @error, 1;
+			END
 
 			EXECUTE ventas.CarritoBaja @id_carrito
 
@@ -214,7 +211,6 @@ BEGIN
 	BEGIN CATCH
 		IF @@TRANCOUNT > 0 
 			ROLLBACK TRANSACTION;
-		
 		--PRINT(CAST(ERROR_NUMBER() AS CHAR) + ' ' + ERROR_MESSAGE())
 		THROW
 	END CATCH
