@@ -3,20 +3,12 @@
   "WorkspaceRootPath": "D:\\Documentos\\UNLaM\\2_Base de Datos Aplicada\\Trabajo Pr\u00E1ctico\\To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{1AB1FBB9-ADC6-4A43-14C0-FA1FADD37E7E}|To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales.ssmssqlproj|D:\\Documentos\\UNLaM\\2_Base de Datos Aplicada\\Trabajo Pr\u00E1ctico\\To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales\\32_reportes_emitir.sql||{B5A506EB-11BE-4782-9A18-21265C2CA0B4}",
-      "RelativeMoniker": "D:0:0:{1AB1FBB9-ADC6-4A43-14C0-FA1FADD37E7E}|To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales.ssmssqlproj|solutionrelative:32_reportes_emitir.sql||{B5A506EB-11BE-4782-9A18-21265C2CA0B4}"
+      "AbsoluteMoniker": "D:0:0:{1AB1FBB9-ADC6-4A43-14C0-FA1FADD37E7E}|To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales.ssmssqlproj|D:\\Documentos\\UNLaM\\2_Base de Datos Aplicada\\Trabajo Pr\u00E1ctico\\To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales\\33_reportes_views.sql||{B5A506EB-11BE-4782-9A18-21265C2CA0B4}",
+      "RelativeMoniker": "D:0:0:{1AB1FBB9-ADC6-4A43-14C0-FA1FADD37E7E}|To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales.ssmssqlproj|solutionrelative:33_reportes_views.sql||{B5A506EB-11BE-4782-9A18-21265C2CA0B4}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{1AB1FBB9-ADC6-4A43-14C0-FA1FADD37E7E}|To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales.ssmssqlproj|D:\\Documentos\\UNLaM\\2_Base de Datos Aplicada\\Trabajo Pr\u00E1ctico\\To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales\\30_reportes_ventas.sql||{B5A506EB-11BE-4782-9A18-21265C2CA0B4}",
       "RelativeMoniker": "D:0:0:{1AB1FBB9-ADC6-4A43-14C0-FA1FADD37E7E}|To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales.ssmssqlproj|solutionrelative:30_reportes_ventas.sql||{B5A506EB-11BE-4782-9A18-21265C2CA0B4}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{1AB1FBB9-ADC6-4A43-14C0-FA1FADD37E7E}|To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales.ssmssqlproj|D:\\Documentos\\UNLaM\\2_Base de Datos Aplicada\\Trabajo Pr\u00E1ctico\\To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales\\31_reportes_deudores.sql||{B5A506EB-11BE-4782-9A18-21265C2CA0B4}",
-      "RelativeMoniker": "D:0:0:{1AB1FBB9-ADC6-4A43-14C0-FA1FADD37E7E}|To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales.ssmssqlproj|solutionrelative:31_reportes_deudores.sql||{B5A506EB-11BE-4782-9A18-21265C2CA0B4}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{1AB1FBB9-ADC6-4A43-14C0-FA1FADD37E7E}|To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales.ssmssqlproj|D:\\Documentos\\UNLaM\\2_Base de Datos Aplicada\\Trabajo Pr\u00E1ctico\\To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales\\02_tablas.sql||{B5A506EB-11BE-4782-9A18-21265C2CA0B4}",
-      "RelativeMoniker": "D:0:0:{1AB1FBB9-ADC6-4A43-14C0-FA1FADD37E7E}|To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales.ssmssqlproj|solutionrelative:02_tablas.sql||{B5A506EB-11BE-4782-9A18-21265C2CA0B4}"
     }
   ],
   "DocumentGroupContainers": [
@@ -26,51 +18,29 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "32_reportes_emitir.sql - JOAQUIN\\SQLEXPRESS.GestionParquesNacionales (JOAQUIN\\joaqu (69))",
-              "DocumentMoniker": "D:\\Documentos\\UNLaM\\2_Base de Datos Aplicada\\Trabajo Pr\u00E1ctico\\To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales\\32_reportes_emitir.sql",
-              "RelativeDocumentMoniker": "32_reportes_emitir.sql",
-              "ToolTip": "32_reportes_emitir.sql - JOAQUIN\\SQLEXPRESS.GestionParquesNacionales (JOAQUIN\\joaqu (69))",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
-              "WhenOpened": "2026-06-23T21:38:20.841Z",
-              "EditorCaption": " - JOAQUIN\\SQLEXPRESS.GestionParquesNacionales (JOAQUIN\\joaqu (69))"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "02_tablas.sql - JOAQUIN\\SQLEXPRESS.master (JOAQUIN\\joaqu (70))",
-              "DocumentMoniker": "D:\\Documentos\\UNLaM\\2_Base de Datos Aplicada\\Trabajo Pr\u00E1ctico\\To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales\\02_tablas.sql",
-              "RelativeDocumentMoniker": "02_tablas.sql",
-              "ToolTip": "02_tablas.sql - JOAQUIN\\SQLEXPRESS.master (JOAQUIN\\joaqu (70))",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
-              "WhenOpened": "2026-06-23T20:48:59.467Z",
-              "EditorCaption": " - JOAQUIN\\SQLEXPRESS.master (JOAQUIN\\joaqu (70))"
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "30_reportes_ventas.sql - JOAQUIN\\SQLEXPRESS.GestionParquesNacionales (JOAQUIN\\joaqu (71))",
+              "Title": "30_reportes_ventas.sql - JOAQUIN\\SQLEXPRESS.master (JOAQUIN\\joaqu (66))",
               "DocumentMoniker": "D:\\Documentos\\UNLaM\\2_Base de Datos Aplicada\\Trabajo Pr\u00E1ctico\\To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales\\30_reportes_ventas.sql",
               "RelativeDocumentMoniker": "30_reportes_ventas.sql",
-              "ToolTip": "30_reportes_ventas.sql - JOAQUIN\\SQLEXPRESS.GestionParquesNacionales (JOAQUIN\\joaqu (71))",
+              "ToolTip": "30_reportes_ventas.sql - JOAQUIN\\SQLEXPRESS.master (JOAQUIN\\joaqu (66))",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
-              "WhenOpened": "2026-06-23T20:38:51.457Z",
-              "EditorCaption": " - JOAQUIN\\SQLEXPRESS.GestionParquesNacionales (JOAQUIN\\joaqu (71))"
+              "WhenOpened": "2026-06-24T03:35:24.988Z",
+              "EditorCaption": " - JOAQUIN\\SQLEXPRESS.master (JOAQUIN\\joaqu (66))"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "31_reportes_deudores.sql - JOAQUIN\\SQLEXPRESS.master (JOAQUIN\\joaqu (52))",
-              "DocumentMoniker": "D:\\Documentos\\UNLaM\\2_Base de Datos Aplicada\\Trabajo Pr\u00E1ctico\\To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales\\31_reportes_deudores.sql",
-              "RelativeDocumentMoniker": "31_reportes_deudores.sql",
-              "ToolTip": "31_reportes_deudores.sql - JOAQUIN\\SQLEXPRESS.master (JOAQUIN\\joaqu (52))",
+              "DocumentIndex": 0,
+              "Title": "33_reportes_views.sql - JOAQUIN\\SQLEXPRESS.GestionParquesNacionales (JOAQUIN\\joaqu (51))",
+              "DocumentMoniker": "D:\\Documentos\\UNLaM\\2_Base de Datos Aplicada\\Trabajo Pr\u00E1ctico\\To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales\\33_reportes_views.sql",
+              "RelativeDocumentMoniker": "33_reportes_views.sql",
+              "ToolTip": "33_reportes_views.sql - JOAQUIN\\SQLEXPRESS.GestionParquesNacionales (JOAQUIN\\joaqu (51))",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
-              "WhenOpened": "2026-06-23T19:59:19.177Z",
-              "EditorCaption": " - JOAQUIN\\SQLEXPRESS.master (JOAQUIN\\joaqu (52))"
+              "WhenOpened": "2026-06-24T03:33:00.053Z",
+              "EditorCaption": " - JOAQUIN\\SQLEXPRESS.GestionParquesNacionales (JOAQUIN\\joaqu (51))"
             }
           ]
         }
