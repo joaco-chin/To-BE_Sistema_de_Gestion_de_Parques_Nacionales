@@ -26,7 +26,8 @@ GO
 -- ============================================================
 CREATE OR ALTER PROCEDURE ventas.ConvertirARS_USD
     @monto_ars DECIMAL(10,2),
-    @monto_usd DECIMAL(10,2) = NULL OUTPUT
+    @monto_usd DECIMAL(10,2) = NULL OUTPUT,
+	@cotizacion_usd DECIMAL(10,2) OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -64,6 +65,7 @@ BEGIN
     IF @cotizacion_venta > 0
     BEGIN
         SET @monto_usd = @monto_ars / @cotizacion_venta;
+		SET @cotizacion_usd = @cotizacion_venta;
     END
 	
     ELSE
@@ -73,6 +75,8 @@ BEGIN
 	--PRINT(CAST(@monto_usd AS CHAR))
 END
 GO
+
+
 
 -- ============================================================
 -- VentaConfirmar
@@ -86,7 +90,7 @@ CREATE OR ALTER PROCEDURE ventas.VentaConfirmar
 	@forma_de_pago CHAR(13),
 	@datos_de_pago CHAR(22),
 	@punto_de_venta CHAR(4),
-	@moneda CHAR(3) = 'ARS'	
+	@moneda CHAR(3) = 'ARS'
 AS
 BEGIN
 	SET NOCOUNT ON
@@ -128,19 +132,22 @@ BEGIN
 				WHERE id_carrito = @id_carrito 
 			)
 
+			DECLARE @cotizacion_dolar DECIMAL(10,2) = NULL;
+
 			IF @moneda NOT LIKE 'ARS'
 			BEGIN
 				EXECUTE ventas.ConvertirARS_USD
 					@monto_ars = @importe,
-					@monto_usd = @importe OUTPUT 
+					@monto_usd = @importe OUTPUT,
+					@cotizacion_usd = @cotizacion_dolar OUTPUT;
 			END
 
 			INSERT INTO ventas.Venta 
 			(punto_de_venta, id_parque, forma_de_pago, 
-			datos_de_pago, fecha, importe, moneda)
+			datos_de_pago, fecha, importe, moneda, cotizacion_dolar)
 			VALUES 
 			(@punto_de_venta, @id_parque, @forma_de_pago, 
-			@datos_de_pago, @fecha, @importe, @moneda)
+			@datos_de_pago, @fecha, @importe, @moneda, @cotizacion_dolar)
 			
 			DECLARE @id_venta INT
 			SET @id_venta = (SELECT MAX(nro_comprobante) FROM ventas.Venta)
