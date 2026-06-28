@@ -495,3 +495,5 @@ SELECT
 FROM ventas.DetalleVenta
 WHERE id_venta = @ult_venta
 GO
+
+ 

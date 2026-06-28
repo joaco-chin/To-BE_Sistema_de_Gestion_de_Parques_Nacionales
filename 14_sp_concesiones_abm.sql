@@ -265,15 +265,40 @@ BEGIN
 		IF NOT EXISTS(SELECT 1 FROM concesiones.Concesion WHERE id = @id_concesion AND borrado = 0)
 			THROW 50054, '- La concesion no existe.', 1
 
-		DECLARE @fecha_vencimiento DATE = dev.getFactConcesionFechaVencimiento(@id_concesion);
+		DECLARE @fecha_vencimiento DATE;
 
-		IF @fecha_vencimiento > dev.getConcesionFechaFin(@id_concesion)
+		IF NOT EXISTS (SELECT 1 FROM concesiones.FacturaConcesion 
+		WHERE id_concesion = @id_concesion)
+		BEGIN
+			SET @fecha_vencimiento = 
+			(SELECT fecha_inicio_contrato 
+			FROM concesiones.Concesion WHERE id = @id_concesion)
+		END
+
+		ELSE
+		BEGIN
+			SET @fecha_vencimiento =
+			(
+				SELECT MAX(fecha_vencimiento)
+				FROM concesiones.FacturaConcesion
+				WHERE id_concesion = @id_concesion
+			) 
+		END
+
+		SET @fecha_vencimiento = DATEADD(MONTH, 1, @fecha_vencimiento);
+
+		IF @fecha_vencimiento > (SELECT TOP 1 fecha_fin_contrato
+		FROM concesiones.Concesion WHERE id = @id_concesion)
 			THROW 50055, '- El plazo de concesion ha terminado, no se puede emitir otra factura.', 1
 
 		INSERT INTO concesiones.FacturaConcesion 
 		(id_concesion, fecha_vencimiento, monto_a_abonar)
-		VALUES
-		(@id_concesion, @fecha_vencimiento, dev.getConcesionMonto(@id_concesion))
+		SELECT
+		@id_concesion, 
+		@fecha_vencimiento,
+		monto_mensual
+		FROM concesiones.Concesion
+		WHERE id = @id_concesion;
 
 		PRINT('Factura emitida correctamente.')
 	END TRY
