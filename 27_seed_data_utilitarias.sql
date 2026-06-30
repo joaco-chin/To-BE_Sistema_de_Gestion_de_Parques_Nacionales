@@ -50,6 +50,26 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
+    DECLARE @fecha_compra DATE = 
+    DATEADD(YEAR,  CAST(RAND() * (3 - 1) + 1 AS INT), '2023-03-03');
+
+    IF YEAR(@fecha_compra) = GETDATE()
+    BEGIN
+        SET @fecha_compra =
+        DATEADD(MONTH, CAST(RAND() * ((MONTH(GETDATE()) - 1) - 1)
+        + 1 AS INT), @fecha_compra);
+    END
+
+    ELSE
+    BEGIN
+        SET @fecha_compra =
+        DATEADD(MONTH, CAST(RAND() * (12 - 1) + 
+        1 AS INT), @fecha_compra);
+    END
+
+    SET @fecha_compra =
+    DATEADD(DAY, CAST(RAND() * (30 - 1) + 1 AS INT), @fecha_compra);
+
     DECLARE @id_parque INT = 
     (SELECT id_parque FROM ventas.Carrito WHERE id = @id_carrito);
 
@@ -71,7 +91,8 @@ BEGIN
         (SELECT COUNT(id_horario) FROM
         actividades.ActividadesHorariosDisponibles
         WHERE cupo_disponible NOT LIKE 'LLENO'
-        AND id_parque = @id_parque);
+        AND id_parque = @id_parque
+        AND fecha >= @fecha_compra);
         
         SET @modo_compra = CASE 
         WHEN @total_horarios = 0 
@@ -83,7 +104,7 @@ BEGIN
             SET @id_tipo_visitante = 
             CAST(RAND()*(@max_visitante - @min_visitante)+ @min_visitante AS INT);
             PRINT('Id visitante: ' + CAST(@id_tipo_visitante AS CHAR))
-            SET @fecha_visita = DATEADD(DAY, FLOOR(RAND() * 30) + 1, CAST(GETDATE() AS DATE));
+            SET @fecha_visita = DATEADD(DAY, FLOOR(RAND() * 30) + 1, CAST(@fecha_compra AS DATE));
             SET @id_horario = NULL;
             SET @cantidad = 1;
         END
@@ -98,7 +119,8 @@ BEGIN
             AS INT)
             FROM actividades.ActividadesHorariosDisponibles
             WHERE cupo_disponible NOT LIKE 'LLENO'
-            AND id_parque = @id_parque);
+            AND id_parque = @id_parque
+            AND fecha >= @fecha_compra);
 
             SET @cantidad = 
             (SELECT CAST(RAND() * (CAST(cupo_disponible AS INT) - 1) + 1 AS INT)
@@ -122,7 +144,8 @@ BEGIN
                 @id_tipo_visitante = @id_tipo_visitante,
                 @fecha_visita      = @fecha_visita,
                 @id_horario        = @id_horario,
-                @cantidad          = @cantidad;
+                @cantidad          = @cantidad,
+                @fecha             = @fecha_compra;
         END TRY
         BEGIN CATCH
             PRINT CAST(ERROR_NUMBER() AS CHAR) + ' ' + ERROR_MESSAGE();
@@ -153,7 +176,8 @@ BEGIN
             @forma_de_pago = @forma_pago,
             @datos_de_pago = @num_tarjeta,
             @punto_de_venta = @punto_venta,
-            @moneda = @moneda_pago;
+            @moneda = @moneda_pago,
+            @fecha = @fecha_compra;
     END TRY
 
     BEGIN CATCH

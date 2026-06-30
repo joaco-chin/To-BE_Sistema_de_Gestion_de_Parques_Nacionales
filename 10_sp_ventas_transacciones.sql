@@ -90,7 +90,8 @@ CREATE OR ALTER PROCEDURE ventas.VentaConfirmar
 	@forma_de_pago CHAR(13),
 	@datos_de_pago CHAR(22),
 	@punto_de_venta CHAR(4),
-	@moneda CHAR(3) = 'ARS'
+	@moneda CHAR(3) = 'ARS',
+	@fecha DATE = NULL
 AS
 BEGIN
 	SET NOCOUNT ON
@@ -106,8 +107,10 @@ BEGIN
 			IF @moneda NOT IN ('ARS', 'USD')
 				SET @errores += 'Moneda invalida.' + CHAR(13);
 
-			DECLARE @fecha DATE
-			SET @fecha = GETDATE()
+			IF @fecha IS NULL
+			BEGIN
+				SET @fecha = GETDATE()
+			END
 
 			IF @fecha > ANY(SELECT fecha_visita 
 			FROM ventas.CarritoDetalleVenta WHERE id_carrito = @id_carrito)
