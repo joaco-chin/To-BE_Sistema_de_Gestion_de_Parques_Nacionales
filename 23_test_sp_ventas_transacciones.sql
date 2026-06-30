@@ -24,6 +24,11 @@ EXEC sp_configure 'Ole Automation Procedures', 1;
 RECONFIGURE;
 GO
 
+DELETE FROM personal.AsignacionesGuardaParque
+DELETE FROM actividades.GuiaActividad
+DELETE FROM concesiones.PagoConcesion
+DELETE FROM concesiones.FacturaConcesion
+DELETE FROM concesiones.Concesion
 DELETE FROM ventas.DetalleVenta
 DELETE FROM ventas.Venta
 DELETE FROM ventas.CarritoDetalleVenta 
@@ -490,3 +495,5 @@ SELECT
 FROM ventas.DetalleVenta
 WHERE id_venta = @ult_venta
 GO
+
+ 

@@ -140,7 +140,7 @@ BEGIN
     IF @respuesta_raw IS NULL OR @respuesta_raw = ''
     BEGIN
         PRINT 'No se recibió respuesta de la API';
-        RETURN;
+        --RETURN;
     END
 
     DECLARE @json_nvarchar NVARCHAR(MAX) = CAST(@respuesta_raw AS NVARCHAR(MAX));

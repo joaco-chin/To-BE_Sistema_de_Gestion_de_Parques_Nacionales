@@ -131,7 +131,9 @@ CREATE TABLE ventas.Venta
 	fecha DATE NOT NULL,
 	importe DECIMAL(10,2) NOT NULL	-- encriptar
 	CHECK (importe > 0),
-	moneda CHAR(3) NOT NULL CHECK (moneda IN ('ARS', 'USD'))
+	moneda CHAR(3) NOT NULL CHECK (moneda IN ('ARS', 'USD')),
+	cotizacion_dolar DECIMAL(10,2) NULL
+	CHECK (cotizacion_dolar > 0)
 )
 END
 GO
