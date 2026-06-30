@@ -18,35 +18,6 @@ Views de reportes para el dashboard de PowerBI
 USE GestionParquesNacionales
 GO
 
-CREATE OR ALTER VIEW ventas.VentasPesificadas
-AS
-SELECT 
-	nro_comprobante,
-	punto_de_venta,
-	id_parque,
-	forma_de_pago,
-	datos_de_pago,
-	fecha,
-	importe * cotizacion_dolar AS importe,
-	'ARS' AS moneda,
-	NULL AS cotizacion_dolar
-FROM ventas.Venta
-WHERE moneda = 'USD'
-UNION
-SELECT
-	nro_comprobante,
-	punto_de_venta,
-	id_parque,
-	forma_de_pago,
-	datos_de_pago,
-	fecha,
-	importe,
-	moneda,
-	cotizacion_dolar
-FROM ventas.Venta
-WHERE moneda = 'ARS'
-GO
-
 CREATE OR ALTER VIEW ventas.ReporteVisitas
 AS
 SELECT
