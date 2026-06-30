@@ -3,12 +3,20 @@
   "WorkspaceRootPath": "C:\\Users\\YerimenLombardo\\Repos\\To-BE_Sistema_de_Gestion_de_Parques_Nacionales\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{1AB1FBB9-ADC6-4A43-14C0-FA1FADD37E7E}|To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales.ssmssqlproj|C:\\Users\\YerimenLombardo\\Repos\\To-BE_Sistema_de_Gestion_de_Parques_Nacionales\\27_test_sp_importacion_visitas_csv.sql||{B5A506EB-11BE-4782-9A18-21265C2CA0B4}",
-      "RelativeMoniker": "D:0:0:{1AB1FBB9-ADC6-4A43-14C0-FA1FADD37E7E}|To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales.ssmssqlproj|solutionrelative:27_test_sp_importacion_visitas_csv.sql||{B5A506EB-11BE-4782-9A18-21265C2CA0B4}"
+      "AbsoluteMoniker": "D:0:0:{1AB1FBB9-ADC6-4A43-14C0-FA1FADD37E7E}|To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales.ssmssqlproj|C:\\Users\\YerimenLombardo\\Repos\\To-BE_Sistema_de_Gestion_de_Parques_Nacionales\\10_sp_personal_abm.sql||{B5A506EB-11BE-4782-9A18-21265C2CA0B4}",
+      "RelativeMoniker": "D:0:0:{1AB1FBB9-ADC6-4A43-14C0-FA1FADD37E7E}|To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales.ssmssqlproj|solutionrelative:10_sp_personal_abm.sql||{B5A506EB-11BE-4782-9A18-21265C2CA0B4}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{1AB1FBB9-ADC6-4A43-14C0-FA1FADD37E7E}|To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales.ssmssqlproj|C:\\Users\\YerimenLombardo\\Repos\\To-BE_Sistema_de_Gestion_de_Parques_Nacionales\\17_sp_importacion_visitas_csv.sql||{B5A506EB-11BE-4782-9A18-21265C2CA0B4}",
       "RelativeMoniker": "D:0:0:{1AB1FBB9-ADC6-4A43-14C0-FA1FADD37E7E}|To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales.ssmssqlproj|solutionrelative:17_sp_importacion_visitas_csv.sql||{B5A506EB-11BE-4782-9A18-21265C2CA0B4}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\YerimenLombardo\\Repos\\To-BE_Sistema_de_Gestion_de_Parques_Nacionales\\26_seed_data_core.sql||{B5A506EB-11BE-4782-9A18-21265C2CA0B4}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:26_seed_data_core.sql||{B5A506EB-11BE-4782-9A18-21265C2CA0B4}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\YerimenLombardo\\Repos\\To-BE_Sistema_de_Gestion_de_Parques_Nacionales\\27_test_sp_importacion_visitas_csv.sql||{B5A506EB-11BE-4782-9A18-21265C2CA0B4}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:27_test_sp_importacion_visitas_csv.sql||{B5A506EB-11BE-4782-9A18-21265C2CA0B4}"
     }
   ],
   "DocumentGroupContainers": [
@@ -23,24 +31,48 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "27_test_sp_importacion_visitas_csv.sql - YERI-ENTA\\SQL2025.ToBE (sa (68))",
+              "Title": "10_sp_personal_abm.sql - JOAQUIN\\SQLEXPRESS.GestionParquesNacionales (sa (85))",
+              "DocumentMoniker": "C:\\Users\\YerimenLombardo\\Repos\\To-BE_Sistema_de_Gestion_de_Parques_Nacionales\\10_sp_personal_abm.sql",
+              "RelativeDocumentMoniker": "10_sp_personal_abm.sql",
+              "ToolTip": "10_sp_personal_abm.sql - JOAQUIN\\SQLEXPRESS.GestionParquesNacionales (sa (85))",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
+              "WhenOpened": "2026-06-30T03:06:00.225Z",
+              "EditorCaption": " - JOAQUIN\\SQLEXPRESS.GestionParquesNacionales (sa (85))"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "26_seed_data_core.sql - YERI-ENTA\\SQL2025.ToBE (sa (58))",
+              "DocumentMoniker": "C:\\Users\\YerimenLombardo\\Repos\\To-BE_Sistema_de_Gestion_de_Parques_Nacionales\\26_seed_data_core.sql",
+              "RelativeDocumentMoniker": "26_seed_data_core.sql",
+              "ToolTip": "C:\\Users\\YerimenLombardo\\Repos\\To-BE_Sistema_de_Gestion_de_Parques_Nacionales\\26_seed_data_core.sql - YERI-ENTA\\SQL2025.ToBE (sa (58))",
+              "RelativeToolTip": "26_seed_data_core.sql - YERI-ENTA\\SQL2025.ToBE (sa (58))",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
+              "WhenOpened": "2026-06-23T01:32:50.367Z",
+              "EditorCaption": " - YERI-ENTA\\SQL2025.ToBE (sa (58))"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "27_test_sp_importacion_visitas_csv.sql - YERI-ENTA\\SQL2025.master (sa (53))",
               "DocumentMoniker": "C:\\Users\\YerimenLombardo\\Repos\\To-BE_Sistema_de_Gestion_de_Parques_Nacionales\\27_test_sp_importacion_visitas_csv.sql",
               "RelativeDocumentMoniker": "27_test_sp_importacion_visitas_csv.sql",
-              "ToolTip": "27_test_sp_importacion_visitas_csv.sql - YERI-ENTA\\SQL2025.ToBE (sa (68))",
+              "ToolTip": "C:\\Users\\YerimenLombardo\\Repos\\To-BE_Sistema_de_Gestion_de_Parques_Nacionales\\27_test_sp_importacion_visitas_csv.sql - YERI-ENTA\\SQL2025.master (sa (53))",
+              "RelativeToolTip": "27_test_sp_importacion_visitas_csv.sql - YERI-ENTA\\SQL2025.master (sa (53))",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
               "WhenOpened": "2026-06-22T03:25:54.973Z",
-              "EditorCaption": " - YERI-ENTA\\SQL2025.ToBE (sa (68))"
+              "EditorCaption": " - YERI-ENTA\\SQL2025.master (sa (53))"
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "17_sp_importacion_visitas_csv.sql - YERI-ENTA\\SQL2025.ToBE (sa (67))",
+              "Title": "17_sp_importacion_visitas_csv.sql - JOAQUIN\\SQLEXPRESS.master (sa (80))",
               "DocumentMoniker": "C:\\Users\\YerimenLombardo\\Repos\\To-BE_Sistema_de_Gestion_de_Parques_Nacionales\\17_sp_importacion_visitas_csv.sql",
               "RelativeDocumentMoniker": "17_sp_importacion_visitas_csv.sql",
-              "ToolTip": "17_sp_importacion_visitas_csv.sql - YERI-ENTA\\SQL2025.ToBE (sa (67))",
+              "ToolTip": "17_sp_importacion_visitas_csv.sql - JOAQUIN\\SQLEXPRESS.master (sa (80))",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
               "WhenOpened": "2026-06-22T03:25:46.469Z",
-              "EditorCaption": " - YERI-ENTA\\SQL2025.ToBE (sa (67))"
+              "EditorCaption": " - JOAQUIN\\SQLEXPRESS.master (sa (80))"
             }
           ]
         }
