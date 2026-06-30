@@ -2018,9 +2018,9 @@ SELECT 'Facturas emitidas de concesiones',           COUNT(id) FROM concesiones.
 UNION ALL
 SELECT 'Tipos de visitante',           COUNT(id) FROM ventas.TipoVisitante
 UNION ALL
-SELECT 'Tarifas de parques',           COUNT(id) FROM ventas.TarifaParque
+SELECT 'Tarifas de parques',           COUNT(id) FROM ventas.TarifaParque WHERE activo = 1
 UNION ALL
-SELECT 'Ventas',           COUNT(id) FROM ventas.Venta
+SELECT 'Ventas',           COUNT(nro_comprobante) FROM ventas.Venta
 
 PRINT ''
 PRINT 'Escenarios cubiertos:'

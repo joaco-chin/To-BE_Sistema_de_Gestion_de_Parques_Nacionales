@@ -88,7 +88,8 @@ CREATE OR ALTER PROCEDURE ventas.CarritoAgregarItem
 	@id_tipo_visitante INT = NULL,
 	@fecha_visita DATE = NULL,
 	@id_horario INT = NULL,		-- id de HorarioActividad (instancia de horario especifica)
-	@cantidad INT = NULL
+	@cantidad INT = NULL,
+	@fecha DATE = NULL
 AS
 BEGIN
 	SET NOCOUNT ON
@@ -120,7 +121,10 @@ BEGIN
 				SET @errores += '- El horario de actividad no existe o no esta activo.' + CHAR(13)
 
 			-- Validar que la fecha de HorarioActividad sea mayor o igual a la actual (de compra)
-			IF CAST(GETDATE() AS DATE) > 
+			IF @fecha IS NULL
+				SET @fecha = GETDATE()
+
+			IF @fecha > 
 			ANY(SELECT fecha FROM actividades.HorarioActividad
 			WHERE id = @id_horario AND activo = 1 AND borrado = 0)
 				SET @errores += '- No se puede comprar entradas para una actividad ya caducada' + CHAR(13)

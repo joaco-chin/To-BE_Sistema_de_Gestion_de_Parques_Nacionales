@@ -34,7 +34,7 @@ SELECT
 FROM actividades.Actividad AS a
 INNER JOIN actividades.HorarioActividad AS ha
 ON a.id = ha.id_actividad
-WHERE ha.borrado = 0 AND ha.fecha >= GETDATE()
+WHERE ha.borrado = 0
 GO
 
 CREATE OR ALTER VIEW ventas.VentasPesificadas
