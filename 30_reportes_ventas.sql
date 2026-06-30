@@ -31,7 +31,7 @@ BEGIN
 		COUNT(dv.id_tarifa_parque) OVER (PARTITION BY p.id,DATENAME(YEAR,v.fecha)) 
 		AS total_visitas_por_año
 	FROM parques.Parque AS p
-	INNER JOIN ventas.Venta AS v
+	INNER JOIN ventas.VentasPesificadas AS v
 	ON p.id = v.id_parque
 	INNER JOIN ventas.DetalleVenta AS dv
 	ON v.nro_comprobante = dv.id_venta
@@ -54,7 +54,7 @@ BEGIN
 		AS total_mensual,
 		SUM(importe) OVER (PARTITION BY id_parque, DATENAME(YEAR, fecha)) 
 		AS total_anual
-	FROM ventas.Venta
+	FROM ventas.VentasPesificadas
 	),
 	TotalConcesionesPorParque(id_parque, total_semanal, total_mensual, total_anual)
 	AS

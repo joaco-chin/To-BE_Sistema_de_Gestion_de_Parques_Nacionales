@@ -135,6 +135,19 @@ DECLARE @hor_humedales   INT
 DECLARE @emp1 INT, @emp2 INT, @emp3 INT, @emp4 INT, @emp5 INT
 DECLARE @emp6 INT, @emp7 INT, @emp8 INT, @emp9 INT, @emp10 INT
 
+-- ID Concesiones
+DECLARE @concesion1 INT, @concesion2 INT, @concesion3 INT, @concesion4 INT
+DECLARE @concesion5 INT, @concesion6 INT, @concesion7 INT, @concesion8 INT
+DECLARE @concesion9 INT, @concesion10 INT, @concesion11 INT, @concesion12 INT
+
+DECLARE @visitante_general INT
+DECLARE @visitante_nacional INT
+DECLARE @visitante_provincial INT
+DECLARE @visitante_jubilado INT
+DECLARE @visitante_estudiante INT
+
+DECLARE @carrito1 INT, @carrito2 INT, @carrito3 INT, @carrito4 INT
+
 -- ================================================================
 -- SECCION 1: TIPOS DE ACTIVIDAD (5)
 -- ================================================================
@@ -1204,9 +1217,9 @@ IF NOT EXISTS (SELECT 1 FROM actividades.GuiaActividad WHERE legajo_guia = 2021 
 IF NOT EXISTS (SELECT 1 FROM actividades.GuiaActividad WHERE legajo_guia = 2022 AND id_horario = @hor_humedales  AND (fecha_fin IS NULL OR fecha_fin > GETDATE()))
     EXEC personal.GuiaAsignarActividad @legajo = 2022, @dni = 40001022, @id_horario = @hor_humedales
 
--- ================================================================
--- SECCION 6: EMPRESAS CONCESIONARIAS (10) + CONCESIONES (12)
--- ================================================================
+-- =====================================================================
+-- SECCION 6: EMPRESAS CONCESIONARIAS (10) + CONCESIONES (12) + FACTURAS
+-- =====================================================================
 PRINT '-- [6/6] Registrando Empresas y Concesiones...'
 
 -- ============================================================
@@ -1264,6 +1277,9 @@ IF NOT EXISTS (SELECT 1 FROM concesiones.Concesion WHERE id_empresa = @emp1 AND 
         @id_empresa = @emp1, @cuit_empresa = '30712345670', @id_parque = @p1,
         @tipo_actividad = 'Restaurante',    @monto_mensual = 180000.00,
         @fecha_inicio = '2024-01-01',       @fecha_fin = '2027-12-31'
+SELECT @concesion1 = id FROM concesiones.Concesion WHERE id_empresa = @emp1
+AND id_parque = @p1 AND fecha_inicio_contrato = '2024-01-01'
+AND fecha_fin_contrato = '2027-12-31'
 
 -- 2. ACTIVA: Turismo Sur en Los Glaciares (2025-2027)
 IF NOT EXISTS (SELECT 1 FROM concesiones.Concesion WHERE id_empresa = @emp2 AND id_parque = @p2 AND borrado = 0)
@@ -1271,6 +1287,9 @@ IF NOT EXISTS (SELECT 1 FROM concesiones.Concesion WHERE id_empresa = @emp2 AND 
         @id_empresa = @emp2, @cuit_empresa = '30712345671', @id_parque = @p2,
         @tipo_actividad = 'Empresa de Turismo', @monto_mensual = 220000.00,
         @fecha_inicio = '2025-06-01',       @fecha_fin = '2027-05-31'
+SELECT @concesion2 = id FROM concesiones.Concesion WHERE id_empresa = @emp2
+AND id_parque = @p2 AND fecha_inicio_contrato = '2025-06-01'
+AND fecha_fin_contrato = '2027-05-31'
 
 -- 3. VENCIDA: Tienda del Parque en Nahuel Huapi (vencio 2026-02-28)
 IF NOT EXISTS (SELECT 1 FROM concesiones.Concesion WHERE id_empresa = @emp3 AND id_parque = @p3 AND borrado = 0)
@@ -1278,6 +1297,9 @@ IF NOT EXISTS (SELECT 1 FROM concesiones.Concesion WHERE id_empresa = @emp3 AND 
         @id_empresa = @emp3, @cuit_empresa = '30712345672', @id_parque = @p3,
         @tipo_actividad = 'Comercio',       @monto_mensual = 95000.00,
         @fecha_inicio = '2024-03-01',       @fecha_fin = '2026-02-28'
+SELECT @concesion3 = id FROM concesiones.Concesion WHERE id_empresa = @emp3
+AND id_parque = @p3 AND fecha_inicio_contrato = '2024-03-01'
+AND fecha_fin_contrato = '2026-02-28'
 
 -- 4. PROXIMA A VENCER: Aventura Patagonica en Los Glaciares (vence 2026-07-01)
 IF NOT EXISTS (SELECT 1 FROM concesiones.Concesion WHERE id_empresa = @emp4 AND id_parque = @p2 AND borrado = 0)
@@ -1285,6 +1307,9 @@ IF NOT EXISTS (SELECT 1 FROM concesiones.Concesion WHERE id_empresa = @emp4 AND 
         @id_empresa = @emp4, @cuit_empresa = '30712345673', @id_parque = @p2,
         @tipo_actividad = 'Empresa de Turismo', @monto_mensual = 195000.00,
         @fecha_inicio = '2023-07-01',       @fecha_fin = '2026-07-01'
+SELECT @concesion4 = id FROM concesiones.Concesion WHERE id_empresa = @emp4
+AND id_parque = @p2 AND fecha_inicio_contrato = '2023-07-01'
+AND fecha_fin_contrato = '2026-07-01'
 
 -- 5. ACTIVA: Gastro Norte en Calilegua (2025-2028)
 IF NOT EXISTS (SELECT 1 FROM concesiones.Concesion WHERE id_empresa = @emp5 AND id_parque = @p8 AND borrado = 0)
@@ -1292,6 +1317,9 @@ IF NOT EXISTS (SELECT 1 FROM concesiones.Concesion WHERE id_empresa = @emp5 AND 
         @id_empresa = @emp5, @cuit_empresa = '30712345674', @id_parque = @p8,
         @tipo_actividad = 'Restaurante',    @monto_mensual = 85000.00,
         @fecha_inicio = '2025-01-01',       @fecha_fin = '2028-12-31'
+SELECT @concesion5 = id FROM concesiones.Concesion WHERE id_empresa = @emp5
+AND id_parque = @p8 AND fecha_inicio_contrato = '2025-01-01'
+AND fecha_fin_contrato = '2028-12-31'
 
 -- 6. ACTIVA: Norte Expediciones en Baritu (2024-2027)
 IF NOT EXISTS (SELECT 1 FROM concesiones.Concesion WHERE id_empresa = @emp6 AND id_parque = @p10 AND borrado = 0)
@@ -1299,6 +1327,9 @@ IF NOT EXISTS (SELECT 1 FROM concesiones.Concesion WHERE id_empresa = @emp6 AND 
         @id_empresa = @emp6, @cuit_empresa = '30712345675', @id_parque = @p10,
         @tipo_actividad = 'Empresa de Turismo', @monto_mensual = 72000.00,
         @fecha_inicio = '2024-06-01',       @fecha_fin = '2027-05-31'
+SELECT @concesion6 = id FROM concesiones.Concesion WHERE id_empresa = @emp6
+AND id_parque = @p10 AND fecha_inicio_contrato = '2024-06-01'
+AND fecha_fin_contrato = '2027-05-31'
 
 -- 7. VENCIDA: Sur Naturaleza en Tierra del Fuego (vencio 2024-12-31)
 IF NOT EXISTS (SELECT 1 FROM concesiones.Concesion WHERE id_empresa = @emp7 AND id_parque = @p5 AND borrado = 0)
@@ -1306,6 +1337,9 @@ IF NOT EXISTS (SELECT 1 FROM concesiones.Concesion WHERE id_empresa = @emp7 AND 
         @id_empresa = @emp7, @cuit_empresa = '30712345676', @id_parque = @p5,
         @tipo_actividad = 'Empresa de Turismo', @monto_mensual = 140000.00,
         @fecha_inicio = '2023-01-01',       @fecha_fin = '2024-12-31'
+SELECT @concesion7 = id FROM concesiones.Concesion WHERE id_empresa = @emp7
+AND id_parque = @p5 AND fecha_inicio_contrato = '2023-01-01'
+AND fecha_fin_contrato = '2024-12-31'
 
 -- 8. ACTIVA: Chaco Servicios en Parque Chaco (2025-2027)
 IF NOT EXISTS (SELECT 1 FROM concesiones.Concesion WHERE id_empresa = @emp8 AND id_parque = @p9 AND borrado = 0)
@@ -1313,6 +1347,9 @@ IF NOT EXISTS (SELECT 1 FROM concesiones.Concesion WHERE id_empresa = @emp8 AND 
         @id_empresa = @emp8, @cuit_empresa = '30712345677', @id_parque = @p9,
         @tipo_actividad = 'Comercio',       @monto_mensual = 55000.00,
         @fecha_inicio = '2025-03-01',       @fecha_fin = '2027-02-28'
+SELECT @concesion8 = id FROM concesiones.Concesion WHERE id_empresa = @emp8
+AND id_parque = @p9 AND fecha_inicio_contrato = '2025-03-01'
+AND fecha_fin_contrato = '2027-02-28'
 
 -- 9. ACTIVA: Patagonia Store en Los Alerces (2024-2027)
 IF NOT EXISTS (SELECT 1 FROM concesiones.Concesion WHERE id_empresa = @emp9 AND id_parque = @p7 AND borrado = 0)
@@ -1320,6 +1357,9 @@ IF NOT EXISTS (SELECT 1 FROM concesiones.Concesion WHERE id_empresa = @emp9 AND 
         @id_empresa = @emp9, @cuit_empresa = '30712345678', @id_parque = @p7,
         @tipo_actividad = 'Comercio',       @monto_mensual = 110000.00,
         @fecha_inicio = '2024-09-01',       @fecha_fin = '2027-08-31'
+SELECT @concesion9 = id FROM concesiones.Concesion WHERE id_empresa = @emp9
+AND id_parque = @p7 AND fecha_inicio_contrato = '2024-09-01'
+AND fecha_fin_contrato = '2027-08-31'
 
 -- 10. ACTIVA: Yungas Tours en Calilegua (2025-2028)
 IF NOT EXISTS (SELECT 1 FROM concesiones.Concesion WHERE id_empresa = @emp10 AND id_parque = @p8 AND borrado = 0)
@@ -1327,6 +1367,9 @@ IF NOT EXISTS (SELECT 1 FROM concesiones.Concesion WHERE id_empresa = @emp10 AND
         @id_empresa = @emp10, @cuit_empresa = '30712345679', @id_parque = @p8,
         @tipo_actividad = 'Empresa de Turismo', @monto_mensual = 98000.00,
         @fecha_inicio = '2025-07-01',       @fecha_fin = '2028-06-30'
+SELECT @concesion10 = id FROM concesiones.Concesion WHERE id_empresa = @emp10
+AND id_parque = @p8 AND fecha_inicio_contrato = '2025-07-01'
+AND fecha_fin_contrato = '2028-06-30'
 
 -- 11. ACTIVA: Restaurante Iguazu (emp1) en El Palmar (2025-2027)
 IF NOT EXISTS (SELECT 1 FROM concesiones.Concesion WHERE id_empresa = @emp1 AND id_parque = @p4 AND borrado = 0)
@@ -1334,6 +1377,9 @@ IF NOT EXISTS (SELECT 1 FROM concesiones.Concesion WHERE id_empresa = @emp1 AND 
         @id_empresa = @emp1, @cuit_empresa = '30712345670', @id_parque = @p4,
         @tipo_actividad = 'Restaurante',    @monto_mensual = 78000.00,
         @fecha_inicio = '2025-01-15',       @fecha_fin = '2027-01-15'
+SELECT @concesion11 = id FROM concesiones.Concesion WHERE id_empresa = @emp1
+AND id_parque = @p4 AND fecha_inicio_contrato = '2025-01-15'
+AND fecha_fin_contrato = '2027-01-15'
 
 -- 12. PROXIMA A VENCER: Tienda del Parque (emp3) en Lanin (vence 2026-07-10)
 IF NOT EXISTS (SELECT 1 FROM concesiones.Concesion WHERE id_empresa = @emp3 AND id_parque = @p6 AND borrado = 0)
@@ -1341,29 +1387,606 @@ IF NOT EXISTS (SELECT 1 FROM concesiones.Concesion WHERE id_empresa = @emp3 AND 
         @id_empresa = @emp3, @cuit_empresa = '30712345672', @id_parque = @p6,
         @tipo_actividad = 'Comercio',       @monto_mensual = 88000.00,
         @fecha_inicio = '2024-07-10',       @fecha_fin = '2026-07-10'
+SELECT @concesion12 = id FROM concesiones.Concesion WHERE id_empresa = @emp3
+AND id_parque = @p6 AND fecha_inicio_contrato = '2024-07-10'
+AND fecha_fin_contrato = '2026-07-10'
 
 -- ============================================================
 -- FACTURAS DE CONCESIONES 
 -- ============================================================
 
 -- ============================================================
--- CONCESION 1  - Emision de Facturas
--- Empresa: @emp3   - Parque: @p6
+-- EMISION DE TODAS LAS FACTURAS
+-- Para todas las concesiones
 -- ============================================================
-DECLARE @concesion1 INT = (SELECT MIN(id) FROM concesiones.Concesion 
-WHERE borrado = 0) 
+DECLARE @concesion_iterador INT = 
+(SELECT MIN(id) FROM concesiones.Concesion WHERE borrado = 0);
+DECLARE @ult_concesion INT = 
+(SELECT MAX(id) FROM concesiones.Concesion WHERE borrado = 0);
 
-BEGIN TRY
-    WHILE 1 = 1
+WHILE @concesion_iterador <= @ult_concesion
+BEGIN
+    DECLARE @fecha_iterador DATE = (SELECT fecha_inicio_contrato FROM
+    concesiones.Concesion WHERE id = @concesion_iterador);
+    DECLARE @fecha_fin DATE = DATEADD(MONTH, -1, (SELECT fecha_fin_contrato FROM
+    concesiones.Concesion WHERE id = @concesion_iterador)); 
+
+    IF NOT EXISTS(SELECT f.id FROM concesiones.Concesion AS c
+    INNER JOIN concesiones.FacturaConcesion AS f
+    ON c.id = f.id_concesion
+    WHERE c.id = @concesion_iterador)
     BEGIN
-        EXECUTE concesiones.FacturaConcesionAlta
-            @id_concesion = @concesion1
+        WHILE @fecha_iterador < @fecha_fin
+        BEGIN
+            EXECUTE concesiones.FacturaConcesionAlta @id_concesion = @concesion_iterador;
+            SET @fecha_iterador = DATEADD(MONTH, 1, @fecha_iterador);
+        END
     END
-END TRY
 
-BEGIN CATCH
-    PRINT('Fin de emision')
-END CATCH
+    SET @concesion_iterador += 1;
+    WHILE 1 = (SELECT borrado FROM concesiones.Concesion WHERE id = @concesion_iterador)
+    BEGIN
+        SET @concesion_iterador += 1;
+    END
+END
+
+-- ============================================================
+-- PAGO DE FACTURAS
+-- ============================================================
+
+-- ============================================================
+-- CONCESION 1  - Pago de Facturas
+-- Paga hasta el '2026-05-28'
+-- ============================================================
+EXECUTE dev.FacturasPagarHasta
+    @id_concesion = @concesion1,
+    @fecha_fin_pago = '2026-05-28',
+    @dias_retraso = 3;
+PRINT('Pagos de concesion 1 realizados')
+
+-- ============================================================
+-- CONCESION 2  - Pago de Facturas
+-- Paga hasta el '2025-12-01'
+-- ============================================================
+EXECUTE dev.FacturasPagarHasta
+    @id_concesion = @concesion2,
+    @fecha_fin_pago = '2025-12-01',
+    @dias_retraso = 8;
+PRINT('Pagos de concesion 2 realizados')
+
+-- ============================================================
+-- CONCESION 3 - Pago de Facturas
+-- Paga hasta el '2026-02-28'
+-- ============================================================
+EXECUTE dev.FacturasPagarHasta
+    @id_concesion = @concesion3,
+    @fecha_fin_pago = '2026-02-28',
+    @dias_retraso = 6;
+PRINT('Pagos de concesion 3 realizados')
+
+-- ============================================================
+-- CONCESION 4 - Pago de Facturas
+-- Paga hasta el '2026-07-01'
+-- ============================================================
+EXECUTE dev.FacturasPagarHasta
+    @id_concesion = @concesion4,
+    @fecha_fin_pago = '2026-07-01',
+    @dias_retraso = 0;
+PRINT('Pagos de concesion 4 realizados')
+
+-- ============================================================
+-- CONCESION 5 - Pago de Facturas
+-- Paga hasta el '2025-10-01'
+-- ============================================================
+EXECUTE dev.FacturasPagarHasta
+    @id_concesion = @concesion5,
+    @fecha_fin_pago = '2025-10-01',
+    @dias_retraso = 1;
+PRINT('Pagos de concesion 5 realizados')
+
+-- ============================================================
+-- CONCESION 6 - Pago de Facturas
+-- Paga hasta el '2026-01-01'
+-- ============================================================
+EXECUTE dev.FacturasPagarHasta
+    @id_concesion = @concesion6,
+    @fecha_fin_pago = '2026-01-01',
+    @dias_retraso = 8;
+PRINT('Pagos de concesion 6 realizados')
+
+-- ============================================================
+-- CONCESION 7 - Pago de Facturas
+-- Paga hasta el '2024-12-31'
+-- ============================================================
+EXECUTE dev.FacturasPagarHasta
+    @id_concesion = @concesion7,
+    @fecha_fin_pago = '2024-12-31',
+    @dias_retraso = 0;
+PRINT('Pagos de concesion 7 realizados')
+
+-- ============================================================
+-- CONCESION 8 - Pago de Facturas
+-- Paga hasta el '2026-06-30'
+-- ============================================================
+EXECUTE dev.FacturasPagarHasta
+    @id_concesion = @concesion8,
+    @fecha_fin_pago = '2026-06-30',
+    @dias_retraso = 1;
+PRINT('Pagos de concesion 8 realizados')
+
+-- ============================================================
+-- CONCESION 9 - Pago de Facturas
+-- Paga hasta el '2026-06-30'
+-- ============================================================
+EXECUTE dev.FacturasPagarHasta
+    @id_concesion = @concesion9,
+    @fecha_fin_pago = '2026-06-30',
+    @dias_retraso = 2;
+PRINT('Pagos de concesion 9 realizados')
+
+-- ============================================================
+-- CONCESION 10 - Pago de Facturas
+-- Paga hasta el '2026-06-30'
+-- ============================================================
+EXECUTE dev.FacturasPagarHasta
+    @id_concesion = @concesion10,
+    @fecha_fin_pago = '2026-06-30',
+    @dias_retraso = 0;
+PRINT('Pagos de concesion 10 realizados')
+
+-- ============================================================
+-- CONCESION 11 - Pago de Facturas
+-- Paga hasta el '2026-06-30'
+-- ============================================================
+EXECUTE dev.FacturasPagarHasta
+    @id_concesion = @concesion11,
+    @fecha_fin_pago = '2026-06-30',
+    @dias_retraso = 0;
+PRINT('Pagos de concesion 11 realizados')
+
+-- ============================================================
+-- CONCESION 12 - Pago de Facturas
+-- Paga hasta el '2026-06-30'
+-- ============================================================
+EXECUTE dev.FacturasPagarHasta
+    @id_concesion = @concesion12,
+    @fecha_fin_pago = '2026-06-30',
+    @dias_retraso = 0;
+PRINT('Pagos de concesion 12 realizados')
+
+-- =====================================================================
+-- SECCION 7: ENTRADAS - TIPOS DE VISITANTE + TARIFAS DE PARQUES + 
+-- VENTAS DE ENTRADAS
+-- =====================================================================
+
+-- =====================================================================
+-- Tipos de visitantes
+-- =====================================================================
+IF NOT EXISTS (SELECT id FROM ventas.TipoVisitante WHERE descripcion = 'General')
+    EXECUTE ventas.TipoVisitanteAlta @descripcion = 'General', @descuento = 0.0;
+SELECT @visitante_general = id FROM ventas.TipoVisitante WHERE descripcion = 'General'
+
+IF NOT EXISTS (SELECT id FROM ventas.TipoVisitante WHERE descripcion = 'Nacional')
+    EXECUTE ventas.TipoVisitanteAlta @descripcion = 'Nacional', @descuento = 0.20;
+SELECT @visitante_nacional = id FROM ventas.TipoVisitante WHERE descripcion = 'Nacional'
+
+IF NOT EXISTS (SELECT id FROM ventas.TipoVisitante WHERE descripcion = 'Residente Provincial')
+    EXECUTE ventas.TipoVisitanteAlta @descripcion = 'Residente Provincial', @descuento = 0.40;
+SELECT @visitante_provincial = id FROM ventas.TipoVisitante WHERE descripcion = 'Residente Provincial'
+
+IF NOT EXISTS (SELECT id FROM ventas.TipoVisitante WHERE descripcion = 'Jubilado (Nacional)')
+    EXECUTE ventas.TipoVisitanteAlta @descripcion = 'Jubilado (Nacional)', @descuento = 0.65;
+SELECT @visitante_jubilado = id FROM ventas.TipoVisitante WHERE descripcion = 'Jubilado (Nacional)'
+
+IF NOT EXISTS (SELECT id FROM ventas.TipoVisitante WHERE descripcion = 'Estudiante')
+    EXECUTE ventas.TipoVisitanteAlta @descripcion = 'Estudiante', @descuento = 0.50;
+SELECT @visitante_estudiante = id FROM ventas.TipoVisitante WHERE descripcion = 'Estudiante'
+
+-- =====================================================================
+-- Tarifas de Parques
+-- =====================================================================
+
+-- =====================================================================
+-- Parque 1
+-- =====================================================================
+IF NOT EXISTS(SELECT 1 FROM ventas.TarifaParque WHERE id_parque = @p1)
+BEGIN
+EXECUTE ventas.TarifaParqueAlta @id_parque = @p1, @id_tipo_visitante = @visitante_general,
+    @precio = 60505.75, @precio_feriado = 80505.75, @vigencia_desde = '2023-01-01';
+EXECUTE ventas.TarifaParqueAlta @id_parque = @p1, @id_tipo_visitante = @visitante_nacional,
+    @precio = 60505.75, @precio_feriado = 80505.75, @vigencia_desde = '2023-01-01';
+EXECUTE ventas.TarifaParqueAlta @id_parque = @p1, @id_tipo_visitante = @visitante_provincial,
+    @precio = 60505.75, @precio_feriado = 80505.75, @vigencia_desde = '2023-01-01';
+EXECUTE ventas.TarifaParqueAlta @id_parque = @p1, @id_tipo_visitante = @visitante_jubilado,
+    @precio = 60505.75, @precio_feriado = 80505.75, @vigencia_desde = '2023-01-01';
+EXECUTE ventas.TarifaParqueAlta @id_parque = @p1, @id_tipo_visitante = @visitante_estudiante,
+    @precio = 60505.75, @precio_feriado = 80505.75, @vigencia_desde = '2023-01-01';
+END
+
+-- =====================================================================
+-- Parque 2
+-- =====================================================================
+IF NOT EXISTS(SELECT 1 FROM ventas.TarifaParque WHERE id_parque = @p2)
+BEGIN
+EXECUTE ventas.TarifaParqueAlta @id_parque = @p2, @id_tipo_visitante = @visitante_general,
+    @precio = 70505.75, @precio_feriado = 90505.75, @vigencia_desde = '2023-01-01';
+EXECUTE ventas.TarifaParqueAlta @id_parque = @p2, @id_tipo_visitante = @visitante_nacional,
+    @precio = 70505.75, @precio_feriado = 90505.75, @vigencia_desde = '2023-01-01';
+EXECUTE ventas.TarifaParqueAlta @id_parque = @p2, @id_tipo_visitante = @visitante_provincial,
+    @precio = 70505.75, @precio_feriado = 90505.75, @vigencia_desde = '2023-01-01';
+EXECUTE ventas.TarifaParqueAlta @id_parque = @p2, @id_tipo_visitante = @visitante_jubilado,
+    @precio = 70505.75, @precio_feriado = 90505.75, @vigencia_desde = '2023-01-01';
+EXECUTE ventas.TarifaParqueAlta @id_parque = @p2, @id_tipo_visitante = @visitante_estudiante,
+    @precio = 70505.75, @precio_feriado = 90505.75, @vigencia_desde = '2023-01-01';
+END
+
+-- =====================================================================
+-- Parque 3
+-- =====================================================================
+IF NOT EXISTS(SELECT 1 FROM ventas.TarifaParque WHERE id_parque = @p3)
+BEGIN
+EXECUTE ventas.TarifaParqueAlta @id_parque = @p3, @id_tipo_visitante = @visitante_general,
+    @precio = 80505.75, @precio_feriado = 100505.75, @vigencia_desde = '2023-01-01';
+EXECUTE ventas.TarifaParqueAlta @id_parque = @p3, @id_tipo_visitante = @visitante_nacional,
+    @precio = 80505.75, @precio_feriado = 100505.75, @vigencia_desde = '2023-01-01';
+EXECUTE ventas.TarifaParqueAlta @id_parque = @p3, @id_tipo_visitante = @visitante_provincial,
+    @precio = 80505.75, @precio_feriado = 100505.75, @vigencia_desde = '2023-01-01';
+EXECUTE ventas.TarifaParqueAlta @id_parque = @p3, @id_tipo_visitante = @visitante_jubilado,
+    @precio = 80505.75, @precio_feriado = 100505.75, @vigencia_desde = '2023-01-01';
+EXECUTE ventas.TarifaParqueAlta @id_parque = @p3, @id_tipo_visitante = @visitante_estudiante,
+    @precio = 80505.75, @precio_feriado = 100505.75, @vigencia_desde = '2023-01-01';
+END
+
+-- =====================================================================
+-- Parque 4
+-- =====================================================================
+IF NOT EXISTS(SELECT 1 FROM ventas.TarifaParque WHERE id_parque = @p4)
+BEGIN
+EXECUTE ventas.TarifaParqueAlta @id_parque = @p4, @id_tipo_visitante = @visitante_general,
+    @precio = 50505.75, @precio_feriado = 70505.75, @vigencia_desde = '2023-01-01';
+EXECUTE ventas.TarifaParqueAlta @id_parque = @p4, @id_tipo_visitante = @visitante_nacional,
+    @precio = 50505.75, @precio_feriado = 70505.75, @vigencia_desde = '2023-01-01';
+EXECUTE ventas.TarifaParqueAlta @id_parque = @p4, @id_tipo_visitante = @visitante_provincial,
+    @precio = 50505.75, @precio_feriado = 70505.75, @vigencia_desde = '2023-01-01';
+EXECUTE ventas.TarifaParqueAlta @id_parque = @p4, @id_tipo_visitante = @visitante_jubilado,
+    @precio = 50505.75, @precio_feriado = 70505.75, @vigencia_desde = '2023-01-01';
+EXECUTE ventas.TarifaParqueAlta @id_parque = @p4, @id_tipo_visitante = @visitante_estudiante,
+    @precio = 50505.75, @precio_feriado = 70505.75, @vigencia_desde = '2023-01-01';
+END
+
+-- =====================================================================
+-- Parque 5
+-- =====================================================================
+IF NOT EXISTS(SELECT 1 FROM ventas.TarifaParque WHERE id_parque = @p5)
+BEGIN
+EXECUTE ventas.TarifaParqueAlta @id_parque = @p5, @id_tipo_visitante = @visitante_general,
+    @precio = 60505.75, @precio_feriado = 80505.75, @vigencia_desde = '2023-01-01';
+EXECUTE ventas.TarifaParqueAlta @id_parque = @p5, @id_tipo_visitante = @visitante_nacional,
+    @precio = 60505.75, @precio_feriado = 80505.75, @vigencia_desde = '2023-01-01';
+EXECUTE ventas.TarifaParqueAlta @id_parque = @p5, @id_tipo_visitante = @visitante_provincial,
+    @precio = 60505.75, @precio_feriado = 80505.75, @vigencia_desde = '2023-01-01';
+EXECUTE ventas.TarifaParqueAlta @id_parque = @p5, @id_tipo_visitante = @visitante_jubilado,
+    @precio = 60505.75, @precio_feriado = 80505.75, @vigencia_desde = '2023-01-01';
+EXECUTE ventas.TarifaParqueAlta @id_parque = @p5, @id_tipo_visitante = @visitante_estudiante,
+    @precio = 60505.75, @precio_feriado = 80505.75, @vigencia_desde = '2023-01-01';
+END
+
+-- =====================================================================
+-- Parque 6
+-- =====================================================================
+IF NOT EXISTS(SELECT 1 FROM ventas.TarifaParque WHERE id_parque = @p6)
+BEGIN
+EXECUTE ventas.TarifaParqueAlta @id_parque = @p6, @id_tipo_visitante = @visitante_general,
+    @precio = 60505.75, @precio_feriado = 80505.75, @vigencia_desde = '2023-01-01';
+EXECUTE ventas.TarifaParqueAlta @id_parque = @p6, @id_tipo_visitante = @visitante_nacional,
+    @precio = 60505.75, @precio_feriado = 80505.75, @vigencia_desde = '2023-01-01';
+EXECUTE ventas.TarifaParqueAlta @id_parque = @p6, @id_tipo_visitante = @visitante_provincial,
+    @precio = 60505.75, @precio_feriado = 80505.75, @vigencia_desde = '2023-01-01';
+EXECUTE ventas.TarifaParqueAlta @id_parque = @p6, @id_tipo_visitante = @visitante_jubilado,
+    @precio = 60505.75, @precio_feriado = 80505.75, @vigencia_desde = '2023-01-01';
+EXECUTE ventas.TarifaParqueAlta @id_parque = @p6, @id_tipo_visitante = @visitante_estudiante,
+    @precio = 60505.75, @precio_feriado = 80505.75, @vigencia_desde = '2023-01-01';
+END
+
+-- =====================================================================
+-- Parque 7
+-- =====================================================================
+IF NOT EXISTS(SELECT 1 FROM ventas.TarifaParque WHERE id_parque = @p7)
+BEGIN
+EXECUTE ventas.TarifaParqueAlta @id_parque = @p7, @id_tipo_visitante = @visitante_general,
+    @precio = 90505.75, @precio_feriado = 110505.75, @vigencia_desde = '2023-01-01';
+EXECUTE ventas.TarifaParqueAlta @id_parque = @p7, @id_tipo_visitante = @visitante_nacional,
+    @precio = 90505.75, @precio_feriado = 110505.75, @vigencia_desde = '2023-01-01';
+EXECUTE ventas.TarifaParqueAlta @id_parque = @p7, @id_tipo_visitante = @visitante_provincial,
+    @precio = 90505.75, @precio_feriado = 110505.75, @vigencia_desde = '2023-01-01';
+EXECUTE ventas.TarifaParqueAlta @id_parque = @p7, @id_tipo_visitante = @visitante_jubilado,
+    @precio = 90505.75, @precio_feriado = 110505.75, @vigencia_desde = '2023-01-01';
+EXECUTE ventas.TarifaParqueAlta @id_parque = @p7, @id_tipo_visitante = @visitante_estudiante,
+    @precio = 90505.75, @precio_feriado = 110505.75, @vigencia_desde = '2023-01-01';
+END
+
+-- =====================================================================
+-- Parque 8
+-- =====================================================================
+BEGIN
+IF NOT EXISTS(SELECT 1 FROM ventas.TarifaParque WHERE id_parque = @p8)
+EXECUTE ventas.TarifaParqueAlta @id_parque = @p8, @id_tipo_visitante = @visitante_general,
+    @precio = 60505.75, @precio_feriado = 80505.75, @vigencia_desde = '2023-01-01';
+EXECUTE ventas.TarifaParqueAlta @id_parque = @p8, @id_tipo_visitante = @visitante_nacional,
+    @precio = 60505.75, @precio_feriado = 80505.75, @vigencia_desde = '2023-01-01';
+EXECUTE ventas.TarifaParqueAlta @id_parque = @p8, @id_tipo_visitante = @visitante_provincial,
+    @precio = 60505.75, @precio_feriado = 80505.75, @vigencia_desde = '2023-01-01';
+EXECUTE ventas.TarifaParqueAlta @id_parque = @p8, @id_tipo_visitante = @visitante_jubilado,
+    @precio = 60505.75, @precio_feriado = 80505.75, @vigencia_desde = '2023-01-01';
+EXECUTE ventas.TarifaParqueAlta @id_parque = @p8, @id_tipo_visitante = @visitante_estudiante,
+    @precio = 60505.75, @precio_feriado = 80505.75, @vigencia_desde = '2023-01-01';
+END
+
+-- =====================================================================
+-- Parque 9
+-- =====================================================================
+IF NOT EXISTS(SELECT 1 FROM ventas.TarifaParque WHERE id_parque = @p9)
+BEGIN
+EXECUTE ventas.TarifaParqueAlta @id_parque = @p9, @id_tipo_visitante = @visitante_general,
+    @precio = 90505.75, @precio_feriado = 110505.75, @vigencia_desde = '2023-01-01';
+EXECUTE ventas.TarifaParqueAlta @id_parque = @p9, @id_tipo_visitante = @visitante_nacional,
+    @precio = 90505.75, @precio_feriado = 110505.75, @vigencia_desde = '2023-01-01';
+EXECUTE ventas.TarifaParqueAlta @id_parque = @p9, @id_tipo_visitante = @visitante_provincial,
+    @precio = 90505.75, @precio_feriado = 110505.75, @vigencia_desde = '2023-01-01';
+EXECUTE ventas.TarifaParqueAlta @id_parque = @p9, @id_tipo_visitante = @visitante_jubilado,
+    @precio = 90505.75, @precio_feriado = 110505.75, @vigencia_desde = '2023-01-01';
+EXECUTE ventas.TarifaParqueAlta @id_parque = @p9, @id_tipo_visitante = @visitante_estudiante,
+    @precio = 90505.75, @precio_feriado = 110505.75, @vigencia_desde = '2023-01-01';
+END
+
+-- =====================================================================
+-- Parque 10
+-- =====================================================================
+IF NOT EXISTS(SELECT 1 FROM ventas.TarifaParque WHERE id_parque = @p10)
+BEGIN
+EXECUTE ventas.TarifaParqueAlta @id_parque = @p10, @id_tipo_visitante = @visitante_general,
+    @precio = 90505.75, @precio_feriado = 110505.75, @vigencia_desde = '2023-01-01';
+EXECUTE ventas.TarifaParqueAlta @id_parque = @p10, @id_tipo_visitante = @visitante_nacional,
+    @precio = 90505.75, @precio_feriado = 110505.75, @vigencia_desde = '2023-01-01';
+EXECUTE ventas.TarifaParqueAlta @id_parque = @p10, @id_tipo_visitante = @visitante_provincial,
+    @precio = 90505.75, @precio_feriado = 110505.75, @vigencia_desde = '2023-01-01';
+EXECUTE ventas.TarifaParqueAlta @id_parque = @p10, @id_tipo_visitante = @visitante_jubilado,
+    @precio = 90505.75, @precio_feriado = 110505.75, @vigencia_desde = '2023-01-01';
+EXECUTE ventas.TarifaParqueAlta @id_parque = @p10, @id_tipo_visitante = @visitante_estudiante,
+    @precio = 90505.75, @precio_feriado = 110505.75, @vigencia_desde = '2023-01-01';
+END
+
+-- =====================================================================
+-- Parque 11
+-- =====================================================================
+IF NOT EXISTS(SELECT 1 FROM ventas.TarifaParque WHERE id_parque = @p11)
+BEGIN
+EXECUTE ventas.TarifaParqueAlta @id_parque = @p11, @id_tipo_visitante = @visitante_general,
+    @precio = 55505.75, @precio_feriado = 65505.75, @vigencia_desde = '2023-01-01';
+EXECUTE ventas.TarifaParqueAlta @id_parque = @p11, @id_tipo_visitante = @visitante_nacional,
+    @precio = 55505.75, @precio_feriado = 65505.75, @vigencia_desde = '2023-01-01';
+EXECUTE ventas.TarifaParqueAlta @id_parque = @p11, @id_tipo_visitante = @visitante_provincial,
+    @precio = 55505.75, @precio_feriado = 65505.75, @vigencia_desde = '2023-01-01';
+EXECUTE ventas.TarifaParqueAlta @id_parque = @p11, @id_tipo_visitante = @visitante_jubilado,
+    @precio = 55505.75, @precio_feriado = 65505.75, @vigencia_desde = '2023-01-01';
+EXECUTE ventas.TarifaParqueAlta @id_parque = @p11, @id_tipo_visitante = @visitante_estudiante,
+    @precio = 55505.75, @precio_feriado = 65505.75, @vigencia_desde = '2023-01-01';
+END
+
+-- =====================================================================
+-- Parque 12
+-- =====================================================================
+IF NOT EXISTS(SELECT 1 FROM ventas.TarifaParque WHERE id_parque = @p12)
+BEGIN
+EXECUTE ventas.TarifaParqueAlta @id_parque = @p12, @id_tipo_visitante = @visitante_general,
+    @precio = 55505.75, @precio_feriado = 65505.75, @vigencia_desde = '2023-01-01';
+EXECUTE ventas.TarifaParqueAlta @id_parque = @p12, @id_tipo_visitante = @visitante_nacional,
+    @precio = 55505.75, @precio_feriado = 65505.75, @vigencia_desde = '2023-01-01';
+EXECUTE ventas.TarifaParqueAlta @id_parque = @p12, @id_tipo_visitante = @visitante_provincial,
+    @precio = 55505.75, @precio_feriado = 65505.75, @vigencia_desde = '2023-01-01';
+EXECUTE ventas.TarifaParqueAlta @id_parque = @p12, @id_tipo_visitante = @visitante_jubilado,
+    @precio = 55505.75, @precio_feriado = 65505.75, @vigencia_desde = '2023-01-01';
+EXECUTE ventas.TarifaParqueAlta @id_parque = @p12, @id_tipo_visitante = @visitante_estudiante,
+    @precio = 55505.75, @precio_feriado = 65505.75, @vigencia_desde = '2023-01-01';
+END
+
+-- =====================================================================
+-- COMPRAS
+-- =====================================================================
+
+-- =====================================================================
+-- Parque 1
+-- =====================================================================
+EXECUTE ventas.CarritoAlta @id_parque = @p1
+SELECT @carrito1 = MAX(id) FROM ventas.Carrito WHERE id_parque = @p1
+EXECUTE ventas.CarritoAlta @id_parque = @p1
+SELECT @carrito2 = MAX(id) FROM ventas.Carrito WHERE id_parque = @p1
+EXECUTE ventas.CarritoAlta @id_parque = @p1
+SELECT @carrito3 = MAX(id) FROM ventas.Carrito WHERE id_parque = @p1
+EXECUTE ventas.CarritoAlta @id_parque = @p1
+SELECT @carrito4 = MAX(id) FROM ventas.Carrito WHERE id_parque = @p1
+
+EXECUTE dev.ComprasAleatorias @id_carrito = @carrito1, @cant_iteraciones = 20;
+EXECUTE dev.ComprasAleatorias @id_carrito = @carrito2, @cant_iteraciones = 20;
+EXECUTE dev.ComprasAleatorias @id_carrito = @carrito3, @cant_iteraciones = 20;
+EXECUTE dev.ComprasAleatorias @id_carrito = @carrito4, @cant_iteraciones = 20;
+
+-- =====================================================================
+-- Parque 2
+-- =====================================================================
+EXECUTE ventas.CarritoAlta @id_parque = @p2
+SELECT @carrito1 = MAX(id) FROM ventas.Carrito WHERE id_parque = @p2
+EXECUTE ventas.CarritoAlta @id_parque = @p2
+SELECT @carrito2 = MAX(id) FROM ventas.Carrito WHERE id_parque = @p2
+EXECUTE ventas.CarritoAlta @id_parque = @p2
+SELECT @carrito3 = MAX(id) FROM ventas.Carrito WHERE id_parque = @p2
+EXECUTE ventas.CarritoAlta @id_parque = @p2
+SELECT @carrito4 = MAX(id) FROM ventas.Carrito WHERE id_parque = @p2
+
+EXECUTE dev.ComprasAleatorias @id_carrito = @carrito1, @cant_iteraciones = 20;
+EXECUTE dev.ComprasAleatorias @id_carrito = @carrito2, @cant_iteraciones = 20;
+EXECUTE dev.ComprasAleatorias @id_carrito = @carrito3, @cant_iteraciones = 20;
+EXECUTE dev.ComprasAleatorias @id_carrito = @carrito4, @cant_iteraciones = 20;
+-- =====================================================================
+-- Parque 3
+-- =====================================================================
+EXECUTE ventas.CarritoAlta @id_parque = @p3
+SELECT @carrito1 = MAX(id) FROM ventas.Carrito WHERE id_parque = @p3
+EXECUTE ventas.CarritoAlta @id_parque = @p3
+SELECT @carrito2 = MAX(id) FROM ventas.Carrito WHERE id_parque = @p3
+EXECUTE ventas.CarritoAlta @id_parque = @p3
+SELECT @carrito3 = MAX(id) FROM ventas.Carrito WHERE id_parque = @p3
+EXECUTE ventas.CarritoAlta @id_parque = @p3
+SELECT @carrito4 = MAX(id) FROM ventas.Carrito WHERE id_parque = @p3
+
+EXECUTE dev.ComprasAleatorias @id_carrito = @carrito1, @cant_iteraciones = 20;
+EXECUTE dev.ComprasAleatorias @id_carrito = @carrito2, @cant_iteraciones = 20;
+EXECUTE dev.ComprasAleatorias @id_carrito = @carrito3, @cant_iteraciones = 20;
+EXECUTE dev.ComprasAleatorias @id_carrito = @carrito4, @cant_iteraciones = 20;
+-- =====================================================================
+-- Parque 4
+-- =====================================================================
+EXECUTE ventas.CarritoAlta @id_parque = @p4
+SELECT @carrito1 = MAX(id) FROM ventas.Carrito WHERE id_parque = @p4
+EXECUTE ventas.CarritoAlta @id_parque = @p4
+SELECT @carrito2 = MAX(id) FROM ventas.Carrito WHERE id_parque = @p4
+EXECUTE ventas.CarritoAlta @id_parque = @p4
+SELECT @carrito3 = MAX(id) FROM ventas.Carrito WHERE id_parque = @p4
+EXECUTE ventas.CarritoAlta @id_parque = @p4
+SELECT @carrito4 = MAX(id) FROM ventas.Carrito WHERE id_parque = @p4
+
+EXECUTE dev.ComprasAleatorias @id_carrito = @carrito1, @cant_iteraciones = 20;
+EXECUTE dev.ComprasAleatorias @id_carrito = @carrito2, @cant_iteraciones = 20;
+EXECUTE dev.ComprasAleatorias @id_carrito = @carrito3, @cant_iteraciones = 20;
+EXECUTE dev.ComprasAleatorias @id_carrito = @carrito4, @cant_iteraciones = 20;
+-- =====================================================================
+-- Parque 5
+-- =====================================================================
+EXECUTE ventas.CarritoAlta @id_parque = @p5
+SELECT @carrito1 = MAX(id) FROM ventas.Carrito WHERE id_parque = @p5
+EXECUTE ventas.CarritoAlta @id_parque = @p5
+SELECT @carrito2 = MAX(id) FROM ventas.Carrito WHERE id_parque = @p5
+EXECUTE ventas.CarritoAlta @id_parque = @p5
+SELECT @carrito3 = MAX(id) FROM ventas.Carrito WHERE id_parque = @p5
+EXECUTE ventas.CarritoAlta @id_parque = @p5
+SELECT @carrito4 = MAX(id) FROM ventas.Carrito WHERE id_parque = @p5
+
+EXECUTE dev.ComprasAleatorias @id_carrito = @carrito1, @cant_iteraciones = 20;
+EXECUTE dev.ComprasAleatorias @id_carrito = @carrito2, @cant_iteraciones = 20;
+EXECUTE dev.ComprasAleatorias @id_carrito = @carrito3, @cant_iteraciones = 20;
+EXECUTE dev.ComprasAleatorias @id_carrito = @carrito4, @cant_iteraciones = 20;
+-- =====================================================================
+-- Parque 6
+-- =====================================================================
+EXECUTE ventas.CarritoAlta @id_parque = @p6
+SELECT @carrito1 = MAX(id) FROM ventas.Carrito WHERE id_parque = @p6
+EXECUTE ventas.CarritoAlta @id_parque = @p6
+SELECT @carrito2 = MAX(id) FROM ventas.Carrito WHERE id_parque = @p6
+EXECUTE ventas.CarritoAlta @id_parque = @p6
+SELECT @carrito3 = MAX(id) FROM ventas.Carrito WHERE id_parque = @p6
+EXECUTE ventas.CarritoAlta @id_parque = @p6
+SELECT @carrito4 = MAX(id) FROM ventas.Carrito WHERE id_parque = @p6
+
+EXECUTE dev.ComprasAleatorias @id_carrito = @carrito1, @cant_iteraciones = 20;
+EXECUTE dev.ComprasAleatorias @id_carrito = @carrito2, @cant_iteraciones = 20;
+EXECUTE dev.ComprasAleatorias @id_carrito = @carrito3, @cant_iteraciones = 20;
+EXECUTE dev.ComprasAleatorias @id_carrito = @carrito4, @cant_iteraciones = 20;
+-- =====================================================================
+-- Parque 7
+-- =====================================================================
+EXECUTE ventas.CarritoAlta @id_parque = @p7
+SELECT @carrito1 = MAX(id) FROM ventas.Carrito WHERE id_parque = @p7
+EXECUTE ventas.CarritoAlta @id_parque = @p7
+SELECT @carrito2 = MAX(id) FROM ventas.Carrito WHERE id_parque = @p7
+EXECUTE ventas.CarritoAlta @id_parque = @p7
+SELECT @carrito3 = MAX(id) FROM ventas.Carrito WHERE id_parque = @p7
+EXECUTE ventas.CarritoAlta @id_parque = @p7
+SELECT @carrito4 = MAX(id) FROM ventas.Carrito WHERE id_parque = @p7
+
+EXECUTE dev.ComprasAleatorias @id_carrito = @carrito1, @cant_iteraciones = 20;
+EXECUTE dev.ComprasAleatorias @id_carrito = @carrito2, @cant_iteraciones = 20;
+EXECUTE dev.ComprasAleatorias @id_carrito = @carrito3, @cant_iteraciones = 20;
+EXECUTE dev.ComprasAleatorias @id_carrito = @carrito4, @cant_iteraciones = 20;
+-- =====================================================================
+-- Parque 8
+-- =====================================================================
+EXECUTE ventas.CarritoAlta @id_parque = @p8
+SELECT @carrito1 = MAX(id) FROM ventas.Carrito WHERE id_parque = @p8
+EXECUTE ventas.CarritoAlta @id_parque = @p8
+SELECT @carrito2 = MAX(id) FROM ventas.Carrito WHERE id_parque = @p8
+EXECUTE ventas.CarritoAlta @id_parque = @p8
+SELECT @carrito3 = MAX(id) FROM ventas.Carrito WHERE id_parque = @p8
+EXECUTE ventas.CarritoAlta @id_parque = @p8
+SELECT @carrito4 = MAX(id) FROM ventas.Carrito WHERE id_parque = @p8
+
+EXECUTE dev.ComprasAleatorias @id_carrito = @carrito1, @cant_iteraciones = 20;
+EXECUTE dev.ComprasAleatorias @id_carrito = @carrito2, @cant_iteraciones = 20;
+EXECUTE dev.ComprasAleatorias @id_carrito = @carrito3, @cant_iteraciones = 20;
+EXECUTE dev.ComprasAleatorias @id_carrito = @carrito4, @cant_iteraciones = 20;
+-- =====================================================================
+-- Parque 9
+-- =====================================================================
+EXECUTE ventas.CarritoAlta @id_parque = @p9
+SELECT @carrito1 = MAX(id) FROM ventas.Carrito WHERE id_parque = @p9
+EXECUTE ventas.CarritoAlta @id_parque = @p9
+SELECT @carrito2 = MAX(id) FROM ventas.Carrito WHERE id_parque = @p9
+EXECUTE ventas.CarritoAlta @id_parque = @p9
+SELECT @carrito3 = MAX(id) FROM ventas.Carrito WHERE id_parque = @p9
+EXECUTE ventas.CarritoAlta @id_parque = @p9
+SELECT @carrito4 = MAX(id) FROM ventas.Carrito WHERE id_parque = @p9
+
+EXECUTE dev.ComprasAleatorias @id_carrito = @carrito1, @cant_iteraciones = 20;
+EXECUTE dev.ComprasAleatorias @id_carrito = @carrito2, @cant_iteraciones = 20;
+EXECUTE dev.ComprasAleatorias @id_carrito = @carrito3, @cant_iteraciones = 20;
+EXECUTE dev.ComprasAleatorias @id_carrito = @carrito4, @cant_iteraciones = 20;
+-- =====================================================================
+-- Parque 10
+-- =====================================================================
+EXECUTE ventas.CarritoAlta @id_parque = @p10
+SELECT @carrito1 = MAX(id) FROM ventas.Carrito WHERE id_parque = @p10
+EXECUTE ventas.CarritoAlta @id_parque = @p10
+SELECT @carrito2 = MAX(id) FROM ventas.Carrito WHERE id_parque = @p10
+EXECUTE ventas.CarritoAlta @id_parque = @p10
+SELECT @carrito3 = MAX(id) FROM ventas.Carrito WHERE id_parque = @p10
+EXECUTE ventas.CarritoAlta @id_parque = @p10
+SELECT @carrito4 = MAX(id) FROM ventas.Carrito WHERE id_parque = @p10
+
+EXECUTE dev.ComprasAleatorias @id_carrito = @carrito1, @cant_iteraciones = 20;
+EXECUTE dev.ComprasAleatorias @id_carrito = @carrito2, @cant_iteraciones = 20;
+EXECUTE dev.ComprasAleatorias @id_carrito = @carrito3, @cant_iteraciones = 20;
+EXECUTE dev.ComprasAleatorias @id_carrito = @carrito4, @cant_iteraciones = 20;
+-- =====================================================================
+-- Parque 11
+-- =====================================================================
+EXECUTE ventas.CarritoAlta @id_parque = @p11
+SELECT @carrito1 = MAX(id) FROM ventas.Carrito WHERE id_parque = @p11
+EXECUTE ventas.CarritoAlta @id_parque = @p11
+SELECT @carrito2 = MAX(id) FROM ventas.Carrito WHERE id_parque = @p11
+EXECUTE ventas.CarritoAlta @id_parque = @p11
+SELECT @carrito3 = MAX(id) FROM ventas.Carrito WHERE id_parque = @p11
+EXECUTE ventas.CarritoAlta @id_parque = @p11    
+SELECT @carrito4 = MAX(id) FROM ventas.Carrito WHERE id_parque = @p11   
+
+EXECUTE dev.ComprasAleatorias @id_carrito = @carrito1, @cant_iteraciones = 20;
+EXECUTE dev.ComprasAleatorias @id_carrito = @carrito2, @cant_iteraciones = 20;
+EXECUTE dev.ComprasAleatorias @id_carrito = @carrito3, @cant_iteraciones = 20;
+EXECUTE dev.ComprasAleatorias @id_carrito = @carrito4, @cant_iteraciones = 20;
+-- =====================================================================
+-- Parque 12
+-- =====================================================================
+EXECUTE ventas.CarritoAlta @id_parque = @p12
+SELECT @carrito1 = MAX(id) FROM ventas.Carrito WHERE id_parque = @p12
+EXECUTE ventas.CarritoAlta @id_parque = @p12
+SELECT @carrito2 = MAX(id) FROM ventas.Carrito WHERE id_parque = @p12
+EXECUTE ventas.CarritoAlta @id_parque = @p12
+SELECT @carrito3 = MAX(id) FROM ventas.Carrito WHERE id_parque = @p12
+EXECUTE ventas.CarritoAlta @id_parque = @p12
+SELECT @carrito4 = MAX(id) FROM ventas.Carrito WHERE id_parque = @p12
+
+EXECUTE dev.ComprasAleatorias @id_carrito = @carrito1, @cant_iteraciones = 20;
+EXECUTE dev.ComprasAleatorias @id_carrito = @carrito2, @cant_iteraciones = 20;
+EXECUTE dev.ComprasAleatorias @id_carrito = @carrito3, @cant_iteraciones = 20;
+EXECUTE dev.ComprasAleatorias @id_carrito = @carrito4, @cant_iteraciones = 20;
 
 -- ================================================================
 -- RESUMEN FINAL
@@ -1390,6 +2013,14 @@ UNION ALL
 SELECT 'Empresas Concesionarias', COUNT(*) FROM concesiones.Empresa   WHERE borrado = 0
 UNION ALL
 SELECT 'Concesiones',         COUNT(*) FROM concesiones.Concesion     WHERE borrado = 0
+UNION ALL
+SELECT 'Facturas emitidas de concesiones',           COUNT(id) FROM concesiones.FacturaConcesion
+UNION ALL
+SELECT 'Tipos de visitante',           COUNT(id) FROM ventas.TipoVisitante
+UNION ALL
+SELECT 'Tarifas de parques',           COUNT(id) FROM ventas.TarifaParque
+UNION ALL
+SELECT 'Ventas',           COUNT(id) FROM ventas.Venta
 
 PRINT ''
 PRINT 'Escenarios cubiertos:'
@@ -1401,4 +2032,5 @@ PRINT '  [OK] Concesion proxima a vencer: Tienda del Parque en Lanin (vence 2026
 PRINT '  [OK] Guardaparque reasignado: GP 1001 Carlos Fernandez [Iguazu -> Nahuel Huapi]'
 PRINT '================================================================'
 GO
+
 
