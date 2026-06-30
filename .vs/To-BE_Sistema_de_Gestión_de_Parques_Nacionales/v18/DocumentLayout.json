@@ -3,16 +3,16 @@
   "WorkspaceRootPath": "C:\\Users\\YerimenLombardo\\Repos\\To-BE_Sistema_de_Gestion_de_Parques_Nacionales\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{1AB1FBB9-ADC6-4A43-14C0-FA1FADD37E7E}|To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales.ssmssqlproj|C:\\Users\\YerimenLombardo\\Repos\\To-BE_Sistema_de_Gestion_de_Parques_Nacionales\\17_sp_importacion_visitas_csv.sql||{B5A506EB-11BE-4782-9A18-21265C2CA0B4}",
-      "RelativeMoniker": "D:0:0:{1AB1FBB9-ADC6-4A43-14C0-FA1FADD37E7E}|To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales.ssmssqlproj|solutionrelative:17_sp_importacion_visitas_csv.sql||{B5A506EB-11BE-4782-9A18-21265C2CA0B4}"
+      "AbsoluteMoniker": "D:0:0:{1AB1FBB9-ADC6-4A43-14C0-FA1FADD37E7E}|To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales.ssmssqlproj|C:\\Users\\YerimenLombardo\\Repos\\To-BE_Sistema_de_Gestion_de_Parques_Nacionales\\36_test_seguridad.sql||{B5A506EB-11BE-4782-9A18-21265C2CA0B4}",
+      "RelativeMoniker": "D:0:0:{1AB1FBB9-ADC6-4A43-14C0-FA1FADD37E7E}|To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales.ssmssqlproj|solutionrelative:36_test_seguridad.sql||{B5A506EB-11BE-4782-9A18-21265C2CA0B4}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1AB1FBB9-ADC6-4A43-14C0-FA1FADD37E7E}|To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales.ssmssqlproj|C:\\Users\\YerimenLombardo\\Repos\\To-BE_Sistema_de_Gestion_de_Parques_Nacionales\\26_seed_data_core.sql||{B5A506EB-11BE-4782-9A18-21265C2CA0B4}",
-      "RelativeMoniker": "D:0:0:{1AB1FBB9-ADC6-4A43-14C0-FA1FADD37E7E}|To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales.ssmssqlproj|solutionrelative:26_seed_data_core.sql||{B5A506EB-11BE-4782-9A18-21265C2CA0B4}"
+      "AbsoluteMoniker": "D:0:0:{1AB1FBB9-ADC6-4A43-14C0-FA1FADD37E7E}|To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales.ssmssqlproj|C:\\Users\\YerimenLombardo\\Repos\\To-BE_Sistema_de_Gestion_de_Parques_Nacionales\\35_seguridad_roles.sql||{B5A506EB-11BE-4782-9A18-21265C2CA0B4}",
+      "RelativeMoniker": "D:0:0:{1AB1FBB9-ADC6-4A43-14C0-FA1FADD37E7E}|To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales.ssmssqlproj|solutionrelative:35_seguridad_roles.sql||{B5A506EB-11BE-4782-9A18-21265C2CA0B4}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1AB1FBB9-ADC6-4A43-14C0-FA1FADD37E7E}|To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales.ssmssqlproj|C:\\Users\\YerimenLombardo\\Repos\\To-BE_Sistema_de_Gestion_de_Parques_Nacionales\\27_test_sp_importacion_visitas_csv.sql||{B5A506EB-11BE-4782-9A18-21265C2CA0B4}",
-      "RelativeMoniker": "D:0:0:{1AB1FBB9-ADC6-4A43-14C0-FA1FADD37E7E}|To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales.ssmssqlproj|solutionrelative:27_test_sp_importacion_visitas_csv.sql||{B5A506EB-11BE-4782-9A18-21265C2CA0B4}"
+      "AbsoluteMoniker": "D:0:0:{1AB1FBB9-ADC6-4A43-14C0-FA1FADD37E7E}|To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales.ssmssqlproj|C:\\Users\\YerimenLombardo\\Repos\\To-BE_Sistema_de_Gestion_de_Parques_Nacionales\\34_seguridad_cifrado.sql||{B5A506EB-11BE-4782-9A18-21265C2CA0B4}",
+      "RelativeMoniker": "D:0:0:{1AB1FBB9-ADC6-4A43-14C0-FA1FADD37E7E}|To-BE_Sistema_de_Gesti\u00F3n_de_Parques_Nacionales.ssmssqlproj|solutionrelative:34_seguridad_cifrado.sql||{B5A506EB-11BE-4782-9A18-21265C2CA0B4}"
     }
   ],
   "DocumentGroupContainers": [
@@ -27,35 +27,35 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "17_sp_importacion_visitas_csv.sql - YERI-ENTA\\SQL2025.master (sa (52))",
-              "DocumentMoniker": "C:\\Users\\YerimenLombardo\\Repos\\To-BE_Sistema_de_Gestion_de_Parques_Nacionales\\17_sp_importacion_visitas_csv.sql",
-              "RelativeDocumentMoniker": "17_sp_importacion_visitas_csv.sql",
-              "ToolTip": "17_sp_importacion_visitas_csv.sql - YERI-ENTA\\SQL2025.master (sa (52))",
+              "Title": "36_test_seguridad.sql - YERI-ENTA\\SQL2025.GestionParquesNacionales (sa (96))",
+              "DocumentMoniker": "C:\\Users\\YerimenLombardo\\Repos\\To-BE_Sistema_de_Gestion_de_Parques_Nacionales\\36_test_seguridad.sql",
+              "RelativeDocumentMoniker": "36_test_seguridad.sql",
+              "ToolTip": "36_test_seguridad.sql - YERI-ENTA\\SQL2025.GestionParquesNacionales (sa (96))",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
-              "WhenOpened": "2026-06-22T03:25:46.469Z",
-              "EditorCaption": " - YERI-ENTA\\SQL2025.master (sa (52))"
+              "WhenOpened": "2026-06-30T03:16:43.495Z",
+              "EditorCaption": " - YERI-ENTA\\SQL2025.GestionParquesNacionales (sa (96))"
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "26_seed_data_core.sql - YERI-ENTA\\SQL2025.ToBE (sa (58))",
-              "DocumentMoniker": "C:\\Users\\YerimenLombardo\\Repos\\To-BE_Sistema_de_Gestion_de_Parques_Nacionales\\26_seed_data_core.sql",
-              "RelativeDocumentMoniker": "26_seed_data_core.sql",
-              "ToolTip": "26_seed_data_core.sql - YERI-ENTA\\SQL2025.ToBE (sa (58))",
+              "Title": "35_seguridad_roles.sql - YERI-ENTA\\SQL2025.GestionParquesNacionales (sa (61))",
+              "DocumentMoniker": "C:\\Users\\YerimenLombardo\\Repos\\To-BE_Sistema_de_Gestion_de_Parques_Nacionales\\35_seguridad_roles.sql",
+              "RelativeDocumentMoniker": "35_seguridad_roles.sql",
+              "ToolTip": "35_seguridad_roles.sql - YERI-ENTA\\SQL2025.GestionParquesNacionales (sa (61))",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
-              "WhenOpened": "2026-06-23T01:32:50.367Z",
-              "EditorCaption": " - YERI-ENTA\\SQL2025.ToBE (sa (58))"
+              "WhenOpened": "2026-06-30T03:14:53.703Z",
+              "EditorCaption": " - YERI-ENTA\\SQL2025.GestionParquesNacionales (sa (61))"
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "27_test_sp_importacion_visitas_csv.sql - YERI-ENTA\\SQL2025.master (sa (53))",
-              "DocumentMoniker": "C:\\Users\\YerimenLombardo\\Repos\\To-BE_Sistema_de_Gestion_de_Parques_Nacionales\\27_test_sp_importacion_visitas_csv.sql",
-              "RelativeDocumentMoniker": "27_test_sp_importacion_visitas_csv.sql",
-              "ToolTip": "27_test_sp_importacion_visitas_csv.sql - YERI-ENTA\\SQL2025.master (sa (53))",
+              "Title": "34_seguridad_cifrado.sql - YERI-ENTA\\SQL2025.GestionParquesNacionales (sa (57))",
+              "DocumentMoniker": "C:\\Users\\YerimenLombardo\\Repos\\To-BE_Sistema_de_Gestion_de_Parques_Nacionales\\34_seguridad_cifrado.sql",
+              "RelativeDocumentMoniker": "34_seguridad_cifrado.sql",
+              "ToolTip": "34_seguridad_cifrado.sql - YERI-ENTA\\SQL2025.GestionParquesNacionales (sa (57))",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
-              "WhenOpened": "2026-06-22T03:25:54.973Z",
-              "EditorCaption": " - YERI-ENTA\\SQL2025.master (sa (53))"
+              "WhenOpened": "2026-06-30T03:14:41.514Z",
+              "EditorCaption": " - YERI-ENTA\\SQL2025.GestionParquesNacionales (sa (57))"
             }
           ]
         }
